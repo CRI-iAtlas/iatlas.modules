@@ -1,3 +1,8 @@
+#' Title Box
+#'
+#' @param title a string
+#'
+#' @export
 titleBox <- function(title) {
   shiny::fluidRow(
     shinydashboard::box(
@@ -8,6 +13,11 @@ titleBox <- function(title) {
   )
 }
 
+#' Sub Title Box
+#'
+#' @param title  a string
+#'
+#' @export
 subTitleBox <- function(title) {
   shiny::fluidRow(
     shinydashboard::box(
@@ -17,6 +27,12 @@ subTitleBox <- function(title) {
   )
 }
 
+#' Section Box
+#'
+#' @param ... arguments to shinydashboard::box
+#' @param title  a string
+#'
+#' @export
 sectionBox <- function(..., title) {
   shiny::fluidRow(
     shinydashboard::box(
@@ -30,26 +46,61 @@ sectionBox <- function(..., title) {
   )
 }
 
+#' Options Box
+#'
+#' @param ... arguments to shinydashboard::box
+#'
+#' @export
 optionsBox <- function(...) {
   shinydashboard::box(..., background = "navy")
 }
 
+#' Plot Box
+#'
+#' @param ... arguments to shinydashboard::box
+#'
+#' @export
 plotBox <- function(...) {
   shinydashboard::box(..., status = "warning")
 }
 
+#' Table Box
+#'
+#' @param ... arguments to shinydashboard::box
+#'
+#' @export
 tableBox <- function(...) {
   shinydashboard::box(..., status = "warning")
 }
 
+#' Text Box
+#'
+#' @param ... arguments to shinydashboard::box
+#'
+#' @export
 textBox <- function(...) {
   shinydashboard::box(..., status = "success")
 }
 
+#' Message Box
+#'
+#' @param ... arguments to shinydashboard::box
+#'
+#' @export
 messageBox <- function(...) {
   shinydashboard::box(..., status = "danger", background = "green")
 }
 
+#' Img Link Box
+#'
+#' @param ... arguments to shinydashboard::box
+#' @param linkId a string
+#' @param title a string
+#' @param imgSrc a string
+#' @param boxText a string
+#' @param linkText a string
+#'
+#' @export
 imgLinkBox <- function(..., linkId, title, imgSrc, boxText, linkText) {
   shinydashboard::box(
     ...,
