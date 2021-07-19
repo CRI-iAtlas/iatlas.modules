@@ -6,24 +6,23 @@
 \usage{
 drilldown_scatterplot_server(
   id,
-  plot_data,
-  eventdata,
+  scatterplot_data,
   x_feature_input = NULL,
-  y_feature_input = NULL
+  y_feature_input = NULL,
+  selected_group = shiny::reactive("Clicked Group")
 )
 }
 \arguments{
 \item{id}{Module ID}
 
-\item{plot_data}{A shiny::reactive that returns a dataframe with columns
+\item{scatterplot_data}{A shiny::reactive that returns a dataframe with columns
 "sample", "group", "feature", "feature_value"}
-
-\item{eventdata}{A shiny::reactive that returns a dataframe with column
-"key"}
 
 \item{x_feature_input}{A shiny::reactive that returns a string}
 
 \item{y_feature_input}{A shiny::reactive that returns a string}
+
+\item{selected_group}{A string, this gets added to the sample label}
 }
 \description{
 Drilldown Scatterplot Server

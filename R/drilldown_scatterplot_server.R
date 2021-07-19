@@ -2,20 +2,19 @@
 #' Drilldown Scatterplot Server
 #'
 #' @param id Module ID
-#' @param plot_data A shiny::reactive that returns a dataframe with columns
+#' @param scatterplot_data A shiny::reactive that returns a dataframe with columns
 #' "sample", "group", "feature", "feature_value"
-#' @param eventdata A shiny::reactive that returns a dataframe with column
-#' "key"
 #' @param x_feature_input A shiny::reactive that returns a string
 #' @param y_feature_input A shiny::reactive that returns a string
+#' @param selected_group A string, this gets added to the sample label
 #'
 #' @export
 drilldown_scatterplot_server <- function(
   id,
-  plot_data,
-  eventdata,
+  scatterplot_data,
   x_feature_input = NULL,
-  y_feature_input = NULL
+  y_feature_input = NULL,
+  selected_group = shiny::reactive("Clicked Group")
 ) {
   shiny::moduleServer(
     id,
@@ -23,27 +22,15 @@ drilldown_scatterplot_server <- function(
 
       ns <- session$ns
 
-      selected_group <- shiny::reactive({
-        shiny::req(eventdata())
-        eventdata()$key[[1]]
-      })
-
-      scatterplot_data <- shiny::reactive({
-        shiny::req(
-          plot_data(),
-          selected_group(),
-          selected_group() %in% plot_data()$group
-        )
-        build_scatterplot_data(plot_data(), selected_group())
-      })
-
       scatterplot_feature_columns <- shiny::reactive({
         scatterplot_data() %>%
           colnames() %>%
-          setdiff("sample")
+          setdiff(c("sample", "group"))
       })
 
       display_feature_selection_ui <- shiny::reactive({
+        shiny::req(scatterplot_feature_columns())
+
         all(
           any(is.null(x_feature_input), is.null(y_feature_input)),
           length(scatterplot_feature_columns()) > 2
@@ -112,13 +99,12 @@ drilldown_scatterplot_server <- function(
           scatterplot_data(),
           x_feature(),
           y_feature(),
-          selected_group(),
           x_feature() %in% colnames(scatterplot_data()),
           y_feature() %in% colnames(scatterplot_data())
         )
 
         format_scatterplot_data(
-          scatterplot_data(), x_feature(), y_feature(), selected_group()
+          scatterplot_data(), x_feature(), y_feature()
         )
       })
 

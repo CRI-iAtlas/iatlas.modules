@@ -1,31 +1,20 @@
 
-test_that("drilldown_scatterplot_server_2_features", {
+test_that("drilldown_scatterplot_server_wide_data_2_features", {
 
   shiny::testServer(
     drilldown_scatterplot_server,
     args = list(
-      "plot_data" = shiny::reactive(
-        dplyr::select(
-          example_iris_data(),
-          "sample",
-          "group",
-          "feature_value",
-          "feature"
-        ) %>%
-          dplyr::filter(feature %in% c("Petal.Width", "Sepal.Width"))
+      "scatterplot_data" = shiny::reactive(
+        get_pcawg_scatterplot_example() %>%
+          dplyr::select("sample", "group", "TCR Evenness", "TCR Richness"),
       ),
-      "eventdata" = shiny::reactive(dplyr::tibble("key" = c("setosa", "setosa")))
+      "selected_group" = shiny::reactive("C1")
     ),
     {
-      expect_equal(selected_group(), "setosa")
       expect_type(scatterplot_data(), "list")
-      expect_named(
-        scatterplot_data(),
-        c("sample", "Sepal.Width", "Petal.Width")
-      )
       expect_equal(
         scatterplot_feature_columns(),
-        c("Sepal.Width", "Petal.Width")
+        c("TCR Evenness", "TCR Richness")
       )
       expect_false(display_feature_selection_ui())
       expect_type(formatted_scatterplot_data(), "list")
@@ -34,32 +23,19 @@ test_that("drilldown_scatterplot_server_2_features", {
   )
 })
 
-test_that("drilldown_scatterplot_server_4_features", {
+test_that("drilldown_scatterplot_server_wide_data_3_features", {
 
   shiny::testServer(
     drilldown_scatterplot_server,
     args = list(
-      "plot_data" = shiny::reactive(
-        dplyr::select(
-          example_iris_data(),
-          "sample",
-          "group",
-          "feature_value",
-          "feature"
-        )
-      ),
-      "eventdata" = shiny::reactive(dplyr::tibble("key" = c("setosa", "setosa")))
+      "scatterplot_data" = shiny::reactive(get_pcawg_scatterplot_example()),
+      "selected_group" = shiny::reactive("C1")
     ),
     {
-      expect_equal(selected_group(), "setosa")
       expect_type(scatterplot_data(), "list")
-      expect_named(
-        scatterplot_data(),
-        c("sample", "Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width")
-      )
       expect_equal(
         scatterplot_feature_columns(),
-        c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width")
+        c("TCR Evenness", "TCR Richness", "TCR Shannon")
       )
 
       expect_null(x_feature_input)
@@ -67,15 +43,14 @@ test_that("drilldown_scatterplot_server_4_features", {
       expect_true(display_feature_selection_ui())
 
       expect_type(output$x_feature_selection_ui, "list")
-      session$setInputs("x_feature_choice" = "Petal.Length")
+      session$setInputs("x_feature_choice" = "TCR Evenness")
       expect_type(output$y_feature_selection_ui, "list")
-      session$setInputs("y_feature_choice" = "Petal.Width")
+      session$setInputs("y_feature_choice" = "TCR Richness")
       expect_type(formatted_scatterplot_data(), "list")
       expect_named(formatted_scatterplot_data(), c("x", "y", "text"))
 
       session$setInputs("x_feature_choice" = "not_a_feature_x")
       expect_error(formatted_scatterplot_data())
-
     }
   )
 })
@@ -85,32 +60,19 @@ test_that("drilldown_scatterplot_server_group_set_features", {
   shiny::testServer(
     drilldown_scatterplot_server,
     args = list(
-      "plot_data" = shiny::reactive(
-        dplyr::select(
-          example_iris_data(),
-          "sample",
-          "group",
-          "feature_value",
-          "feature"
-        )
-      ),
-      "eventdata" = shiny::reactive(dplyr::tibble("key" = c("setosa", "setosa"))),
-      "x_feature_input" = shiny::reactive("Petal.Length"),
-      "y_feature_input" = shiny::reactive("Petal.Width")
+      "scatterplot_data" = shiny::reactive(get_pcawg_scatterplot_example()),
+      "x_feature_input"  = shiny::reactive("TCR Shannon"),
+      "y_feature_input"  = shiny::reactive("TCR Richness"),
+      "selected_group" = shiny::reactive("C1")
     ),
     {
-      expect_equal(selected_group(), "setosa")
       expect_type(scatterplot_data(), "list")
-      expect_named(
-        scatterplot_data(),
-        c("sample", "Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width")
-      )
       expect_equal(
         scatterplot_feature_columns(),
-        c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width")
+        c("TCR Evenness", "TCR Richness", "TCR Shannon")
       )
-      expect_equal(x_feature_input(), "Petal.Length")
-      expect_equal(y_feature_input(), "Petal.Width")
+      expect_equal(x_feature_input(), "TCR Shannon")
+      expect_equal(y_feature_input(), "TCR Richness")
       expect_false(display_feature_selection_ui())
 
       expect_type(formatted_scatterplot_data(), "list")

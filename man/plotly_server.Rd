@@ -16,9 +16,11 @@ plotly_server(
 
 \item{plot_data}{A shiny::reactive that returns a dataframe}
 
-\item{group_data}{A shiny::reactive that returns NULL or a dataframe}
+\item{group_data}{A shiny::reactive that returns NULL or a dataframe. It
+must have the columns "group", and "description"}
 
-\item{eventdata}{A shiny::reactive that returns NULL or a dataframe}
+\item{eventdata}{A shiny::reactive that returns NULL or a dataframe. It
+must have the column "x"}
 }
 \description{
 Plotly Server

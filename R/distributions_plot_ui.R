@@ -22,14 +22,7 @@ distributions_plot_ui <- function(
     shiny::fluidRow(
       optionsBox(
         width = 12,
-        shiny::conditionalPanel(
-          condition = "output.display_feature_class_selection_ui",
-          ns = ns,
-          shiny::column(
-            width = 3,
-            shiny::uiOutput(ns("feature_class_selection_ui"))
-          )
-        ),
+        shiny::uiOutput(ns("feature_class_selection_ui")),
         shiny::conditionalPanel(
           condition = "output.display_feature_selection_ui",
           ns = ns,

@@ -24,13 +24,23 @@ test_that("barplot_server_iris", {
       )
       expect_equal(barplot_source_name(), "proxy1-barplot")
       expect_type(output$barplot, "character")
+      expect_type(group_data(), "list")
+      expect_named(group_data(), c("group", "description"))
+
       expect_error(
         barplot_eventdata(),
         regexp = "Click on above barplot.",
         class = c("shiny.silent.error")
       )
-      expect_type(group_data(), "list")
-      expect_named(group_data(), c("group", "description"))
+      session$setInputs("test_event_data" = data.frame("key" = "setosa"))
+      expect_type(barplot_eventdata(), "list")
+      expect_named(barplot_eventdata(), "key")
+      expect_equal(selected_group(), "setosa")
+      expect_type(scatterplot_data(), "list")
+      expect_named(
+        scatterplot_data(),
+        c("sample", "Sepal.Length", "Petal.Length")
+      )
     }
   )
 })

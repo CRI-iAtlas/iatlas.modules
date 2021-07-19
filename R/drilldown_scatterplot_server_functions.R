@@ -1,11 +1,3 @@
-build_scatterplot_data <- function(plot_data, selected_group){
-  plot_data %>%
-    dplyr::filter(.data$group == selected_group) %>%
-    dplyr::select("sample", "feature", "feature_value") %>%
-    tidyr::pivot_wider(
-      ., values_from = "feature_value", names_from = "feature"
-    )
-}
 
 get_scatterplot_x_feature <- function(feature_choice, feature_columns){
   if(is.null(feature_choice)) return(feature_columns[[1]])
@@ -20,15 +12,13 @@ get_scatterplot_y_feature <- function(feature_choice, feature_columns){
 format_scatterplot_data <- function(
   plot_data,
   x_feature,
-  y_feature,
-  selected_group
+  y_feature
 ){
   plot_data %>%
     dplyr::select(dplyr::all_of(c(
-      "sample", "x" =  x_feature, "y" = y_feature
+      "sample", "group", "x" =  x_feature, "y" = y_feature
     ))) %>%
     tidyr::drop_na() %>%
-    dplyr::mutate("group" = selected_group) %>%
     create_plotly_text(
       .data$sample, .data$group, c("x", "y"), "Sample"
     ) %>%
