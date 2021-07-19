@@ -73,4 +73,31 @@ server <- function(input, output, session) {
     scale_method_default = shiny::reactive("Log2"),
     feature_default = shiny::reactive("Petal.Length")
   )
+
+  heatmap_server(
+    "heatmap1",
+    feature_classes = shiny::reactive(get_pcawg_feature_class_list()),
+    response_features = shiny::reactive(get_pcawg_feature_list()),
+    feature_data_function = shiny::reactive(get_pcawg_feature_values_by_class),
+    response_data_function = shiny::reactive(get_pcawg_feature_values_by_feature),
+    summarise_function_list = shiny::reactive(
+      purrr::partial(stats::cor, method = "pearson")
+    )
+  )
+
+  heatmap_server(
+    "heatmap2",
+    feature_classes = shiny::reactive(get_pcawg_feature_class_list()),
+    response_features = shiny::reactive(get_pcawg_feature_list()),
+    feature_data_function = shiny::reactive(get_pcawg_feature_values_by_class),
+    response_data_function = shiny::reactive(get_pcawg_feature_values_by_feature),
+    summarise_function_list = shiny::reactive(
+      list(
+        "Pearson" = purrr::partial(stats::cor, method = "pearson"),
+        "Spearman" = purrr::partial(stats::cor, method = "spearman")
+        )
+    )
+  )
+
+
 }

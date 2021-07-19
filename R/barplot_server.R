@@ -86,13 +86,6 @@ barplot_server <- function(
         )
       })
 
-      barplot_eventdata <- shiny::reactive({
-        shiny::req(barplot_source_name(), summarized_barplot_data())
-        eventdata <- plotly::event_data("plotly_click", barplot_source_name())
-        shiny::validate(shiny::need(eventdata, "Click on above barplot."))
-        return(eventdata)
-      })
-
       group_data <- shiny::reactive({
         shiny::req("group_description" %in% colnames(barplot_data()))
         get_barplot_group_data(barplot_data())
@@ -105,10 +98,35 @@ barplot_server <- function(
         eventdata = barplot_eventdata
       )
 
+      barplot_eventdata <- shiny::reactive({
+        shiny::req(barplot_source_name(), summarized_barplot_data())
+        eventdata <- plotly::event_data("plotly_click", barplot_source_name())
+        if(is.null(eventdata) & !is.null(input$test_event_data)){
+          eventdata <- input$test_event_data
+        }
+        shiny::validate(shiny::need(eventdata, "Click on above barplot."))
+        return(eventdata)
+      })
+
+      selected_group <- shiny::reactive({
+        shiny::req(barplot_eventdata())
+        barplot_eventdata()$key[[1]]
+      })
+
+      scatterplot_data <- shiny::reactive({
+        shiny::req(barplot_data(), selected_group())
+        barplot_data() %>%
+          dplyr::filter(.data$group == selected_group()) %>%
+          dplyr::select("sample", "feature", "feature_value") %>%
+          tidyr::pivot_wider(
+            ., values_from = "feature_value", names_from = "feature"
+          )
+      })
+
       drilldown_scatterplot_server(
         "scatterplot",
-        plot_data = barplot_data,
-        eventdata = barplot_eventdata,
+        scatterplot_data,
+        selected_group = selected_group,
         ...
       )
 

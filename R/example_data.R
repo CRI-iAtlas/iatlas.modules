@@ -65,3 +65,149 @@ example_iris_data_func <- function(.feature_class = NULL, .feature = NULL){
   dplyr::select(iris_data, -"feature_class")
 }
 
+# heatmap examples ----
+
+get_pcawg_feature_class_list <- function(){
+  features <-
+    iatlas.api.client::query_features(cohorts = "PCAWG") %>%
+    dplyr::select("class") %>%
+    dplyr::distinct() %>%
+    dplyr::arrange(.data$class)
+}
+
+get_pcawg_feature_list <- function(){
+  features <-
+    iatlas.api.client::query_features(cohorts = "PCAWG") %>%
+    dplyr::arrange(.data$class) %>%
+    create_nested_named_list(
+      names_col1 = "class",
+      names_col2 = "display",
+      values_col = "name"
+    )
+}
+
+get_pcawg_heatmap_example <- function(){
+  feature_data <-
+    iatlas.api.client::query_feature_values(
+      cohorts = "PCAWG", feature_classes = "Adaptive Receptor - T cell"
+    ) %>%
+    dplyr::select(
+      "sample",
+      "feature" = "feature_display",
+      "feature_value",
+      "order" = "feature_order"
+    )
+
+  response_data <-
+    iatlas.api.client::query_feature_values(
+      cohorts = "PCAWG", features = "age_at_diagnosis"
+    ) %>%
+    dplyr::select(
+      "sample",
+      "response" = "feature_display",
+      "response_value" = "feature_value"
+    )
+
+  group_data <-
+    iatlas.api.client::query_tag_samples(
+      cohorts = "PCAWG", parent_tags = "Immune_Subtype"
+    ) %>%
+    dplyr::select(
+      "sample" = "sample_name",
+      "group" = "tag_short_display",
+      "group_description" = "tag_characteristics"
+    )
+
+  plot_data <-
+    dplyr::inner_join(
+      feature_data,
+      response_data,
+      by = "sample"
+    ) %>%
+    dplyr::inner_join(
+      group_data,
+      by = "sample"
+    )
+}
+
+# scatterplot examples ----
+
+get_pcawg_scatterplot_example <- function(){
+  feature_data <-
+    iatlas.api.client::query_feature_values(
+      cohorts = "PCAWG", feature_classes = "Adaptive Receptor - T cell"
+    ) %>%
+    dplyr::select("sample","feature_display", "feature_value") %>%
+    tidyr::pivot_wider(
+      names_from = "feature_display", values_from = "feature_value"
+    ) %>%
+    tidyr::drop_na()
+
+  group_data <-
+    iatlas.api.client::query_tag_samples(
+      cohorts = "PCAWG", parent_tags = "Immune_Subtype"
+    ) %>%
+    dplyr::select("sample" = "sample_name", "group" = "tag_short_display")
+
+  plot_data <-
+    dplyr::inner_join(
+      feature_data,
+      group_data,
+      by = "sample"
+    )
+}
+
+# plot data example functions ----
+
+get_pcawg_feature_values_by_feature <- function(.feature){
+  feature_data <-
+    iatlas.api.client::query_feature_values(
+      cohorts = "PCAWG", features = .feature
+    ) %>%
+    dplyr::select("sample", "feature" = "feature_display", "feature_value")
+
+  group_data <-
+    iatlas.api.client::query_tag_samples(
+      cohorts = "PCAWG", parent_tags = "Immune_Subtype"
+    ) %>%
+    dplyr::select(
+      "sample" = "sample_name",
+      "group" = "tag_short_display",
+      "group_description" = "tag_characteristics",
+      "color" = "tag_color"
+    )
+
+  dplyr::inner_join(
+    feature_data,
+    group_data,
+    by = "sample"
+  )
+}
+
+get_pcawg_feature_values_by_class <- function(.class){
+  feature_data <-
+    iatlas.api.client::query_feature_values(
+      cohorts = "PCAWG", feature_classes = .class
+    ) %>%
+    dplyr::select(
+      "sample", "feature" = "feature_name", "feature_value", "feature_order"
+    )
+
+  group_data <-
+    iatlas.api.client::query_tag_samples(
+      cohorts = "PCAWG", parent_tags = "Immune_Subtype"
+    ) %>%
+    dplyr::select(
+      "sample" = "sample_name",
+      "group" = "tag_short_display",
+      "group_description" = "tag_characteristics",
+      "color" = "tag_color"
+    )
+
+  dplyr::inner_join(
+    feature_data,
+    group_data,
+    by = "sample"
+  )
+}
+

@@ -2,8 +2,10 @@
 #'
 #' @param id Module ID
 #' @param plot_data A shiny::reactive that returns a dataframe
-#' @param group_data A shiny::reactive that returns NULL or a dataframe
-#' @param eventdata A shiny::reactive that returns NULL or a dataframe
+#' @param group_data A shiny::reactive that returns NULL or a dataframe. It
+#' must have the columns "group", and "description"
+#' @param eventdata A shiny::reactive that returns NULL or a dataframe. It
+#' must have the column "x"
 #'
 #' @export
 plotly_server <- function(
@@ -16,7 +18,6 @@ plotly_server <- function(
     id,
     function(input, output, session) {
 
-      # This is so that the conditional panel can see output$show_group_text
       show_group_text <- shiny::reactive(!is.null(group_data()))
       output$show_group_text <- show_group_text
       shiny::outputOptions(output, "show_group_text", suspendWhenHidden = FALSE)
