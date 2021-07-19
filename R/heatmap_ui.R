@@ -3,13 +3,25 @@
 #'
 #' @param id Module ID
 #' @param ... Arguments passed to drilldown_scatterplot_ui
+#' @param title A string
+#' @param html A string that is HTML
 #'
 #' @export
-heatmap_ui <- function(id, ...){
+heatmap_ui <- function(
+  id,
+  title = "",
+  html = htmltools::includeMarkdown(get_markdown_path("distplot1")),
+  ...
+){
 
   ns <- shiny::NS(id)
 
   shiny::tagList(
+    titleBox(title),
+    messageBox(
+      width = 12,
+      html
+    ),
     shiny::fluidRow(
       iatlas.modules::optionsBox(
         width = 12,
