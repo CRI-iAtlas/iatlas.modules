@@ -4,10 +4,19 @@
 \alias{heatmap_ui}
 \title{Heatmap UI}
 \usage{
-heatmap_ui(id, ...)
+heatmap_ui(
+  id,
+  title = "",
+  html = htmltools::includeMarkdown(get_markdown_path("distplot1")),
+  ...
+)
 }
 \arguments{
 \item{id}{Module ID}
+
+\item{title}{A string}
+
+\item{html}{A string that is HTML}
 
 \item{...}{Arguments passed to drilldown_scatterplot_ui}
 }

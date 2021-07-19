@@ -19,6 +19,10 @@ test_that("drilldown_scatterplot_server_wide_data_2_features", {
       expect_false(display_feature_selection_ui())
       expect_type(formatted_scatterplot_data(), "list")
       expect_named(formatted_scatterplot_data(), c("x", "y", "text"))
+
+      res <- session$getReturned()()
+      expect_type(res, "list")
+      expect_named(res, c("x", "y", "text"))
     }
   )
 })
@@ -51,6 +55,7 @@ test_that("drilldown_scatterplot_server_wide_data_3_features", {
 
       session$setInputs("x_feature_choice" = "not_a_feature_x")
       expect_error(formatted_scatterplot_data())
+
     }
   )
 })
@@ -77,6 +82,10 @@ test_that("drilldown_scatterplot_server_group_set_features", {
 
       expect_type(formatted_scatterplot_data(), "list")
       expect_named(formatted_scatterplot_data(), c("x", "y", "text"))
+
+      res <- session$getReturned()()
+      expect_type(res, "list")
+      expect_named(res, c("x", "y", "text"))
     }
   )
 })

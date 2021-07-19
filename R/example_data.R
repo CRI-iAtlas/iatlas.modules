@@ -190,7 +190,7 @@ get_pcawg_feature_values_by_class <- function(.class){
       cohorts = "PCAWG", feature_classes = .class
     ) %>%
     dplyr::select(
-      "sample", "feature" = "feature_name", "feature_value", "feature_order"
+      "sample", "feature" = "feature_display", "feature_value", "feature_order"
     )
 
   group_data <-

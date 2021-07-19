@@ -58,6 +58,15 @@ test_that("heatmap_server", {
         scatterplot_data(),
         c("sample", "group", "TCR Richness", "Age At Diagnosis")
       )
+      expect_true(nrow(scatterplot_data()) > 0)
+
+      res <- session$getReturned()
+      scatterplot_data <- res$scatterplot_data()
+      expect_type(scatterplot_data, "list")
+      expect_named(scatterplot_data, c("x", "y", "text"))
+      heatmap_data <- res$heatmap_data()
+      expect_type(heatmap_data, "list")
+      expect_named(heatmap_data, c('feature', 'C1', 'C2', 'C3', 'C4', 'C6'))
     }
   )
 })
@@ -127,6 +136,14 @@ test_that("heatmap_server_multiple_summarise_functions", {
         scatterplot_data(),
         c("sample", "group", "TCR Richness", "Age At Diagnosis")
       )
+
+      res <- session$getReturned()
+      scatterplot_data <- res$scatterplot_data()
+      expect_type(scatterplot_data, "list")
+      expect_named(scatterplot_data, c("x", "y", "text"))
+      heatmap_data <- res$heatmap_data()
+      expect_type(heatmap_data, "list")
+      expect_named(heatmap_data, c('feature', 'C1', 'C2', 'C3', 'C4', 'C6'))
     }
   )
 })
