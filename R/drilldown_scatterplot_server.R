@@ -124,6 +124,7 @@ drilldown_scatterplot_server <- function(
         plot_data = formatted_scatterplot_data
       )
 
+      return(formatted_scatterplot_data)
     }
   )
 }

@@ -205,7 +205,7 @@ heatmap_server <- function(
           )
       })
 
-      drilldown_scatterplot_server(
+      formatted_scatterplot_data <- drilldown_scatterplot_server(
         "scatterplot",
         scatterplot_data,
         selected_group = selected_group,
@@ -222,6 +222,10 @@ heatmap_server <- function(
         suspendWhenHidden = FALSE
       )
 
+      return(list(
+        "scatterplot_data" = formatted_scatterplot_data,
+        "heatmap_data" = heatmap_tibble
+      ))
     }
   )
 }
