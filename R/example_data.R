@@ -211,3 +211,26 @@ get_pcawg_feature_values_by_class <- function(.class){
   )
 }
 
+get_feature_values_by_class_no_data <- function(.class){
+  dplyr::tibble(
+    "sample" = character(),
+    "group" = character(),
+    "feature" = character(),
+    "feature_value" = character(),
+    "feature_order" = character(),
+    "group_description" = character(),
+    "color" = character()
+  )
+}
+
+get_feature_values_by_feature_no_data <- function(.feature){
+  dplyr::tibble(
+    "sample" = character(),
+    "group" = character(),
+    "feature" = character(),
+    "feature_value" = character(),
+    "feature_order" = character(),
+    "group_description" = character(),
+    "color" = character()
+  )
+}

@@ -85,7 +85,7 @@ heatmap_server <- function(
 
       feature_values_tbl <- shiny::reactive({
         shiny::req(input$feature_class_choice, feature_data_function())
-        feature_data_function()(.class = input$feature_class_choice) %>%
+        tbl <- feature_data_function()(.class = input$feature_class_choice) %>%
           dplyr::select(
             "sample",
             "feature",
@@ -95,12 +95,22 @@ heatmap_server <- function(
             "group_description",
             "color"
           )
+        shiny::validate(shiny::need(
+          nrow(tbl) > 0,
+          "Feature class choice did not produce any data, please select a different one."
+        ))
+        return(tbl)
       })
 
       response_values_tbl <- shiny::reactive({
         shiny::req(input$response_feature_choice, response_data_function())
-        response_data_function()(.feature = input$response_feature_choice) %>%
+        tbl <- response_data_function()(.feature = input$response_feature_choice) %>%
           dplyr::select("sample", "response" = "feature", "response_value" = "feature_value")
+        shiny::validate(shiny::need(
+          nrow(tbl) > 0,
+          "Response feature choice did not produce any data, please select a different one."
+        ))
+        return(tbl)
       })
 
       joined_tibble <- shiny::reactive({
