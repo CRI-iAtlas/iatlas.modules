@@ -1,3 +1,51 @@
+
+test_that("heatmap_server_error_no_feature_data", {
+
+  shiny::testServer(
+    heatmap_server,
+    args = list(
+      "feature_classes" = shiny::reactive(get_pcawg_feature_class_list()),
+      "response_features" = shiny::reactive(get_pcawg_feature_list()),
+      "feature_data_function" = shiny::reactive(get_feature_values_by_class_no_data),
+      "response_data_function" = shiny::reactive(get_pcawg_feature_values_by_feature),
+      "summarise_function_list" = shiny::reactive(
+        purrr::partial(stats::cor, method = "pearson")
+      )
+    ),
+    {
+      session$setInputs("feature_class_choice" = "Adaptive Receptor - T cell")
+      expect_error(
+        feature_values_tbl(),
+        regexp = "Feature class choice did not produce any data, please select a different one."
+      )
+    }
+  )
+})
+
+test_that("heatmap_server_error_no_response_data", {
+
+  shiny::testServer(
+    heatmap_server,
+    args = list(
+      "feature_classes" = shiny::reactive(get_pcawg_feature_class_list()),
+      "response_features" = shiny::reactive(get_pcawg_feature_list()),
+      "feature_data_function" = shiny::reactive(get_pcawg_feature_values_by_class),
+      "response_data_function" = shiny::reactive(get_feature_values_by_feature_no_data),
+      "summarise_function_list" = shiny::reactive(
+        purrr::partial(stats::cor, method = "pearson")
+      )
+    ),
+    {
+      session$setInputs("response_feature_choice" = "age_at_diagnosis")
+      expect_error(
+        response_values_tbl(),
+        regexp = "Response feature choice did not produce any data, please select a different one."
+      )
+    }
+  )
+})
+
+
 test_that("heatmap_server", {
 
   shiny::testServer(
