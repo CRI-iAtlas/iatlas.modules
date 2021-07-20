@@ -103,6 +103,11 @@ drilldown_scatterplot_server <- function(
           y_feature() %in% colnames(scatterplot_data())
         )
 
+        shiny::validate(shiny::need(
+          x_feature() != y_feature(),
+          "Selected features to compare are the same, please select new features."
+        ))
+
         format_scatterplot_data(
           scatterplot_data(), x_feature(), y_feature()
         )

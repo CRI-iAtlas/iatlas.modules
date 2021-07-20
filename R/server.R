@@ -82,7 +82,8 @@ server <- function(input, output, session) {
     response_data_function = shiny::reactive(get_pcawg_feature_values_by_feature),
     summarise_function_list = shiny::reactive(
       purrr::partial(stats::cor, method = "pearson")
-    )
+    ),
+    drilldown = shiny::reactive(T)
   )
 
   heatmap_server(
@@ -96,7 +97,8 @@ server <- function(input, output, session) {
         "Pearson" = purrr::partial(stats::cor, method = "pearson"),
         "Spearman" = purrr::partial(stats::cor, method = "spearman")
         )
-    )
+    ),
+    drilldown = shiny::reactive(T)
   )
 
 
