@@ -32,7 +32,7 @@ heatmap_server <- function(
   feature_data_function,
   response_data_function,
   summarise_function_list = shiny::reactive(stats::cor),
-  drilldown               = shiny::reactive(F),
+  drilldown = shiny::reactive(F),
   ...
 ){
   shiny::moduleServer(
@@ -203,6 +203,20 @@ heatmap_server <- function(
         shiny::req(
           joined_tibble(), selected_feature(), selected_group(), response_feature()
         )
+
+        shiny::validate(shiny::need(
+          all(
+            selected_group() %in% joined_tibble()$group,
+            selected_feature() %in% joined_tibble()$feature
+          ),
+          "Plot has been updated, please click on plot."
+        ))
+
+        shiny::validate(shiny::need(
+          selected_feature() != response_feature(),
+          "Selected features to compare are the same, please select new features."
+        ))
+
         joined_tibble() %>%
           dplyr::filter(
             .data$feature == selected_feature(),
