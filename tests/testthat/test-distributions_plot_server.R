@@ -8,11 +8,12 @@ test_that("distributions_plot_server_no_classes", {
       "distplot_xlab" = shiny::reactive("Species")
     ),
     {
+      session$setInputs("scale_method_choice" = "None")
+      session$setInputs("reorder_method_choice" = "None")
+
       expect_equal(feature_classes(), character(0))
       expect_false(display_feature_class_selection_ui())
       expect_false(display_feature_selection_ui())
-      session$setInputs("scale_method_choice" = "None")
-      session$setInputs("reorder_method_choice" = "None")
       expect_named(
         distplot_data(),
         c("sample", "feature", "feature_value", "group", "group_description", "color")
@@ -41,14 +42,16 @@ test_that("distributions_plot_server_1_class", {
       "drilldown" = shiny::reactive(T)
     ),
     {
+      session$setInputs("feature_choice" = "Sepal.Length")
+      session$setInputs("scale_method_choice" = "None")
+      session$setInputs("reorder_method_choice" = "None")
+
       expect_equal(feature_classes(), "feature_class")
       expect_false(display_feature_class_selection_ui())
       expect_type(output$feature_class_selection_ui, "list")
       expect_true(display_feature_selection_ui())
       expect_type(output$feature_selection_ui, "list")
-      session$setInputs("feature_choice" = "Sepal.Length")
-      session$setInputs("scale_method_choice" = "None")
-      session$setInputs("reorder_method_choice" = "None")
+
       expect_named(
         distplot_data(),
         c("sample", "feature", "feature_value", "group", "group_description", "color")
@@ -84,15 +87,18 @@ test_that("distributions_plot_server_with_2_classes", {
       "drilldown" = shiny::reactive(T)
     ),
     {
+      session$setInputs("feature_choice" = "Sepal.Length")
+      session$setInputs("scale_method_choice" = "None")
+      session$setInputs("reorder_method_choice" = "None")
+      session$setInputs("feature_class_choice" = "feature_class2")
+
       expect_true(display_feature_class_selection_ui())
       expect_equal(feature_classes(), c("feature_class", "feature_class2"))
       expect_type(output$feature_class_selection_ui, "list")
       expect_true(display_feature_selection_ui())
-      session$setInputs("feature_class_choice" = "feature_class2")
+
       expect_type(output$feature_selection_ui, "list")
-      session$setInputs("feature_choice" = "Sepal.Length")
-      session$setInputs("scale_method_choice" = "None")
-      session$setInputs("reorder_method_choice" = "None")
+
       expect_named(
         distplot_data(),
         c("sample", "feature", "feature_value", "group", "group_description", "color")

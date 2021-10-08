@@ -16,7 +16,8 @@ ui <- function() {
           "Distribution Plots",
           distributions_plot_ui("distplot1", title = "Example 1"),
           distributions_plot_ui("distplot2", title = "Example 2"),
-          distributions_plot_ui("distplot3", title = "Example 3")
+          distributions_plot_ui("distplot3", title = "Example 3"),
+          distributions_plot_ui("distplot4", title = "Example 4")
         ),
         shiny::tabPanel(
           "Heatmaps",

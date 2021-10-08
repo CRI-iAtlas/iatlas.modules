@@ -51,6 +51,8 @@ drilldown_histogram_server <- function(
         plot_data = histogram_data()
       )
 
+      return(histogram_data)
+
     }
   )
 }

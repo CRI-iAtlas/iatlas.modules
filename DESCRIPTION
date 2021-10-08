@@ -13,8 +13,9 @@ Suggests:
     devtools, 
     testthat (>= 3.0),
     usethis,
-    iatlas.api.client
-RoxygenNote: 7.1.1
+    iatlas.api.client,
+    iatlas.modules2
+RoxygenNote: 7.1.2
 Config/testthat/edition: 3
 Imports: 
     crayon (>= 1.0),
@@ -41,4 +42,5 @@ Imports:
 URL: https://github.com/CRI-iAtlas/iatlas.modules
 BugReports: https://github.com/CRI-iAtlas/iatlas.modules/issues
 Remotes:
-    CRI-iAtlas/iatlas.api.client@main
+    CRI-iAtlas/iatlas.api.client@main,
+    CRI-iAtlas/iatlas.modules2@master

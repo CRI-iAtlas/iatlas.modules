@@ -39,7 +39,7 @@ test_that("barplot_server_iris", {
       expect_type(scatterplot_data(), "list")
       expect_named(
         scatterplot_data(),
-        c("sample", "Sepal.Length", "Petal.Length")
+        c("sample", "group", "Sepal.Length", "Petal.Length")
       )
     }
   )

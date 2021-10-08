@@ -2,13 +2,13 @@
 #' Barplot Server
 #'
 #' @param id Module ID
-#' @param plot_data_function A shiny::reactive that returns a function
+#' @param plot_data_function A shiny::reactive that returns a function.
 #' The function must take an argument called ".feature" and return a
 #' dataframe with columns "sample", "feature", "feature_value", "group",
 #' and optionally "group_description", "color"
 #' @param features A shiny::reactive that returns a dataframe with "feature",
 #' "feature_display", and any other additional optional columns to group the
-#' features by
+#' features by. If not given, the argument to plot_data_function will be Null.
 #' @param distplot_xlab A shiny::reactive that returns a string
 #' @param scale_method_default A shiny::reactive that returns a string
 #' @param feature_default A shiny::reactive that returns a string
@@ -125,6 +125,7 @@ distributions_plot_server <- function(
         if(display_feature_selection_ui()){
           shiny::req(input$feature_choice)
         }
+
         create_distplot_data(
           plot_data_function(),
           input$feature_choice,
@@ -205,7 +206,7 @@ distributions_plot_server <- function(
         eventdata = distplot_eventdata
       )
 
-      drilldown_histogram_server(
+      histogram_data <- drilldown_histogram_server(
         "histogram",
         plot_data = distplot_data,
         eventdata = distplot_eventdata,
@@ -222,6 +223,11 @@ distributions_plot_server <- function(
         "display_drilldown_ui",
         suspendWhenHidden = FALSE
       )
+
+      return(list(
+        "histogram_data" = histogram_data,
+        "distplot_data" = distplot_data
+      ))
     }
   )
 }
