@@ -13,7 +13,8 @@ Suggests:
     devtools, 
     testthat (>= 3.0),
     usethis,
-    iatlas.api.client
+    iatlas.api.client,
+    iatlas.modules2
 RoxygenNote: 7.1.1
 Config/testthat/edition: 3
 Imports: 

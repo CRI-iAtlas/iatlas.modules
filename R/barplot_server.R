@@ -117,13 +117,13 @@ barplot_server <- function(
         shiny::req(barplot_data(), selected_group())
         barplot_data() %>%
           dplyr::filter(.data$group == selected_group()) %>%
-          dplyr::select("sample", "feature", "feature_value") %>%
+          dplyr::select("sample", "group", "feature", "feature_value") %>%
           tidyr::pivot_wider(
             ., values_from = "feature_value", names_from = "feature"
           )
       })
 
-      drilldown_scatterplot_server(
+      formatted_scatterplot_data <- drilldown_scatterplot_server(
         "scatterplot",
         scatterplot_data,
         selected_group = selected_group,
@@ -139,6 +139,11 @@ barplot_server <- function(
         "display_drilldown_ui",
         suspendWhenHidden = FALSE
       )
+
+      return(list(
+        "scatterplot_data" = formatted_scatterplot_data,
+        "barplot_data" = summarized_barplot_data
+      ))
     }
   )
 }
