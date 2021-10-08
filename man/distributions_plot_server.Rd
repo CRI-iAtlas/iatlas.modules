@@ -18,14 +18,14 @@ distributions_plot_server(
 \arguments{
 \item{id}{Module ID}
 
-\item{plot_data_function}{A shiny::reactive that returns a function
+\item{plot_data_function}{A shiny::reactive that returns a function.
 The function must take an argument called ".feature" and return a
 dataframe with columns "sample", "feature", "feature_value", "group",
 and optionally "group_description", "color"}
 
 \item{features}{A shiny::reactive that returns a dataframe with "feature",
 "feature_display", and any other additional optional columns to group the
-features by}
+features by. If not given, the argument to plot_data_function will be Null.}
 
 \item{distplot_xlab}{A shiny::reactive that returns a string}
 
