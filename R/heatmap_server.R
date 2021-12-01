@@ -22,6 +22,10 @@
 #' the "feature_value" of repsonse_data_function. Each function must return one
 #' numeric value.
 #' @param drilldown A shiny::reactive that returns True or False
+#' @param default_feature A shiny::reactive that returns a string that
+#' is one of the values in response_features
+#' @param default_class A shiny::reactive that returns a string that is one of
+#' the values in feature_classes
 #' @param ... shiny::reactives passed to drilldown_scatterplot_server
 #'
 #' @export
@@ -33,6 +37,8 @@ heatmap_server <- function(
   response_data_function,
   summarise_function_list = shiny::reactive(stats::cor),
   drilldown = shiny::reactive(F),
+  default_feature = shiny::reactive(NULL),
+  default_class = shiny::reactive(NULL),
   ...
 ){
   shiny::moduleServer(
@@ -41,21 +47,42 @@ heatmap_server <- function(
 
       ns <- session$ns
 
+      default_class2 <- shiny::reactive({
+        if(is.null(default_class())){
+          shiny::req(feature_classes())
+          return(feature_classes()[[1]])
+        } else{
+          return(default_class())
+        }
+      })
+
       output$class_selection_ui <- shiny::renderUI({
-        shiny::req(feature_classes())
+        shiny::req(feature_classes(), default_class2())
         shiny::selectInput(
           inputId  = ns("feature_class_choice"),
           label    = "Select or Search for Feature Class",
-          choices  = feature_classes()
+          choices  = feature_classes(),
+          selected = default_class2()
         )
       })
 
+
+      default_feature2 <- shiny::reactive({
+        if(is.null(default_feature())){
+          shiny::req(response_features())
+          return(response_features()[[1]][[1]])
+        } else{
+          return(default_feature())
+        }
+      })
+
       output$response_selection_ui <- shiny::renderUI({
-        shiny::req(response_features())
+        shiny::req(response_features(), default_feature2())
         shiny::selectInput(
           inputId  = ns("response_feature_choice"),
           label    = "Select or Search for Response Feature",
-          choices  = response_features()
+          choices  = response_features(),
+          selected = default_feature2()
         )
       })
 

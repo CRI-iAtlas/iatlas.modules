@@ -72,7 +72,8 @@ get_pcawg_feature_class_list <- function(){
     iatlas.api.client::query_features(cohorts = "PCAWG") %>%
     dplyr::select("class") %>%
     dplyr::distinct() %>%
-    dplyr::arrange(.data$class)
+    dplyr::arrange(.data$class) %>%
+    dplyr::pull("class")
 }
 
 get_pcawg_feature_list <- function(){

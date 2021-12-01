@@ -12,6 +12,8 @@ heatmap_server(
   response_data_function,
   summarise_function_list = shiny::reactive(stats::cor),
   drilldown = shiny::reactive(F),
+  default_feature = shiny::reactive(NULL),
+  default_class = shiny::reactive(NULL),
   ...
 )
 }
@@ -43,6 +45,12 @@ the "feature_value" of repsonse_data_function. Each function must return one
 numeric value.}
 
 \item{drilldown}{A shiny::reactive that returns True or False}
+
+\item{default_feature}{A shiny::reactive that returns a string that
+is one of the values in response_features}
+
+\item{default_class}{A shiny::reactive that returns a string that is one of
+the values in feature_classes}
 
 \item{...}{shiny::reactives passed to drilldown_scatterplot_server}
 }

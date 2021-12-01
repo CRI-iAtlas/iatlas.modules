@@ -1,3 +1,30 @@
+test_that("heatmap_server_error_default_class_and_feature", {
+
+  shiny::testServer(
+    heatmap_server,
+    args = list(
+      "feature_classes" = shiny::reactive(get_pcawg_feature_class_list()),
+      "response_features" = shiny::reactive(get_pcawg_feature_list()),
+      "feature_data_function" = shiny::reactive(get_feature_values_by_class_no_data),
+      "response_data_function" = shiny::reactive(get_pcawg_feature_values_by_feature),
+      "summarise_function_list" = shiny::reactive(
+        purrr::partial(stats::cor, method = "pearson")
+      ),
+      "default_feature" = shiny::reactive("T_cells_gamma_delta"),
+      "default_class" = shiny::reactive("MCPcounter")
+    ),
+    {
+      expect_equal(default_class(), "MCPcounter")
+      expect_equal(default_class2(), "MCPcounter")
+
+      expect_equal(default_feature(), "T_cells_gamma_delta")
+      expect_equal(default_feature2(), "T_cells_gamma_delta")
+    }
+  )
+})
+
+
+
 test_that("heatmap_server_error_no_feature_data", {
 
   shiny::testServer(
@@ -198,6 +225,12 @@ test_that("heatmap_server_multiple_summarise_functions", {
       session$setInputs("feature_class_choice" = "Adaptive Receptor - T cell")
       session$setInputs("response_feature_choice" = "age_at_diagnosis")
       session$setInputs("summarise_function_choice" = "Spearman")
+
+      expect_null(default_class())
+      expect_equal(default_class2(), "Adaptive Receptor - T cell")
+
+      expect_null(default_feature())
+      expect_equal(default_feature2(), "TCR_Evenness")
 
       expect_type(output$class_selection_ui, "list")
       expect_type(output$response_selection_ui, "list")
