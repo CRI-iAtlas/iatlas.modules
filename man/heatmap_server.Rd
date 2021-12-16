@@ -30,12 +30,13 @@ The selected feature will be passed to the repsonse_data_function as .feature.}
 
 \item{feature_data_function}{A shiny::reactive that returns a function
 The function must take an argument called ".feature_class" and return a
-dataframe with columns "sample", "group", "feature", "feature_value",
-"feature_order", "group_description", "color"}
+dataframe with columns "sample_name", "group_name", "feature_name",
+"feature_display", "feature_value", "feature_order", "group_description",
+"group_color"}
 
 \item{response_data_function}{A shiny::reactive that returns a function
 The function must take an argument called ".feature" and return a
-dataframe with columns "sample", "feature_value"}
+dataframe with columns "sample_name", "feature_name", "feature_value"}
 
 \item{summarise_function_list}{A shiny::reactive that returns a either a function
 or a named list of functions. If a list is passed, it will be passed to

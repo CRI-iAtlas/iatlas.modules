@@ -10,16 +10,56 @@ test_that("distributions_plot_server_no_classes", {
     {
       session$setInputs("scale_method_choice" = "None")
       session$setInputs("reorder_method_choice" = "None")
+      session$setInputs("mock_event_data" = data.frame(
+        "curveNumber" = c(0,0),
+        "pointNumber" = c(0,0),
+        "x" = "setosa",
+        "y" = c(5.1, 2.1),
+        "key" = "setosa"
+      ))
 
       expect_equal(feature_classes(), character(0))
       expect_false(display_feature_class_selection_ui())
       expect_false(display_feature_selection_ui())
       expect_named(
         distplot_data(),
-        c("sample", "feature", "feature_value", "group", "group_description", "color")
+        c(
+          "sample_name",
+          "feature_name",
+          "feature_value",
+          "group_name",
+          "group_description",
+          "group_color"
+        )
       )
       session$setInputs("plot_type_choice" = "Violin")
       expect_type(output$distplot, "character")
+      expect_type(distplot_eventdata(), "list")
+      expect_named(
+        distplot_eventdata(),
+        c("curveNumber", "pointNumber", "x", "y", "key")
+      )
+      expect_type(group_data(), "list")
+      expect_named(group_data(), c("group_name", "group_description"))
+
+      res <- session$getReturned()
+      histogram_data <- res$histogram_data()
+      expect_type(histogram_data, "list")
+      expect_named(histogram_data, "feature_value")
+      distplot_data <- res$distplot_data()
+      expect_type(distplot_data, "list")
+      expect_named(
+        distplot_data,
+        c(
+          'sample_name',
+          'feature_name',
+          'feature_value',
+          'group_name',
+          'group_description',
+          'group_color'
+        )
+      )
+
     }
   )
 })
@@ -34,7 +74,7 @@ test_that("distributions_plot_server_1_class", {
         example_iris_data() %>%
           dplyr::select(
             "feature_class",
-            "feature_name" = "feature",
+            "feature_name",
             "feature_display",
           ) %>%
           dplyr::distinct()
@@ -54,7 +94,14 @@ test_that("distributions_plot_server_1_class", {
 
       expect_named(
         distplot_data(),
-        c("sample", "feature", "feature_value", "group", "group_description", "color")
+        c(
+          "sample_name",
+          "feature_name",
+          "feature_value",
+          "group_name",
+          "group_description",
+          "group_color"
+        )
       )
       expect_equal(distplot_source_name(), "proxy1-distplot")
       session$setInputs("plot_type_choice" = "Violin")
@@ -76,7 +123,7 @@ test_that("distributions_plot_server_with_2_classes", {
         example_iris_data() %>%
           dplyr::select(
             "feature_class",
-            "feature_name" = "feature",
+            "feature_name",
             "feature_display",
             "feature_class2",
           ) %>%
@@ -101,7 +148,14 @@ test_that("distributions_plot_server_with_2_classes", {
 
       expect_named(
         distplot_data(),
-        c("sample", "feature", "feature_value", "group", "group_description", "color")
+        c(
+          "sample_name",
+          "feature_name",
+          "feature_value",
+          "group_name",
+          "group_description",
+          "group_color"
+        )
       )
       session$setInputs("plot_type_choice" = "Violin")
       expect_type(output$distplot, "character")

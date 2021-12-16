@@ -4,8 +4,8 @@
 #' @param id Module ID
 #' @param plot_data_function A shiny::reactive that returns a function
 #' The function must take an argument called ".feature_class" and return a
-#' dataframe with columns "sample", "feature", "feature_value", "group",
-#' and optionally "group_description"
+#' dataframe with columns "sample_name", "feature_name", "feature_value",
+#' "group_name", and optionally "group_description"
 #' @param feature_classes A shiny::reactive that returns a vector of strings.
 #' One of these strings are passed to plot_data_function
 #' @param barplot_xlab A shiny::reactive that returns a string
@@ -75,9 +75,9 @@ barplot_server <- function(
         plotly_bar(
           summarized_barplot_data(),
           source_name = barplot_source_name(),
-          x_col = "group",
+          x_col = "group_name",
           y_col = "MEAN",
-          color_col = "feature",
+          color_col = "feature_name",
           error_col = "SE",
           text_col = "text",
           xlab = barplot_xlab(),
@@ -101,8 +101,8 @@ barplot_server <- function(
       barplot_eventdata <- shiny::reactive({
         shiny::req(barplot_source_name(), summarized_barplot_data())
         eventdata <- plotly::event_data("plotly_click", barplot_source_name())
-        if(is.null(eventdata) & !is.null(input$test_event_data)){
-          eventdata <- input$test_event_data
+        if(is.null(eventdata) & !is.null(input$mock_event_data)){
+          eventdata <- input$mock_event_data
         }
         shiny::validate(shiny::need(eventdata, "Click on above barplot."))
         return(eventdata)
@@ -116,10 +116,10 @@ barplot_server <- function(
       scatterplot_data <- shiny::reactive({
         shiny::req(barplot_data(), selected_group())
         barplot_data() %>%
-          dplyr::filter(.data$group == selected_group()) %>%
-          dplyr::select("sample", "group", "feature", "feature_value") %>%
+          dplyr::filter(.data$group_name == selected_group()) %>%
+          dplyr::select("sample_name", "group_name", "feature_name", "feature_value") %>%
           tidyr::pivot_wider(
-            ., values_from = "feature_value", names_from = "feature"
+            ., values_from = "feature_value", names_from = "feature_name"
           )
       })
 

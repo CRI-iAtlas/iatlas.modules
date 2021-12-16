@@ -21,8 +21,8 @@ barplot_server(
 
 \item{plot_data_function}{A shiny::reactive that returns a function
 The function must take an argument called ".feature_class" and return a
-dataframe with columns "sample", "feature", "feature_value", "group",
-and optionally "group_description"}
+dataframe with columns "sample_name", "feature_name", "feature_value",
+"group_name", and optionally "group_description"}
 
 \item{feature_classes}{A shiny::reactive that returns a vector of strings.
 One of these strings are passed to plot_data_function}

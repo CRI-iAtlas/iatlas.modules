@@ -6,7 +6,7 @@ test_that("drilldown_scatterplot_server_wide_data_2_features", {
     args = list(
       "scatterplot_data" = shiny::reactive(
         get_pcawg_scatterplot_example() %>%
-          dplyr::select("sample", "group", "TCR Evenness", "TCR Richness"),
+          dplyr::select("sample_name", "group_name", "TCR Evenness", "TCR Richness"),
       ),
       "selected_group" = shiny::reactive("C1")
     ),

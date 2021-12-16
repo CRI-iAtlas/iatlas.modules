@@ -14,12 +14,12 @@ test_that("plotly_server", {
     )  %>%
   dplyr::mutate("error" = .data$y / sqrt(.data$count))
 
-  eventdata <-dplyr::filter(plot_data, x == "Aleena")
+  eventdata <- dplyr::filter(plot_data, x == "Aleena")
 
   group_data <- plot_data %>%
-    dplyr::select("group" = "x") %>%
+    dplyr::select("group_name" = "x") %>%
     dplyr::distinct() %>%
-    dplyr::mutate("description" = stringr::str_c("Race: ", .data$group))
+    dplyr::mutate("group_description" = stringr::str_c("Race: ", .data$group_name))
 
 
   shiny::testServer(

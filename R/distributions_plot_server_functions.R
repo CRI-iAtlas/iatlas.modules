@@ -47,8 +47,8 @@ create_distplot_data <- function(
     reafctor_by_tbl_value_column(reorder_method_choice) %>%
     dplyr::select(dplyr::any_of(
       c(
-        "sample", "feature", "feature_value", "group", "group_description",
-        "color"
+        "sample_name", "feature_name", "feature_value", "group_name", "group_description",
+        "group_color"
       )
     ))
 }

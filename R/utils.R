@@ -81,7 +81,7 @@ scale_tbl_value_column <- function(tbl, scale_method = "None"){
 #' Refactor By Tibble Value Column
 #'
 #' @param reorder_method One of "None", "Median", "Mean", "Max", "Min
-#' @param tbl A Tibble with columns "feature_value", "group"
+#' @param tbl A Tibble with columns "feature_value", "group_name"
 #'
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
@@ -92,7 +92,7 @@ reafctor_by_tbl_value_column <- function(tbl, reorder_method = "None"){
   if(reorder_method == "None") {
     tbl <- tbl %>%
       dplyr::mutate(
-        "group" = factor(.data$group)
+        "group_name" = factor(.data$group_name)
       )
   } else {
     reorder_method <- switch(
@@ -108,10 +108,10 @@ reafctor_by_tbl_value_column <- function(tbl, reorder_method = "None"){
         "feature_value" = reorder_method(.data$feature_value), .groups = "drop"
       ) %>%
       dplyr::arrange(.data$feature_value) %>%
-      dplyr::pull("group")
+      dplyr::pull("group_name")
     tbl <- tbl %>%
       dplyr::mutate(
-        "group" = factor(.data$group, levels = new_levels)
+        "group_name" = factor(.data$group, levels = new_levels)
       )
   }
 }
@@ -269,8 +269,8 @@ get_values_from_eventdata <- function(eventdata, col = "x"){
 create_group_text_from_eventdata <- function(eventdata, group_tbl){
   selected_group <- get_values_from_eventdata(eventdata)
   group_tbl %>%
-    dplyr::filter(.data$group == selected_group) %>%
-    dplyr::pull("description")
+    dplyr::filter(.data$group_name == selected_group) %>%
+    dplyr::pull("group_description")
 }
 
 # misc ------------------------------------------------------------------------
