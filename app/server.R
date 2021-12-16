@@ -46,7 +46,7 @@ server <- function(input, output, session) {
       example_iris_data() %>%
         dplyr::select(
           "feature_class",
-          "feature_name" = "feature",
+          "feature_name",
           "feature_display"
         ) %>%
         dplyr::distinct()
@@ -63,7 +63,7 @@ server <- function(input, output, session) {
         dplyr::select(
           "Class1" = "feature_class",
           "Class2" = "feature_class2",
-          "feature_name" = "feature",
+          "feature_name",
           "feature_display"
         ) %>%
         dplyr::distinct()
@@ -80,12 +80,13 @@ server <- function(input, output, session) {
       function(.feature){
         iatlas.modules2::pcawg_immune_subtype_cohort_obj$get_gene_values(entrez = as.integer(.feature)) %>%
           dplyr::select(
-            "sample" = "sample_name",
-            "group" = "group_short_name",
-            "feature" = "hgnc",
+            "sample_name",
+            "group_name" = "group_short_name",
+            "feature_name" = "entrez",
+            "feature_display" = "hgnc",
             "feature_value" = "rna_seq_expr",
             "group_description" = "group_characteristics",
-            "color" = "group_color"
+            "group_color" = "group_color"
           )
       }
     }),

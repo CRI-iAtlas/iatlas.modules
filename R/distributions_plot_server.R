@@ -1,12 +1,13 @@
 
-#' Barplot Server
+#' Distributions Plot Server
 #'
 #' @param id Module ID
 #' @param plot_data_function A shiny::reactive that returns a function.
 #' The function must take an argument called ".feature" and return a
-#' dataframe with columns "sample", "feature", "feature_value", "group",
-#' and optionally "group_description", "color"
-#' @param features A shiny::reactive that returns a dataframe with "feature",
+#' dataframe with columns "sample_name", "feature_name", "feature_value",
+#' "group_name",
+#' and optionally "group_description", "group_color"
+#' @param features A shiny::reactive that returns a dataframe with "feature_name",
 #' "feature_display", and any other additional optional columns to group the
 #' features by. If not given, the argument to plot_data_function will be Null.
 #' @param distplot_xlab A shiny::reactive that returns a string
@@ -143,9 +144,9 @@ distributions_plot_server <- function(
 
       plot_fill_colors <- shiny::reactive({
         shiny::req(distplot_data())
-        if("color" %in% colnames(distplot_data())){
+        if("group_color" %in% colnames(distplot_data())){
           fill_colors <- distplot_data() %>%
-            dplyr::select("group", "color") %>%
+            dplyr::select("group_name", "group_color") %>%
             dplyr::distinct() %>%
             tibble::deframe(.)
         } else {
@@ -176,7 +177,7 @@ distributions_plot_server <- function(
         plotly_function()(
           plot_data = distplot_data(),
           source_name = distplot_source_name(),
-          x_col = "group",
+          x_col = "group_name",
           y_col = "feature_value",
           fill_colors = plot_fill_colors(),
           title = plot_title(),
@@ -188,6 +189,9 @@ distributions_plot_server <- function(
       distplot_eventdata <- shiny::reactive({
         shiny::req(distplot_source_name(), distplot_data(), plotly_function())
         eventdata <- plotly::event_data("plotly_click", distplot_source_name())
+        if(is.null(eventdata) & !is.null(input$mock_event_data)){
+          eventdata <- input$mock_event_data
+        }
         shiny::validate(shiny::need(eventdata, "Click on above barplot."))
         return(eventdata)
       })
@@ -195,7 +199,7 @@ distributions_plot_server <- function(
       group_data <- shiny::reactive({
         shiny::req("group_description" %in% colnames(distplot_data()))
         distplot_data() %>%
-          dplyr::select("group", "description" = "group_description") %>%
+          dplyr::select("group_name", "group_description") %>%
           dplyr::distinct()
       })
 

@@ -2,7 +2,7 @@
 % Please edit documentation in R/distributions_plot_server.R
 \name{distributions_plot_server}
 \alias{distributions_plot_server}
-\title{Barplot Server}
+\title{Distributions Plot Server}
 \usage{
 distributions_plot_server(
   id,
@@ -20,10 +20,11 @@ distributions_plot_server(
 
 \item{plot_data_function}{A shiny::reactive that returns a function.
 The function must take an argument called ".feature" and return a
-dataframe with columns "sample", "feature", "feature_value", "group",
-and optionally "group_description", "color"}
+dataframe with columns "sample_name", "feature_name", "feature_value",
+"group_name",
+and optionally "group_description", "group_color"}
 
-\item{features}{A shiny::reactive that returns a dataframe with "feature",
+\item{features}{A shiny::reactive that returns a dataframe with "feature_name",
 "feature_display", and any other additional optional columns to group the
 features by. If not given, the argument to plot_data_function will be Null.}
 
@@ -38,5 +39,5 @@ features by. If not given, the argument to plot_data_function will be Null.}
 \item{...}{shiny::reactives passed to drilldown_histogram_server}
 }
 \description{
-Barplot Server
+Distributions Plot Server
 }

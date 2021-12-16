@@ -6,7 +6,7 @@ test_that("drilldown_histogram_server", {
       "plot_data" = shiny::reactive(
         dplyr::select(
           example_iris_data(),
-          "group",
+          "group_name",
           "feature_value"
         )
       ),

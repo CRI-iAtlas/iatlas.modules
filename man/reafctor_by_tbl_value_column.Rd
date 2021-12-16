@@ -7,7 +7,7 @@
 reafctor_by_tbl_value_column(tbl, reorder_method = "None")
 }
 \arguments{
-\item{tbl}{A Tibble with columns "feature_value", "group"}
+\item{tbl}{A Tibble with columns "feature_value", "group_name"}
 
 \item{reorder_method}{One of "None", "Median", "Mean", "Max", "Min}
 }

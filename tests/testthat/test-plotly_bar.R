@@ -3,9 +3,9 @@ test_that("plotly_bar_one_group", {
     summarise_barplot_se(title = "Sample") %>%
     plotly_bar(
       source_name = "test",
-      x_col = "group",
+      x_col = "group_name",
       y_col = "MEAN",
-      color_col = "feature",
+      color_col = "feature_name",
       error_col = "SE",
       text_col = "text"
     )
@@ -18,9 +18,9 @@ test_that("plotly_bar_two_groups", {
     summarise_barplot_se(title = "Sample") %>%
     plotly_bar(
       source_name = "test",
-      x_col = "group",
+      x_col = "group_name",
       y_col = "MEAN",
-      color_col = "feature",
+      color_col = "feature_name",
       text_col = "text"
     )
   expect_type(p, "list")

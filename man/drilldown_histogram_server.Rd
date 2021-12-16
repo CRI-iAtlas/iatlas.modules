@@ -10,7 +10,7 @@ drilldown_histogram_server(id, plot_data, eventdata, ...)
 \item{id}{Module ID}
 
 \item{plot_data}{A shiny::reactive that returns a dataframe with columns
-"group", "feature_value"}
+"group_name", "feature_value"}
 
 \item{eventdata}{A shiny::reactive that returns a dataframe with column
 "key"}

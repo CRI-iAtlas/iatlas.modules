@@ -3,7 +3,7 @@
 #'
 #' @param id Module ID
 #' @param plot_data A shiny::reactive that returns a dataframe with columns
-#' "group", "feature_value"
+#' "group_name", "feature_value"
 #' @param eventdata A shiny::reactive that returns a dataframe with column
 #' "key"
 #' @param ... arguments sents to plotly_histogram
@@ -30,10 +30,10 @@ drilldown_histogram_server <- function(
         shiny::req(
           plot_data(),
           selected_group(),
-          selected_group() %in% plot_data()$group
+          selected_group() %in% plot_data()$group_name
         )
         plot_data() %>%
-          dplyr::filter(.data$group == selected_group()) %>%
+          dplyr::filter(.data$group_name == selected_group()) %>%
           dplyr::select("feature_value")
       })
 

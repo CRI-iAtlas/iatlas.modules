@@ -16,11 +16,11 @@ format_scatterplot_data <- function(
 ){
   plot_data %>%
     dplyr::select(dplyr::all_of(c(
-      "sample", "group", "x" =  x_feature, "y" = y_feature
+      "sample_name", "group_name", "x" =  x_feature, "y" = y_feature
     ))) %>%
     tidyr::drop_na() %>%
     create_plotly_text(
-      .data$sample, .data$group, c("x", "y"), "Sample"
+      .data$sample_name, .data$group_name, c("x", "y"), "Sample"
     ) %>%
     dplyr::select("x", "y", "text")
 }
