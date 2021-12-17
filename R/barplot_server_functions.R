@@ -5,6 +5,7 @@ build_barplot_data <- function(plot_data_function, feature_class_choice){
       c(
         "sample_name",
         "feature_name",
+        "feature_display",
         "feature_value",
         "group_name",
         "group_description"
@@ -14,16 +15,16 @@ build_barplot_data <- function(plot_data_function, feature_class_choice){
 
 summarise_barplot_se <- function(data, title){
   data %>%
-    dplyr::select("group_name", "feature_name", "feature_value") %>%
+    dplyr::select("group_name", "feature_display", "feature_value") %>%
     tidyr::drop_na() %>%
-    dplyr::group_by_at(dplyr::vars("group_name", "feature_name")) %>%
+    dplyr::group_by_at(dplyr::vars("group_name", "feature_display")) %>%
     dplyr::summarise(
       "MEAN" = mean(.data$feature_value),
       "SE" = .data$MEAN / sqrt(dplyr::n()),
       .groups = "drop"
     ) %>%
     create_plotly_text(
-      .data$feature_name,
+      .data$feature_display,
       .data$group_name,
       c("MEAN", "SE"),
       title

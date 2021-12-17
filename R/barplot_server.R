@@ -4,8 +4,8 @@
 #' @param id Module ID
 #' @param plot_data_function A shiny::reactive that returns a function
 #' The function must take an argument called ".feature_class" and return a
-#' dataframe with columns "sample_name", "feature_name", "feature_value",
-#' "group_name", and optionally "group_description"
+#' dataframe with columns "sample_name", "feature_name", "feature_display",
+#' "feature_value", "group_name", and optionally "group_description"
 #' @param feature_classes A shiny::reactive that returns a vector of strings.
 #' One of these strings are passed to plot_data_function
 #' @param barplot_xlab A shiny::reactive that returns a string
@@ -77,7 +77,7 @@ barplot_server <- function(
           source_name = barplot_source_name(),
           x_col = "group_name",
           y_col = "MEAN",
-          color_col = "feature_name",
+          color_col = "feature_display",
           error_col = "SE",
           text_col = "text",
           xlab = barplot_xlab(),
@@ -117,9 +117,9 @@ barplot_server <- function(
         shiny::req(barplot_data(), selected_group())
         barplot_data() %>%
           dplyr::filter(.data$group_name == selected_group()) %>%
-          dplyr::select("sample_name", "group_name", "feature_name", "feature_value") %>%
+          dplyr::select("sample_name", "group_name", "feature_display", "feature_value") %>%
           tidyr::pivot_wider(
-            ., values_from = "feature_value", names_from = "feature_name"
+            ., values_from = "feature_value", names_from = "feature_display"
           )
       })
 

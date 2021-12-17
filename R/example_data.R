@@ -11,7 +11,8 @@ example_starwars_data <- function(){
     ) %>%
     tidyr::pivot_longer(
       -c("sample_name", "group_name"), names_to = "feature_name", values_to = "feature_value"
-    )
+    ) %>%
+    dplyr::mutate("feature_display" = .data$feature_name)
 }
 
 example_starwars_data_func <- function(.feature_class){
@@ -62,7 +63,7 @@ example_iris_data_func <- function(.feature_class = NULL, .feature = NULL){
   dplyr::select(iris_data, -"feature_class")
 }
 
-# heatmap examples ----
+# pcawg examples ----
 
 get_pcawg_feature_class_list <- function(){
   features <-
@@ -246,3 +247,53 @@ get_feature_values_by_feature_no_data <- function(.feature){
     "group_color" = character()
   )
 }
+
+# TCGA
+
+get_tcga_feature_values_by_feature <- function(.feature){
+  feature_data <-
+    iatlas.api.client::query_feature_values(
+      cohorts = "TCGA", features = .feature
+    ) %>%
+    dplyr::select(
+      "sample_name" = "sample",
+      "feature_name",
+      "feature_display",
+      "feature_value"
+    )
+
+  group_data <-
+    iatlas.api.client::query_tag_samples(
+      cohorts = "TCGA", parent_tags = "Immune_Subtype"
+    ) %>%
+    dplyr::select(
+      "sample_name",
+      "group_name" = "tag_short_display",
+      "group_description" = "tag_characteristics",
+      "group_color" = "tag_color"
+    )
+
+  dplyr::inner_join(
+    feature_data,
+    group_data,
+    by = "sample_name"
+  )
+}
+
+get_tcga_cell_proportions <- function(.feature_class){
+  result <-
+    get_tcga_feature_values_by_feature(
+      c("leukocyte_fraction", "Stromal_Fraction", "Tumor_fraction")
+    )  %>%
+    dplyr::select(
+      "sample_name",
+      "group_name",
+      "feature_name",
+      "feature_display",
+      "feature_value",
+      "group_description"
+    )
+}
+
+
+
