@@ -6,9 +6,11 @@
 \usage{
 distributions_plot_server(
   id,
-  plot_data_function,
-  features = shiny::reactive(NULL),
+  sample_data_function,
+  feature_data = shiny::reactive(NULL),
+  group_data = shiny::reactive(NULL),
   distplot_xlab = shiny::reactive(""),
+  distplot_title = shiny::reactive(NULL),
   scale_method_default = shiny::reactive("None"),
   feature_default = shiny::reactive(NULL),
   drilldown = shiny::reactive(F),
@@ -18,15 +20,19 @@ distributions_plot_server(
 \arguments{
 \item{id}{Module ID}
 
-\item{plot_data_function}{A shiny::reactive that returns a function.
+\item{sample_data_function}{A shiny::reactive that returns a function.
 The function must take an argument called ".feature" and return a
-dataframe with columns "sample_name", "feature_name", "feature_value",
-"group_name",
-and optionally "group_description", "group_color"}
+dataframe with columns "sample_name", "feature_name", "group_name", and
+"feature_value",}
 
-\item{features}{A shiny::reactive that returns a dataframe with "feature_name",
-"feature_display", and any other additional optional columns to group the
-features by. If not given, the argument to plot_data_function will be Null.}
+\item{feature_data}{A shiny::reactive that returns a dataframe with columns
+"feature_name", and "feature_display". Any other additional columns will be
+ names of classes to group the features by. Each value in the "feature_name"
+ column should only appear once.}
+
+\item{group_data}{A shiny::reactive that returns a dataframe with columns
+"group_name", "group_display", and optionally "group_description" and
+"group_color". Each value in the "group_name"column should only appear once.}
 
 \item{distplot_xlab}{A shiny::reactive that returns a string}
 

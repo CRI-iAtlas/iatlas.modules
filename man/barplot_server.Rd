@@ -6,8 +6,9 @@
 \usage{
 barplot_server(
   id,
-  plot_data_function,
-  feature_classes = shiny::reactive(NULL),
+  sample_data_function,
+  feature_data = shiny::reactive(NULL),
+  group_data = shiny::reactive(NULL),
   barplot_xlab = shiny::reactive(""),
   barplot_ylab = shiny::reactive(""),
   barplot_title = shiny::reactive(""),
@@ -17,15 +18,19 @@ barplot_server(
 )
 }
 \arguments{
-\item{id}{Module ID}
+\item{id}{Module ID
+#' @param sample_data_function A shiny::reactive that returns a function.
+The function must take an argument called ".feature" and return a
+dataframe with columns "sample_name", "feature_name", "group_name", and
+"feature_value",}
 
-\item{plot_data_function}{A shiny::reactive that returns a function
-The function must take an argument called ".feature_class" and return a
-dataframe with columns "sample_name", "feature_name", "feature_display",
-"feature_value", "group_name", and optionally "group_description"}
+\item{feature_data}{A shiny::reactive that returns a dataframe with columns
+"feature_name","feature_display", and optionally "feature_class. Each value
+ in the "feature_name" column should only appear once.}
 
-\item{feature_classes}{A shiny::reactive that returns a vector of strings.
-One of these strings are passed to plot_data_function}
+\item{group_data}{A shiny::reactive that returns a dataframe with columns
+"group_name", "group_display", and optionally "group_description" and
+"group_color". Each value in the "group_name" column should only appear once.}
 
 \item{barplot_xlab}{A shiny::reactive that returns a string}
 
