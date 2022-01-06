@@ -3,7 +3,7 @@
 #' @param id Module ID
 #' @param plot_data A shiny::reactive that returns a dataframe
 #' @param group_data A shiny::reactive that returns NULL or a dataframe. It
-#' must have the columns "group", and "description"
+#' must have the columns "group_name", "group_display" and "group_description"
 #' @param eventdata A shiny::reactive that returns NULL or a dataframe. It
 #' must have the column "x"
 #'
