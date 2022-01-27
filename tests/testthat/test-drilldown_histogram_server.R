@@ -4,11 +4,14 @@ test_that("drilldown_histogram_server", {
     drilldown_histogram_server,
     args = list(
       "plot_data" = shiny::reactive(
-        dplyr::select(
-          example_iris_data(),
-          "group_name",
-          "feature_value"
-        )
+        example_iris_data() %>%
+          dplyr::select(
+            "group_name",
+            "feature_value"
+          ) %>%
+          dplyr::mutate(
+            "group_display" = .data$group_name
+          )
       ),
       "eventdata" = shiny::reactive(dplyr::tibble("key" =  "setosa"))
     ),

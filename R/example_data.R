@@ -24,8 +24,10 @@ utils::globalVariables("iris")
 example_iris_data <- function(.feature = NULL, .feature_class = NULL){
   tbl <- iris %>%
     dplyr::as_tibble() %>%
-    dplyr::mutate("sample_name" = as.character(1:dplyr::n())) %>%
     dplyr::rename("group_name" = "Species") %>%
+    dplyr::mutate(
+      "sample_name" = as.character(1:dplyr::n())
+    ) %>%
     tidyr::pivot_longer(
       !c("group_name", "sample_name"),
       names_to = "feature_name",
@@ -51,7 +53,13 @@ example_iris_data <- function(.feature = NULL, .feature_class = NULL){
     tbl <- dplyr::filter(tbl, .data$feature_class == .feature_class)
   }
 
-  dplyr::select(tbl, "sample_name", "feature_name", "group_name", "feature_value")
+  dplyr::select(
+    tbl,
+    "sample_name",
+    "feature_name",
+    "group_name",
+    "feature_value"
+  )
 }
 
 

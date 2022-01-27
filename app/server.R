@@ -17,41 +17,6 @@ server <- function(input, output, session) {
     barplot_xlab = shiny::reactive("Species"),
     barplot_ylab = shiny::reactive("Height")
   )
-  #
-  # barplot_server(
-  #   "barplot2",
-  #   shiny::reactive(example_iris_data_func),
-  #   feature_classes = shiny::reactive(c("Length", "Width")),
-  #   barplot_xlab = shiny::reactive("Species"),
-  #   drilldown = shiny::reactive(T)
-  # )
-  #
-  # barplot_server(
-  #   "barplot3",
-  #   shiny::reactive(example_iris_data_func),
-  #   barplot_xlab = shiny::reactive("Species"),
-  #   drilldown = shiny::reactive(T)
-  # )
-  #
-  # barplot_server(
-  #   "barplot4",
-  #   shiny::reactive(example_iris_data_func),
-  #   barplot_xlab = shiny::reactive("Species"),
-  #   drilldown = shiny::reactive(T),
-  #   x_feature_input = shiny::reactive("Petal.Length"),
-  #   y_feature_input = shiny::reactive("Petal.Width")
-  # )
-  #
-  # barplot_server(
-  #   "barplot5",
-  #   shiny::reactive(get_tcga_cell_proportions),
-  #   barplot_xlab    = shiny::reactive("Fraction type by group"),
-  #   barplot_ylab    = shiny::reactive("Fraction mean"),
-  #   barplot_label   = shiny::reactive("Fraction"),
-  #   drilldown       = shiny::reactive(T),
-  #   y_feature_input = shiny::reactive("Leukocyte Fraction"),
-  #   x_feature_input = shiny::reactive("Stromal Fraction")
-  # )
 
   distributions_plot_server(
     "distplot1",
