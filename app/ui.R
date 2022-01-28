@@ -20,7 +20,7 @@ ui <- function() {
         shiny::tabPanel(
           "Heatmaps",
           heatmap_ui("heatmap1"),
-          # heatmap_ui("heatmap2")
+          heatmap_ui("heatmap2")
         )
       )
     )
