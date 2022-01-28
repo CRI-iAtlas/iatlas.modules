@@ -5,8 +5,8 @@ test_that("heatmap_server", {
     args = list(
       "feature_sample_data_function" = shiny::reactive(example_iris_data),
       "response_sample_data_function" = shiny::reactive(example_iris_data),
-      "feature_data" = shiny::reactive(example_iris_data_features_1_class2()),
-      "response_data" = shiny::reactive(example_iris_data_features_1_class2()),
+      "feature_data" = shiny::reactive(example_iris_data_features_1_class()),
+      "response_data" = shiny::reactive(example_iris_data_features_1_class()),
       "group_data" = shiny::reactive(example_iris_data_groups()),
       "summarise_function_list" = shiny::reactive(
         purrr::partial(stats::cor, method = "pearson")
@@ -133,8 +133,8 @@ test_that("heatmap_server_multiple_summarise_functions", {
     args = list(
       "feature_sample_data_function" = shiny::reactive(example_iris_data),
       "response_sample_data_function" = shiny::reactive(example_iris_data),
-      "feature_data" = shiny::reactive(example_iris_data_features_1_class2()),
-      "response_data" = shiny::reactive(example_iris_data_features_1_class2()),
+      "feature_data" = shiny::reactive(example_iris_data_features_1_class()),
+      "response_data" = shiny::reactive(example_iris_data_features_1_class()),
       "group_data" = shiny::reactive(example_iris_data_groups()),
       "summarise_function_list" = shiny::reactive(
         list(
@@ -185,8 +185,8 @@ test_that("heatmap_server_error_no_feature_data", {
     args = list(
       "feature_sample_data_function" = shiny::reactive(example_iris_data),
       "response_sample_data_function" = shiny::reactive(example_iris_data),
-      "feature_data" = shiny::reactive(example_iris_data_features_1_class2()),
-      "response_data" = shiny::reactive(example_iris_data_features_1_class2()),
+      "feature_data" = shiny::reactive(example_iris_data_features_1_class()),
+      "response_data" = shiny::reactive(example_iris_data_features_1_class()),
       "group_data" = shiny::reactive(example_iris_data_groups()),
       "summarise_function_list" = shiny::reactive(
         purrr::partial(stats::cor, method = "pearson")
@@ -210,8 +210,8 @@ test_that("heatmap_server_error_no_response_data", {
     args = list(
       "feature_sample_data_function" = shiny::reactive(example_iris_data),
       "response_sample_data_function" = shiny::reactive(example_iris_data),
-      "feature_data" = shiny::reactive(example_iris_data_features_1_class2()),
-      "response_data" = shiny::reactive(example_iris_data_features_1_class2()),
+      "feature_data" = shiny::reactive(example_iris_data_features_1_class()),
+      "response_data" = shiny::reactive(example_iris_data_features_1_class()),
       "group_data" = shiny::reactive(example_iris_data_groups()),
       "summarise_function_list" = shiny::reactive(
         purrr::partial(stats::cor, method = "pearson")
@@ -235,8 +235,8 @@ test_that("heatmap_server_chosen_features_are_equal", {
     args = list(
       "feature_sample_data_function" = shiny::reactive(example_iris_data),
       "response_sample_data_function" = shiny::reactive(example_iris_data),
-      "feature_data" = shiny::reactive(example_iris_data_features_1_class2()),
-      "response_data" = shiny::reactive(example_iris_data_features_1_class2()),
+      "feature_data" = shiny::reactive(example_iris_data_features_1_class()),
+      "response_data" = shiny::reactive(example_iris_data_features_1_class()),
       "group_data" = shiny::reactive(example_iris_data_groups()),
       "summarise_function_list" = shiny::reactive(
         purrr::partial(stats::cor, method = "pearson")
@@ -268,8 +268,8 @@ test_that("heatmap_server_plot_updated", {
     args = list(
       "feature_sample_data_function" = shiny::reactive(example_iris_data),
       "response_sample_data_function" = shiny::reactive(example_iris_data),
-      "feature_data" = shiny::reactive(example_iris_data_features_1_class2()),
-      "response_data" = shiny::reactive(example_iris_data_features_1_class2()),
+      "feature_data" = shiny::reactive(example_iris_data_features_1_class()),
+      "response_data" = shiny::reactive(example_iris_data_features_1_class()),
       "group_data" = shiny::reactive(example_iris_data_groups()),
       "summarise_function_list" = shiny::reactive(
         purrr::partial(stats::cor, method = "pearson")

@@ -2,7 +2,7 @@
 #' Barplot Server
 #'
 #' @param id Module ID
-#' #' @param sample_data_function A shiny::reactive that returns a function.
+#' @param sample_data_function A shiny::reactive that returns a function.
 #' The function must take an argument called ".feature" and return a
 #' dataframe with columns "sample_name", "feature_name", "group_name", and
 #' "feature_value",
@@ -41,7 +41,11 @@ barplot_server <- function(
       validated_feature_data <- shiny::reactive({
         if(is.null(feature_data())) return(NULL)
         validate_feature_data(feature_data())
-        return(feature_data())
+
+        dplyr::select(
+          feature_data(),
+          dplyr::any_of(c( "feature_name", "feature_display", "feature_class"))
+        )
       })
 
       validated_group_data <- shiny::reactive({

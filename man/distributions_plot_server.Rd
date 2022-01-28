@@ -36,6 +36,8 @@ dataframe with columns "sample_name", "feature_name", "group_name", and
 
 \item{distplot_xlab}{A shiny::reactive that returns a string}
 
+\item{distplot_title}{A shiny::reactive that returns a string}
+
 \item{scale_method_default}{A shiny::reactive that returns a string}
 
 \item{feature_default}{A shiny::reactive that returns a string}

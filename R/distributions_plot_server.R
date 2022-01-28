@@ -14,6 +14,7 @@
 #' "group_name", "group_display", and optionally "group_description" and
 #' "group_color". Each value in the "group_name"column should only appear once.
 #' @param distplot_xlab A shiny::reactive that returns a string
+#' @param distplot_title A shiny::reactive that returns a string
 #' @param scale_method_default A shiny::reactive that returns a string
 #' @param feature_default A shiny::reactive that returns a string
 #' @param drilldown A shiny::reactive that returns True or False

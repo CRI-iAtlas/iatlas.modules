@@ -89,7 +89,9 @@ test_that("distributions_plot_server_1_class", {
     distributions_plot_server,
     args = list(
       "sample_data_func" = shiny::reactive(example_iris_data),
-      "feature_data" = shiny::reactive(example_iris_data_features_1_class()),
+      "feature_data" = shiny::reactive(
+        example_distributions_iris_data_feature_data_1_class()
+      ),
       "drilldown" = shiny::reactive(T),
       "distplot_xlab" = shiny::reactive("Species")
     ),
@@ -196,7 +198,9 @@ test_that("distributions_plot_server_2_classes", {
     distributions_plot_server,
     args = list(
       "sample_data_func" = shiny::reactive(example_iris_data),
-      "feature_data" = shiny::reactive(example_iris_data_features_2_classes()),
+      "feature_data" = shiny::reactive(
+        example_distributions_iris_data_feature_data_2_classes()
+      ),
       "group_data" = shiny::reactive(example_iris_data_groups()),
       "drilldown" = shiny::reactive(T),
       "distplot_xlab" = shiny::reactive("Species")
@@ -313,7 +317,9 @@ test_that("distributions_plot_server_2_classes", {
     distributions_plot_server,
     args = list(
       "sample_data_func" = shiny::reactive(example_iris_data),
-      "feature_data" = shiny::reactive(example_iris_data_features_2_classes()),
+      "feature_data" = shiny::reactive(
+        example_distributions_iris_data_feature_data_2_classes()
+      ),
       "group_data" = shiny::reactive(example_iris_data_groups2()),
       "drilldown" = shiny::reactive(T),
       "distplot_xlab" = shiny::reactive("Species")
@@ -387,7 +393,9 @@ test_that("distributions_plot_server_data_missing_column2", {
     distributions_plot_server,
     args = list(
       "sample_data_func" = shiny::reactive(example_iris_data),
-      "feature_data" = shiny::reactive(example_iris_data_features_missing_column()),
+      "feature_data" = shiny::reactive(
+        example_distributions_iris_data_feature_data_missing_column()
+      ),
       "drilldown" = shiny::reactive(T),
       "distplot_xlab" = shiny::reactive("Species")
     ),
@@ -415,7 +423,9 @@ test_that("distributions_plot_server_data_duplicated_row", {
     distributions_plot_server,
     args = list(
       "sample_data_func" = shiny::reactive(example_iris_data),
-      "feature_data" = shiny::reactive(example_iris_data_features_duplicated_feature()),
+      "feature_data" = shiny::reactive(
+        example_distributions_iris_data_feature_data_duplicated_feature()
+      ),
       "drilldown" = shiny::reactive(T),
       "distplot_xlab" = shiny::reactive("Species")
     ),

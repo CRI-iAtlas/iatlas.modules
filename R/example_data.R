@@ -48,7 +48,7 @@ example_iris_data_missing_column <- function(.feature = NULL, .feature_class = N
   dplyr::select(example_iris_data(), "sample_name", "feature_name", "group_name")
 }
 
-example_iris_data_features_2_classes <- function(){
+example_iris_data_feature_data <- function(){
   dplyr::tribble(
     ~feature_name,  ~feature_display, ~Class1,  ~Class2, ~feature_order,
     "Sepal.Length", "Sepal Length",   "Length", "Sepal", 1,
@@ -59,39 +59,37 @@ example_iris_data_features_2_classes <- function(){
 }
 
 example_iris_data_features_1_class <- function(){
-  dplyr::select(
-    example_iris_data_features_2_classes(),
-    "feature_name",
-    "feature_display",
-    "Class1"
-  )
+  example_iris_data_feature_data() %>%
+    dplyr::select(
+      "feature_name",
+      "feature_display",
+      "feature_class" = "Class1",
+      "feature_order"
+    )
 }
 
-example_iris_data_features_1_class2 <- function(){
-  dplyr::select(
-    example_iris_data_features_2_classes(),
-    "feature_name",
-    "feature_display",
-    "feature_class" = "Class1",
-    "feature_order"
-  )
+example_distributions_iris_data_feature_data_2_classes <- function(){
+  example_iris_data_feature_data() %>%
+    dplyr::select(-"feature_order")
 }
 
-example_iris_data_features_missing_column <- function(){
-  dplyr::select(
-    example_iris_data_features_2_classes(),
-    "feature_name",
-    "Class1"
-  )
+example_distributions_iris_data_feature_data_1_class <- function(){
+  example_iris_data_feature_data() %>%
+    dplyr::select(-c("feature_order", "Class2"))
 }
 
-example_iris_data_features_duplicated_feature <- function(){
-  tibble::add_row(
-    example_iris_data_features_1_class(),
-    "feature_name" = "Sepal.Length",
-    "feature_display" = "Sepal Width",
-    "Class1" = "Length"
-  )
+example_distributions_iris_data_feature_data_missing_column <- function(){
+  example_iris_data_feature_data() %>%
+    dplyr::select("feature_name", "Class1")
+}
+
+example_distributions_iris_data_feature_data_duplicated_feature <- function(){
+  example_distributions_iris_data_feature_data_1_class() %>%
+    tibble::add_row(
+      "feature_name" = "Sepal.Length",
+      "feature_display" = "Sepal Width",
+      "Class1" = "Length"
+    )
 }
 
 example_iris_data_groups <- function(){

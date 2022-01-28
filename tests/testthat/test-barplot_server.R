@@ -91,7 +91,7 @@ test_that("barplot_server_iris_feature_data", {
     barplot_server,
     args = list(
       "sample_data_func" = shiny::reactive(example_iris_data),
-      "feature_data" = shiny::reactive(example_iris_data_features_1_class2()),
+      "feature_data" = shiny::reactive(example_iris_data_features_1_class()),
       "drilldown" = shiny::reactive(T)
     ),
     {
