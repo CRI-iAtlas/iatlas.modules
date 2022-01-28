@@ -1,6 +1,5 @@
 test_that("violin_plot", {
-  p <- example_starwars_data() %>%
-    dplyr::filter(.data$group_name %in% c("Human", "Droid", "Wookiee")) %>%
+  p <- example_iris_data() %>%
     tidyr::drop_na() %>%
     plotly_violin(
       x_col = "group_name",

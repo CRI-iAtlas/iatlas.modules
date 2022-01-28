@@ -3,7 +3,7 @@
 #'
 #' @param id Module ID
 #' @param scatterplot_data A shiny::reactive that returns a dataframe with columns
-#' "sample_name", "group_name", and two value columns
+#' "sample_name", "group_display" and two value columns
 #' @param x_feature_input A shiny::reactive that returns a string
 #' @param y_feature_input A shiny::reactive that returns a string
 #' @param selected_group A string, this gets added to the sample label
@@ -25,7 +25,7 @@ drilldown_scatterplot_server <- function(
       scatterplot_feature_columns <- shiny::reactive({
         scatterplot_data() %>%
           colnames() %>%
-          setdiff(c("sample_name", "group_name"))
+          setdiff(c("sample_name", "group_display"))
       })
 
       display_feature_selection_ui <- shiny::reactive({
@@ -112,6 +112,8 @@ drilldown_scatterplot_server <- function(
           scatterplot_data(), x_feature(), y_feature()
         )
       })
+
+
 
       output$scatterplot <- plotly::renderPlotly({
         plotly_scatter(

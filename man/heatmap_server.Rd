@@ -6,13 +6,14 @@
 \usage{
 heatmap_server(
   id,
-  feature_classes,
-  response_features,
-  feature_data_function,
-  response_data_function,
+  feature_sample_data_function,
+  response_sample_data_function,
+  feature_data,
+  response_data,
+  group_data,
   summarise_function_list = shiny::reactive(stats::cor),
   drilldown = shiny::reactive(F),
-  default_feature = shiny::reactive(NULL),
+  default_response = shiny::reactive(NULL),
   default_class = shiny::reactive(NULL),
   ...
 )
@@ -20,23 +21,26 @@ heatmap_server(
 \arguments{
 \item{id}{Module ID}
 
-\item{feature_classes}{A shiny::reactive that returns a list of feature
-classes. This will be passed to the choices argument of shiny::selectInput.
-The selected class will be passed to the feature_data_function as .class.}
-
-\item{response_features}{A shiny::reactive that returns a list of features.
-This will be passed to the choices argument of shiny::selectInput.
-The selected feature will be passed to the repsonse_data_function as .feature.}
-
-\item{feature_data_function}{A shiny::reactive that returns a function
+\item{feature_sample_data_function}{A shiny::reactive that returns a function
 The function must take an argument called ".feature_class" and return a
-dataframe with columns "sample_name", "group_name", "feature_name",
-"feature_display", "feature_value", "feature_order", "group_description",
-"group_color"}
+dataframe with columns "sample_name", "group_name", "feature_name", and
+"feature_value"}
 
-\item{response_data_function}{A shiny::reactive that returns a function
+\item{response_sample_data_function}{A shiny::reactive that returns a function
 The function must take an argument called ".feature" and return a
 dataframe with columns "sample_name", "feature_name", "feature_value"}
+
+\item{feature_data}{A shiny::reactive that returns a dataframe with columns
+"feature_name","feature_display", "feature_class", and "feature_order". Each
+value in the "feature_name" column should only appear once.}
+
+\item{response_data}{A shiny::reactive that returns a dataframe with columns
+"feature_name","feature_display", and optionally "feature_class. Each value
+ in the "feature_name" column should only appear once.}
+
+\item{group_data}{A shiny::reactive that returns a dataframe with columns
+"group_name", "group_display", and optionally "group_description" and
+"group_color". Each value in the "group_name"column should only appear once.}
 
 \item{summarise_function_list}{A shiny::reactive that returns a either a function
 or a named list of functions. If a list is passed, it will be passed to
@@ -47,11 +51,11 @@ numeric value.}
 
 \item{drilldown}{A shiny::reactive that returns True or False}
 
-\item{default_feature}{A shiny::reactive that returns a string that
-is one of the values in response_features}
+\item{default_response}{A shiny::reactive that returns a string that is one of
+the values in the response_data feature_name column}
 
 \item{default_class}{A shiny::reactive that returns a string that is one of
-the values in feature_classes}
+the values in the feature_data feature_class column}
 
 \item{...}{shiny::reactives passed to drilldown_scatterplot_server}
 }
