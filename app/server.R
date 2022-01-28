@@ -52,17 +52,18 @@ server <- function(input, output, session) {
   )
 
 
-  # heatmap_server(
-  #   "heatmap1",
-  #   feature_classes = shiny::reactive(get_pcawg_feature_class_list()),
-  #   response_features = shiny::reactive(get_pcawg_feature_list()),
-  #   feature_data_function = shiny::reactive(get_pcawg_feature_values_by_class),
-  #   response_data_function = shiny::reactive(get_pcawg_feature_values_by_feature),
-  #   summarise_function_list = shiny::reactive(
-  #     purrr::partial(stats::cor, method = "pearson")
-  #   ),
-  #   drilldown = shiny::reactive(T)
-  # )
+  heatmap_server(
+    "heatmap1",
+    feature_sample_data_function = shiny::reactive(example_iris_data),
+    response_sample_data_function = shiny::reactive(example_iris_data),
+    feature_data = shiny::reactive(example_iris_data_features_1_class2()),
+    response_data = shiny::reactive(example_iris_data_features_1_class2()),
+    group_data = shiny::reactive(example_iris_data_groups()),
+    summarise_function_list = shiny::reactive(
+      purrr::partial(stats::cor, method = "pearson")
+    ),
+    drilldown = shiny::reactive(T)
+  )
   #
   # heatmap_server(
   #   "heatmap2",
