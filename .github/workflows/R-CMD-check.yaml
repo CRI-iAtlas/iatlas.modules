@@ -19,7 +19,7 @@ jobs:
       matrix:
         config:
           - {os: macOS-latest,   r: '4.1.0'}
-          - {os: windows-latest, r: '4.1.0'}
+          # - {os: windows-latest, r: '4.1.0'}
           - {os: ubuntu-20.04, r: '4.1.0', rspm: "https://packagemanager.rstudio.com/cran/__linux__/focal/latest"}
 
     env:
@@ -29,6 +29,10 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+
+      - name: Install libcurl
+        if: ${{ matrix.config.os == 'ubuntu-20.04' }}
+        run: sudo apt-get install libcurl4-openssl-dev
 
       - uses: r-lib/actions/setup-pandoc@v1
 
