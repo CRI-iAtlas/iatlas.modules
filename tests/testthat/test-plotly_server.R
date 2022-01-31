@@ -1,9 +1,9 @@
 test_that("plotly_server", {
-  plot_data <- dplyr::starwars %>%
+  plot_data <- example_iris_data() %>%
     dplyr::select(
-      "x" = "species",
-      "color" = "gender",
-      "y" = "height"
+      "x" = "feature_name",
+      "color" = "group_name",
+      "y" = "feature_value"
     ) %>%
     tidyr::drop_na() %>%
     dplyr::group_by(.data$x, .data$color) %>%
@@ -14,12 +14,12 @@ test_that("plotly_server", {
     )  %>%
   dplyr::mutate("error" = .data$y / sqrt(.data$count))
 
-  eventdata <- dplyr::filter(plot_data, x == "Aleena")
+  eventdata <- dplyr::filter(plot_data, x == "Petal.Length")
 
   group_data <- plot_data %>%
-    dplyr::select("group_name" = "x") %>%
+    dplyr::select("group_display" = "x") %>%
     dplyr::distinct() %>%
-    dplyr::mutate("group_description" = stringr::str_c("Race: ", .data$group_name))
+    dplyr::mutate("group_description" = stringr::str_c("Race: ", .data$group_display))
 
 
   shiny::testServer(
@@ -31,7 +31,7 @@ test_that("plotly_server", {
     ),
     {
       expect_true(show_group_text())
-      expect_equal(output$plot_group_text, "Race: Aleena")
+      expect_equal(output$plot_group_text, "Race: Petal.Length")
       expect_type(output$download_tbl, "character")
     }
   )

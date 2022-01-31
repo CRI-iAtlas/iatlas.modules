@@ -269,7 +269,7 @@ get_values_from_eventdata <- function(eventdata, col = "x"){
 create_group_text_from_eventdata <- function(eventdata, group_tbl){
   selected_group <- get_values_from_eventdata(eventdata)
   group_tbl %>%
-    dplyr::filter(.data$group_name == selected_group) %>%
+    dplyr::filter(.data$group_display == selected_group) %>%
     dplyr::pull("group_description")
 }
 
@@ -349,5 +349,56 @@ get_system_path_file <- function(
 
 get_markdown_path <- function(name, extension = ".markdown"){
   get_system_path_file(name, extension, "markdown")
+}
+
+
+# input validation ------------------------------------------------------------
+
+validate_feature_data <- function(data){
+
+  needed_col_names <- c("feature_name", "feature_display")
+  col_names <- colnames(data)
+
+  if(!all(needed_col_names %in% col_names)) {
+    msg <- stringr::str_c(
+      "Columns in fetaure_data (",
+      stringr::str_c(col_names, collapse = ", "),
+      ") missing one or more of (",
+      stringr::str_c(needed_col_names, collapse = ", "),
+      ")."
+    )
+    stop(msg)
+  }
+
+  if(nrow(data) > length(unique(data$feature_name)))
+    stop("Values in feature_data$feature_name are not unique.")
+}
+
+validate_group_data <- function(data){
+
+  needed_col_names <- c("group_name", "group_display")
+  col_names <- colnames(data)
+
+  if(!all(needed_col_names %in% col_names)) {
+    msg <- stringr::str_c(
+      "Columns in fetaure_data (",
+      stringr::str_c(col_names, collapse = ", "),
+      ") missing one or more of (",
+      stringr::str_c(needed_col_names, collapse = ", "),
+      ")."
+    )
+    stop(msg)
+  }
+
+  if(nrow(data) > length(unique(data$group_name)))
+    stop("Values in group_data$group_name are not unique.")
+
+  if(!"group_color" %in% col_names){
+    data <- dplyr::mutate(data, "group_color" = NA)
+  }
+
+  if(!"group_description" %in% col_names){
+    data <- dplyr::mutate(data, "group_description" = "")
+  }
 }
 
