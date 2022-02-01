@@ -21,7 +21,7 @@ Imports:
     htmltools (>= 0.5),
     magrittr (>= 2.0),
     markdown (>= 1.0),
-    pillar (>= 1.5),
+    pillar (>= 1.7),
     pkgcond,
     plotly (>= 4.0),
     purrr (>= 0.3),
