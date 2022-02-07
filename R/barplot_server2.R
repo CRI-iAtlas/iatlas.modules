@@ -101,10 +101,13 @@ barplot_server2 <- function(
 
       barplot_eventdata <- shiny::reactive({
         shiny::req(barplot_source_name(), summarized_barplot_data())
-        eventdata <- plotly::event_data("plotly_click", barplot_source_name())
-        if(is.null(eventdata) & !is.null(input$mock_event_data)){
+
+        if(!is.null(input$mock_event_data)){
           eventdata <- input$mock_event_data
+        } else {
+          eventdata <- plotly::event_data("plotly_click", barplot_source_name())
         }
+
         shiny::validate(shiny::need(eventdata, "Click on above barplot."))
         return(eventdata)
       })
