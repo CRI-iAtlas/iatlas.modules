@@ -367,7 +367,7 @@ validate_data <- function(
 
   if(is.null(optional_columns)) columns <- required_columns
   else columns <- c(required_columns, optional_columns)
-  dplyr::select(data, dplyr::all_of(columns))
+  dplyr::select(data, dplyr::any_of(columns))
 }
 
 validate_data_columns <- function(data, columns, table_name, table_key){
@@ -422,6 +422,7 @@ validate_feature_data <- function(
     table_key,
     optional_columns
   )
+
   add_display_column <- all(
     "feature_display" %in% optional_columns,
     !"feature_display" %in% colnames(data)

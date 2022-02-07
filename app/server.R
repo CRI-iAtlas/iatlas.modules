@@ -39,8 +39,6 @@ server <- function(input, output, session) {
     barplot_ylab = shiny::reactive("Height")
   )
 
-
-
   distributions_plot_server(
     "distplot1",
     sample_data_function = shiny::reactive(example_iris_data),
@@ -70,6 +68,30 @@ server <- function(input, output, session) {
     sample_data_function = shiny::reactive(example_iris_data),
     feature_data = shiny::reactive(example_iris_data_feature_data()),
     group_data = shiny::reactive(example_iris_data_groups2()),
+    drilldown = shiny::reactive(T),
+    distplot_xlab = shiny::reactive("Species")
+  )
+  distributions_plot_server2(
+      "distplot5",
+      distplot_data = shiny::reactive(
+        dplyr::rename(
+          example_iris_data(),
+          "feature_display" = "feature_name"
+        )
+      ),
+      drilldown = shiny::reactive(T),
+      distplot_xlab = shiny::reactive("Species")
+  )
+
+  distributions_plot_server2(
+    "distplot6",
+    distplot_data = shiny::reactive(
+      dplyr::rename(
+        example_iris_data(),
+        "feature_display" = "feature_name"
+      )
+    ),
+    group_data = shiny::reactive(example_iris_data_groups()),
     drilldown = shiny::reactive(T),
     distplot_xlab = shiny::reactive("Species")
   )

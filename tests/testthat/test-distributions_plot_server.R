@@ -1,3 +1,45 @@
+validated_sample_names <- c(
+  "sample_name",
+  "feature_name",
+  "group_name",
+  "feature_value"
+)
+
+distplot_data_names <-  c(
+  "sample_name",
+  "feature_name",
+  "feature_display",
+  "group_name",
+  "feature_value"
+)
+
+
+test_result_object <- function(res){
+  expect_named(
+    res,
+    c("histogram_data", "distplot_data", "group_text")
+  )
+
+  expect_type(res$group_text, "character")
+
+  histogram_data <- res$histogram_data
+  expect_true(tibble::is_tibble(histogram_data))
+  expect_named(histogram_data, "feature_value")
+  distplot_data <- res$distplot_data
+  expect_type(distplot_data, "list")
+  expect_named(
+    distplot_data,
+    c(
+      'sample_name',
+      'group_display',
+      'group_color',
+      'group_description',
+      'feature_display',
+      'feature_value'
+    )
+  )
+}
+
 test_that("distributions_plot_server_no_features_no_class", {
 
   shiny::testServer(
@@ -8,76 +50,27 @@ test_that("distributions_plot_server_no_features_no_class", {
       "distplot_xlab" = shiny::reactive("Species")
     ),
     {
-      session$setInputs("scale_method_choice" = "None")
-      session$setInputs("reorder_method_choice" = "None")
-      session$setInputs("plot_type_choice" = "Violin")
-      session$setInputs("mock_event_data" = data.frame(
+      session$setInputs("distplot-mock_event_data" = data.frame(
         "curveNumber" = c(0,0),
         "pointNumber" = c(0,0),
         "x" = "setosa",
         "y" = c(5.1, 2.1),
         "key" = "setosa"
       ))
+      session$setInputs("scale_method_choice" = "None")
+      session$setInputs("reorder_method_choice" = "None")
+      session$setInputs("plot_type_choice" = "Violin")
 
       expect_null(feature_data())
       expect_null(validated_feature_data())
-      expect_null(group_data())
-      expect_null(validated_group_data())
 
       expect_equal(feature_classes(), character(0))
       expect_false(display_feature_class_selection_ui())
       expect_false(display_feature_selection_ui())
-      expect_named(
-        validated_sample_data(),
-        c(
-          "sample_name",
-          "feature_name",
-          "group_name",
-          "feature_value"
-        )
-      )
 
-      expect_named(
-        distplot_data(),
-        c(
-          "sample_name",
-          "feature_name",
-          "feature_display",
-          "group_name",
-          "group_display",
-          "feature_value"
-        )
-      )
-
-      expect_equal(distplot_source_name(), "proxy1-distplot")
-      expect_equal(plotly_function(), plotly_violin)
-      expect_null(plot_fill_colors())
-      expect_equal(plot_title(), "")
-
-      expect_type(output$distplot, "character")
-      expect_type(distplot_eventdata(), "list")
-      expect_named(
-        distplot_eventdata(),
-        c("curveNumber", "pointNumber", "x", "y", "key")
-      )
-
-      res <- session$getReturned()
-      histogram_data <- res$histogram_data()
-      expect_type(histogram_data, "list")
-      expect_named(histogram_data, "feature_value")
-      distplot_data <- res$distplot_data()
-      expect_type(distplot_data, "list")
-      expect_named(
-        distplot_data,
-        c(
-          'sample_name',
-          'feature_name',
-          'feature_display',
-          'group_name',
-          'group_display',
-          'feature_value'
-        )
-      )
+      expect_named(validated_sample_data(), validated_sample_names)
+      expect_named(distplot_data(), distplot_data_names)
+      test_result_object(ploted_data())
 
     }
   )
@@ -96,17 +89,19 @@ test_that("distributions_plot_server_1_class", {
       "distplot_xlab" = shiny::reactive("Species")
     ),
     {
-      session$setInputs("feature_choice" = "Sepal.Length")
-      session$setInputs("scale_method_choice" = "None")
-      session$setInputs("reorder_method_choice" = "None")
-      session$setInputs("plot_type_choice" = "Violin")
-      session$setInputs("mock_event_data" = data.frame(
+      session$setInputs("distplot-mock_event_data" = data.frame(
         "curveNumber" = c(0,0),
         "pointNumber" = c(0,0),
         "x" = "setosa",
         "y" = c(5.1, 2.1),
         "key" = "setosa"
       ))
+
+      session$setInputs("feature_choice" = "Sepal.Length")
+      session$setInputs("scale_method_choice" = "None")
+      session$setInputs("reorder_method_choice" = "None")
+      session$setInputs("plot_type_choice" = "Violin")
+
 
       expect_type(feature_data(), "list")
       expect_named(
@@ -127,9 +122,6 @@ test_that("distributions_plot_server_1_class", {
         )
       )
 
-      expect_null(group_data())
-      expect_null(validated_group_data())
-
       expect_equal(feature_classes(), "Class1")
       expect_false(display_feature_class_selection_ui())
       expect_type(output$feature_class_selection_ui, "list")
@@ -137,57 +129,9 @@ test_that("distributions_plot_server_1_class", {
       expect_type(feature_list(), "list")
       expect_type(output$feature_selection_ui, "list")
 
-      expect_named(
-        validated_sample_data(),
-        c(
-          "sample_name",
-          "feature_name",
-          "group_name",
-          "feature_value"
-        )
-      )
-
-      expect_named(
-        distplot_data(),
-        c(
-          "sample_name",
-          "feature_name",
-          "feature_display",
-          "group_name",
-          "group_display",
-          "feature_value"
-        )
-      )
-
-      expect_equal(distplot_source_name(), "proxy1-distplot")
-      expect_equal(plotly_function(), plotly_violin)
-      expect_null(plot_fill_colors())
-      expect_equal(plot_title(), "Sepal Length")
-
-      expect_type(output$distplot, "character")
-      expect_type(distplot_eventdata(), "list")
-      expect_named(
-        distplot_eventdata(),
-        c("curveNumber", "pointNumber", "x", "y", "key")
-      )
-
-      res <- session$getReturned()
-      histogram_data <- res$histogram_data()
-      expect_type(histogram_data, "list")
-      expect_named(histogram_data, "feature_value")
-      distplot_data <- res$distplot_data()
-      expect_type(distplot_data, "list")
-      expect_named(
-        distplot_data,
-        c(
-          'sample_name',
-          'feature_name',
-          'feature_display',
-          'group_name',
-          'group_display',
-          'feature_value'
-        )
-      )
+      expect_named(validated_sample_data(), validated_sample_names)
+      expect_named(distplot_data(), distplot_data_names)
+      test_result_object(ploted_data())
     }
   )
 })
@@ -206,17 +150,18 @@ test_that("distributions_plot_server_2_classes", {
       "distplot_xlab" = shiny::reactive("Species")
     ),
     {
-      session$setInputs("feature_choice" = "Sepal.Length")
-      session$setInputs("scale_method_choice" = "None")
-      session$setInputs("reorder_method_choice" = "None")
-      session$setInputs("plot_type_choice" = "Violin")
-      session$setInputs("mock_event_data" = data.frame(
+      session$setInputs("distplot-mock_event_data" = data.frame(
         "curveNumber" = c(0,0),
         "pointNumber" = c(0,0),
         "x" = "setosa",
         "y" = c(5.1, 2.1),
         "key" = "Setosa"
       ))
+      session$setInputs("feature_choice" = "Sepal.Length")
+      session$setInputs("scale_method_choice" = "None")
+      session$setInputs("reorder_method_choice" = "None")
+      session$setInputs("plot_type_choice" = "Violin")
+
 
       expect_type(feature_data(), "list")
       expect_type(validated_feature_data(), "list")
@@ -230,18 +175,6 @@ test_that("distributions_plot_server_2_classes", {
         )
       )
 
-      expect_type(group_data(), "list")
-      expect_type(validated_group_data(), "list")
-      expect_named(
-        validated_group_data(),
-        c(
-          "group_name",
-          "group_display",
-          "group_color",
-          "group_description"
-        )
-      )
-
       expect_equal(feature_classes(), c("Class1", "Class2"))
       expect_true(display_feature_class_selection_ui())
       expect_type(output$feature_class_selection_ui, "list")
@@ -249,121 +182,13 @@ test_that("distributions_plot_server_2_classes", {
       expect_type(feature_list(), "list")
       expect_type(output$feature_selection_ui, "list")
 
-      expect_named(
-        validated_sample_data(),
-        c(
-          "sample_name",
-          "feature_name",
-          "group_name",
-          "feature_value"
-        )
-      )
-
-      expect_named(
-        distplot_data(),
-        c(
-          "sample_name",
-          "feature_name",
-          "feature_display",
-          "group_name",
-          "group_display",
-          "feature_value"
-        )
-      )
-
-      expect_equal(distplot_source_name(), "proxy1-distplot")
-      expect_equal(plotly_function(), plotly_violin)
-      expect_equal(
-        names(plot_fill_colors()),
-        c('Setosa', 'Versicolor', 'Virginica')
-      )
-      expect_equal(
-        unname(plot_fill_colors()),
-        c('#FF0000', '#0000FF', '#FFFF00')
-      )
-      expect_equal(plot_title(), "Sepal Length")
-
-      expect_type(output$distplot, "character")
-      expect_type(distplot_eventdata(), "list")
-      expect_named(
-        distplot_eventdata(),
-        c("curveNumber", "pointNumber", "x", "y", "key")
-      )
-
-      res <- session$getReturned()
-      histogram_data <- res$histogram_data()
-      expect_type(histogram_data, "list")
-      expect_named(histogram_data, "feature_value")
-      distplot_data <- res$distplot_data()
-      expect_type(distplot_data, "list")
-      expect_named(
-        distplot_data,
-        c(
-          'sample_name',
-          'feature_name',
-          'feature_display',
-          'group_name',
-          'group_display',
-          'feature_value'
-        )
-      )
+      expect_named(validated_sample_data(), validated_sample_names)
+      expect_named(distplot_data(), distplot_data_names)
+      test_result_object(ploted_data())
     }
   )
 })
 
-test_that("distributions_plot_server_2_classes", {
-
-  shiny::testServer(
-    distributions_plot_server,
-    args = list(
-      "sample_data_func" = shiny::reactive(example_iris_data),
-      "feature_data" = shiny::reactive(
-        example_distributions_iris_data_feature_data_2_classes()
-      ),
-      "group_data" = shiny::reactive(example_iris_data_groups2()),
-      "drilldown" = shiny::reactive(T),
-      "distplot_xlab" = shiny::reactive("Species")
-    ),
-    {
-      session$setInputs("feature_choice" = "Sepal.Length")
-      session$setInputs("scale_method_choice" = "None")
-      session$setInputs("reorder_method_choice" = "None")
-      session$setInputs("plot_type_choice" = "Violin")
-      session$setInputs("mock_event_data" = data.frame(
-        "curveNumber" = c(0,0),
-        "pointNumber" = c(0,0),
-        "x" = "setosa",
-        "y" = c(5.1, 2.1),
-        "key" = "Setosa"
-      ))
-
-      expect_named(
-        validated_group_data(),
-        c('group_name', 'group_display', 'group_color', 'group_description')
-      )
-
-      expect_null(plot_fill_colors())
-
-      res <- session$getReturned()
-      histogram_data <- res$histogram_data()
-      expect_type(histogram_data, "list")
-      expect_named(histogram_data, "feature_value")
-      distplot_data <- res$distplot_data()
-      expect_type(distplot_data, "list")
-      expect_named(
-        distplot_data,
-        c(
-          'sample_name',
-          'feature_name',
-          'feature_display',
-          'group_name',
-          'group_display',
-          'feature_value'
-        )
-      )
-    }
-  )
-})
 
 test_that("distributions_plot_server_data_missing_column", {
 
@@ -383,36 +208,6 @@ test_that("distributions_plot_server_data_missing_column", {
         validated_sample_data(),
         "Columns in table from sample_data_function"
       )
-    }
-  )
-})
-
-test_that("distributions_plot_server_data_missing_column2", {
-
-  shiny::testServer(
-    distributions_plot_server,
-    args = list(
-      "sample_data_func" = shiny::reactive(example_iris_data),
-      "feature_data" = shiny::reactive(
-        example_distributions_iris_data_feature_data_missing_column()
-      ),
-      "drilldown" = shiny::reactive(T),
-      "distplot_xlab" = shiny::reactive("Species")
-    ),
-    {
-      session$setInputs("scale_method_choice" = "None")
-      session$setInputs("reorder_method_choice" = "None")
-      session$setInputs("plot_type_choice" = "Violin")
-
-      expect_type(feature_data(), "list")
-      expect_named(
-        feature_data(),
-        c(
-          "feature_name",
-          "Class1"
-        )
-      )
-      expect_error(validated_feature_data(), "Columns in fetaure_data")
     }
   )
 })
