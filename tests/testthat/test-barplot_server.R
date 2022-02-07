@@ -1,12 +1,16 @@
-summarized_barplot_data_names <- c(
-  "group_display",
-  "feature_display",
-  "text",
-  "MEAN",
-  "SE"
+sample_data_names <- c(
+  "sample_name",
+  "feature_name",
+  "group_name",
+  "feature_value"
 )
 
-barplot_eventdata_names <- c("curveNumber", "pointNumber", "x", "y", "key")
+barplot_data_names <- c(
+  "sample_name",
+  "group_name",
+  "feature_display",
+  "feature_value"
+)
 
 test_result_object <- function(res){
   scatterplot_data <- res$scatterplot_data
@@ -20,132 +24,109 @@ test_result_object <- function(res){
   )
 }
 
-test_that("barplot_server_iris_no_group_data", {
+
+test_that("barplot_server_iris_no_feature_or_group_data", {
 
   shiny::testServer(
     barplot_server,
     args = list(
-      "barplot_data" = shiny::reactive(
-        dplyr::rename(
-          example_iris_data(),
-          "feature_display" = "feature_name"
-        )
-      ),
+      "sample_data_func" = shiny::reactive(example_iris_data),
       "drilldown" = shiny::reactive(T)
     ),
     {
-      session$setInputs("mock_event_data" = data.frame(
+      session$setInputs("feature_class_choice" = "Length")
+      session$setInputs("barplot-mock_event_data" = data.frame(
         "curveNumber" = 1,
         "pointNumber" = 2,
-        "x" = "virginica",
+        "x" = "setosa",
         "y" = 6.588,
-        "key" = "virginica"
+        "key" = "setosa"
       ))
 
-      expect_null(validated_group_data())
-      expect_true(tibble::is_tibble(validated_data()))
+      expect_null(feature_data())
+      expect_null(validated_feature_data())
+      expect_null(group_data())
 
-      expect_true(tibble::is_tibble(merged_barplot_data()))
-      expect_true(nrow(merged_barplot_data()) > 0)
-      expect_named(
-        merged_barplot_data(),
-        c(
-          "sample_name",
-          "group_display",
-          "group_color",
-          "feature_display",
-          "feature_value"
-        )
-      )
+      expect_false(display_feature_class_selection_ui())
 
-      expect_type(summarized_barplot_data(), "list")
-      expect_named(summarized_barplot_data(), summarized_barplot_data_names)
-      expect_equal(barplot_source_name(), "proxy1-barplot")
-      expect_type(output$barplot, "character")
-
-      expect_type(barplot_eventdata(), "list")
-      expect_named(barplot_eventdata(), barplot_eventdata_names)
-      expect_equal(selected_group(), "virginica")
-      expect_type(scatterplot_data(), "list")
-      expect_named(
-        scatterplot_data(),
-        c(
-          'sample_name',
-          'group_display',
-          'Sepal.Length',
-          'Sepal.Width',
-          'Petal.Length',
-          'Petal.Width'
-        )
-      )
+      expect_named(validated_sample_data(), sample_data_names)
+      expect_type(barplot_data(), "list")
+      expect_named(barplot_data(), barplot_data_names)
 
       test_result_object(session$getReturned()())
     }
   )
 })
 
-#
-# test_that("barplot_server_iris", {
-#
-#   shiny::testServer(
-#     barplot_server,
-#     args = list(
-#       "barplot_data" = shiny::reactive(
-#         dplyr::rename(
-#           example_iris_data(),
-#           "feature_display" = "feature_name"
-#         )
-#       ),
-#       "group_data" = shiny::reactive(example_iris_data_groups()),
-#       "drilldown" = shiny::reactive(T)
-#     ),
-#     {
-#       session$setInputs("mock_event_data" = data.frame(
-#         "curveNumber" = 1,
-#         "pointNumber" = 2,
-#         "x" = "Virginica",
-#         "y" = 6.588,
-#         "key" = "Virginica"
-#       ))
-#
-#       expect_true(tibble::is_tibble(validated_data()))
-#
-#       expect_true(tibble::is_tibble(merged_barplot_data()))
-#       expect_true(nrow(merged_barplot_data()) > 0)
-#       expect_named(
-#         merged_barplot_data(),
-#         c(
-#           "sample_name",
-#           "group_display",
-#           "group_color",
-#           "feature_display",
-#           "feature_value"
-#         )
-#       )
-#
-#       expect_type(summarized_barplot_data(), "list")
-#       expect_named(summarized_barplot_data(), summarized_barplot_data_names)
-#       expect_equal(barplot_source_name(), "proxy1-barplot")
-#       expect_type(output$barplot, "character")
-#
-#       expect_type(barplot_eventdata(), "list")
-#       expect_named(barplot_eventdata(), barplot_eventdata_names)
-#       expect_equal(selected_group(), "Virginica")
-#       expect_type(scatterplot_data(), "list")
-#       expect_named(
-#         scatterplot_data(),
-#         c(
-#           'sample_name',
-#           'group_display',
-#           'Sepal.Length',
-#           'Sepal.Width',
-#           'Petal.Length',
-#           'Petal.Width'
-#         )
-#       )
-#
-#       test_result_object(session$getReturned()())
-#     }
-#   )
-# })
-#
+
+test_that("barplot_server_iris_feature_data", {
+
+  shiny::testServer(
+    barplot_server,
+    args = list(
+      "sample_data_func" = shiny::reactive(example_iris_data),
+      "feature_data" = shiny::reactive(example_iris_data_features_1_class()),
+      "drilldown" = shiny::reactive(T)
+    ),
+    {
+      session$setInputs("feature_class_choice" = "Length")
+      session$setInputs("barplot-mock_event_data" = data.frame(
+        "curveNumber" = 1,
+        "pointNumber" = 2,
+        "x" = "setosa",
+        "y" = 6.588,
+        "key" = "setosa"
+      ))
+
+      expect_true(tibble::is_tibble(feature_data()))
+      expect_true(tibble::is_tibble(validated_feature_data()))
+      expect_named(
+        validated_feature_data(),
+        c('feature_name', 'feature_display', 'feature_class')
+      )
+
+      expect_true(display_feature_class_selection_ui())
+      expect_type(output$feature_class_selection_ui, "list")
+      expect_named(validated_sample_data(), sample_data_names)
+
+      expect_type(barplot_data(), "list")
+      expect_named(barplot_data(), barplot_data_names)
+
+      test_result_object(session$getReturned()())
+    }
+  )
+})
+
+test_that("barplot_server_iris_group_data", {
+
+  shiny::testServer(
+    barplot_server,
+    args = list(
+      "sample_data_func" = shiny::reactive(example_iris_data),
+      "group_data" = shiny::reactive(example_iris_data_groups()),
+      "drilldown" = shiny::reactive(T)
+    ),
+    {
+      session$setInputs("feature_class_choice" = "Length")
+      session$setInputs("barplot-mock_event_data" = data.frame(
+        "curveNumber" = 1,
+        "pointNumber" = 2,
+        "x" = "Virginica",
+        "y" = 6.588,
+        "key" = "Virginica"
+      ))
+
+      expect_null(feature_data())
+      expect_null(validated_feature_data())
+      expect_type(group_data(), "list")
+
+      expect_false(display_feature_class_selection_ui())
+
+      expect_named(validated_sample_data(), sample_data_names)
+      expect_type(barplot_data(), "list")
+      expect_named(barplot_data(), barplot_data_names)
+
+      test_result_object(session$getReturned()())
+    }
+  )
+})

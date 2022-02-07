@@ -1,29 +1,39 @@
-
 #' Barplot UI
 #'
 #' @param id Module ID
-#' @param ... Arguments passed to drilldown_scatterplot_ui
+#' @param title A string
+#' @param barplot_html A string that is HTML
+#' @param ... Arguments passed to barplot_ui
 #'
 #' @export
-barplot_ui <- function(id, ...){
+barplot_ui <- function(
+  id,
+  title = "",
+  barplot_html = htmltools::includeMarkdown(get_markdown_path("barchart1")),
+  ...
+){
 
   ns <- shiny::NS(id)
 
   shiny::tagList(
-    shiny::fluidRow(
-      plotBox(
-        width = 12,
-        "barplot" %>%
-          ns() %>%
-          plotly::plotlyOutput(.) %>%
-          shinycssloaders::withSpinner(.),
-        plotly_ui(ns("barplot"))
-      )
+    titleBox(title),
+    messageBox(
+      width = 12,
+      barplot_html
     ),
     shiny::conditionalPanel(
-      condition = "output.display_drilldown_ui",
+      condition = "output.display_feature_class_selection_ui",
       ns = ns,
-      drilldown_scatterplot_ui(ns("scatterplot"), ...)
-    )
+      shiny::fluidRow(
+        optionsBox(
+          width = 12,
+          shiny::column(
+            width = 12,
+            shiny::uiOutput(ns("feature_class_selection_ui"))
+          )
+        )
+      )
+    ),
+    barplot_ui2(ns("barplot"), ...)
   )
 }

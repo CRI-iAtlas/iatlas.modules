@@ -1,7 +1,7 @@
 
 server <- function(input, output, session) {
 
-  barplot_server2(
+  barplot_server(
     "barplot1",
     shiny::reactive(example_iris_data),
     drilldown = shiny::reactive(T),
@@ -9,7 +9,7 @@ server <- function(input, output, session) {
     barplot_ylab = shiny::reactive("Height")
   )
 
-  barplot_server2(
+  barplot_server(
     "barplot2",
     shiny::reactive(example_iris_data),
     drilldown = shiny::reactive(T),
@@ -18,7 +18,7 @@ server <- function(input, output, session) {
     barplot_ylab = shiny::reactive("Height")
   )
 
-  barplot_server2(
+  barplot_server(
     "barplot3",
     shiny::reactive(example_iris_data),
     drilldown = shiny::reactive(T),
@@ -28,12 +28,11 @@ server <- function(input, output, session) {
     barplot_ylab = shiny::reactive("Height")
   )
 
-  barplot_server(
+  barplot_server2(
     "barplot4",
     shiny::reactive(dplyr::rename(
       example_iris_data(),
       "feature_display" = "feature_name",
-      "group_display" = "group_name"
     )),
     drilldown = shiny::reactive(T),
     barplot_xlab = shiny::reactive("Species"),
