@@ -23,7 +23,7 @@ heatmap_ui <- function(
       html
     ),
     shiny::fluidRow(
-      iatlas.modules::optionsBox(
+      optionsBox(
         width = 12,
         shiny::column(
           width = 6,
