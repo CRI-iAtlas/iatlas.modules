@@ -20,7 +20,6 @@ get_distributions_feature_list <- function(features, feature_class_choice){
     create_nested_named_list()
 }
 
-
 format_distplot_data <- function(
   data,
   scale_method_choice,

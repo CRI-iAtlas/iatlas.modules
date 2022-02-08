@@ -141,29 +141,9 @@ distributions_plot_server <- function(
           shiny::req(input$feature_choice)
         }
 
-        needed_col_names <-
-          c("sample_name", "feature_name", "group_name", "feature_value")
-
-        sample_data <- dplyr::select(
-          sample_data_function()(.feature = input$feature_choice),
-          dplyr::any_of(needed_col_names)
-        )
-
-        col_names <- colnames(sample_data)
-
-
-        if(!all(needed_col_names %in% col_names)) {
-          msg <- stringr::str_c(
-            "Columns in table from sample_data_function (",
-            stringr::str_c(col_names, collapse = ", "),
-            ") missing one or more of (",
-            stringr::str_c(needed_col_names, collapse = ", "),
-            ")."
-          )
-          stop(msg)
-        }
-
-        return(sample_data)
+        sample_data <-
+          sample_data_function()(.feature = input$feature_choice) %>%
+          validate_sample_data()
       })
 
       distplot_data <- shiny::reactive({
@@ -182,14 +162,26 @@ distributions_plot_server <- function(
         )
       })
 
+      plot_title <- shiny::reactive({
+        if(!is.null(distplot_title())) return(distplot_title())
+        else if(is.null(input$feature_choice)) return("")
+        else {
+          shiny::req(validated_feature_data())
+          title <- validated_feature_data() %>%
+            dplyr::filter(.data$feature_name == input$feature_choice) %>%
+            dplyr::pull("feature_display") %>%
+            unique()
+        }
+      })
+
       ploted_data <- distributions_plot_server2(
         "distplot",
         distplot_data,
         group_data,
         distplot_xlab,
-        distplot_title,
-        drilldown,
-        plot_type = shiny::reactive(input$plot_type_choice),
+        distplot_title = plot_title,
+        drilldown      = drilldown,
+        plot_type      = shiny::reactive(input$plot_type_choice),
         ...
       )
 

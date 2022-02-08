@@ -2,11 +2,13 @@
 #' Distributions Plot Server
 #'
 #' @param id Module ID
-#' @param sample_data_function A shiny::reactive that returns a dataframe with
+#' @param distplot_data A shiny::reactive that returns a dataframe with
 #' columns "sample_name", "group_name", feature_display", and "feature_value".
 #' @param group_data A shiny::reactive that returns a dataframe with columns
 #' "group_name", "group_display", and optionally "group_description" and
 #' "group_color". Each value in the "group_name"column should only appear once.
+#' @param plot_type A shiny::reactive that returns a string, eith "Violin" or
+#' "Box"
 #' @param distplot_xlab A shiny::reactive that returns a string
 #' @param distplot_title A shiny::reactive that returns a string
 #' @param drilldown A shiny::reactive that returns True or False
@@ -30,44 +32,22 @@ distributions_plot_server2 <- function(
 
       validated_distplot_data <- shiny::reactive({
         shiny::req(distplot_data())
-        validate_data(
-          distplot_data(),
-          required_columns = c(
-            "sample_name", "group_name", "feature_display",  "feature_value"
-          ),
-          table_name = "distplot_data"
-        )
+        validate_distplot_data(distplot_data())
       })
 
       validated_group_data <- shiny::reactive({
         if(is.null(group_data())){
           shiny::req(validated_distplot_data())
-          data <- validated_distplot_data() %>%
-            dplyr::select("group_name") %>%
-            dplyr::distinct() %>%
-            dplyr::mutate(
-              "group_display" = .data$group_name,
-              "group_color" = NA_character_,
-              "group_description" = ""
-            )
+          return(create_group_data(validated_distplot_data()))
         } else {
-          data <- validate_group_data(group_data())
+          return(validate_group_data(group_data()))
         }
-        return(data)
       })
 
       merged_distplot_data <- shiny::reactive({
         shiny::req(validated_distplot_data(), validated_group_data())
-        validated_distplot_data() %>%
-          dplyr::inner_join(validated_group_data(), by = "group_name") %>%
-          dplyr::select(
-            "sample_name",
-            "group_display",
-            "group_color",
-            "group_description",
-            "feature_display",
-            "feature_value"
-          )
+        merge_distplot_data(validated_distplot_data(), validated_group_data())
+
       })
 
       distplot_source_name <- shiny::reactive(ns("distplot"))
@@ -79,30 +59,13 @@ distributions_plot_server2 <- function(
       })
 
       plot_fill_colors <- shiny::reactive({
-
-        colors_provided <- !all(is.na(validated_group_data()$group_color))
-
-        if(colors_provided){
-          fill_colors <- validated_group_data() %>%
-            dplyr::select("group_display", "group_color") %>%
-            dplyr::distinct() %>%
-            tibble::deframe(.)
-        } else {
-          fill_colors <- NULL
-        }
-        return(fill_colors)
+        shiny::req(validated_group_data())
+        get_plot_colors(validated_group_data())
       })
 
       plot_title <- shiny::reactive({
-        if(!is.null(distplot_title())) title <- distplot_title()
-        else if(is.null(input$feature_choice)) title <- ""
-        else{
-          title <- validated_feature_data() %>%
-            dplyr::filter(.data$feature_name == input$feature_choice) %>%
-            dplyr::pull("feature_display") %>%
-            unique()
-        }
-        return(title)
+        if(!is.null(distplot_title())) return(distplot_title())
+        else return("")
       })
 
       output$distplot <- plotly::renderPlotly({

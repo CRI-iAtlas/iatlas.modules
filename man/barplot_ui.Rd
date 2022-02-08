@@ -18,7 +18,7 @@ barplot_ui(
 
 \item{barplot_html}{A string that is HTML}
 
-\item{...}{Arguments passed to drilldown_scatterplot_ui}
+\item{...}{Arguments passed to barplot_ui}
 }
 \description{
 Barplot UI

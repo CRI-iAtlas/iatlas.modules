@@ -16,7 +16,7 @@ drilldown_scatterplot_server(
 \item{id}{Module ID}
 
 \item{scatterplot_data}{A shiny::reactive that returns a dataframe with columns
-"sample_name", "group_display" and two value columns}
+"sample_name", "group_display" and at least two other columns}
 
 \item{x_feature_input}{A shiny::reactive that returns a string}
 

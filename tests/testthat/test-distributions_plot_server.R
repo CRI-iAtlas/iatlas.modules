@@ -70,6 +70,9 @@ test_that("distributions_plot_server_no_features_no_class", {
 
       expect_named(validated_sample_data(), validated_sample_names)
       expect_named(distplot_data(), distplot_data_names)
+
+      expect_equal(plot_title(), "")
+
       test_result_object(ploted_data())
 
     }
@@ -131,6 +134,9 @@ test_that("distributions_plot_server_1_class", {
 
       expect_named(validated_sample_data(), validated_sample_names)
       expect_named(distplot_data(), distplot_data_names)
+
+      expect_equal(plot_title(), "Sepal Length")
+
       test_result_object(ploted_data())
     }
   )
@@ -184,6 +190,9 @@ test_that("distributions_plot_server_2_classes", {
 
       expect_named(validated_sample_data(), validated_sample_names)
       expect_named(distplot_data(), distplot_data_names)
+
+      expect_equal(plot_title(), "Sepal Length")
+
       test_result_object(ploted_data())
     }
   )
@@ -206,7 +215,7 @@ test_that("distributions_plot_server_data_missing_column", {
 
       expect_error(
         validated_sample_data(),
-        "Columns in table from sample_data_function"
+        "Columns in sample_data"
       )
     }
   )
