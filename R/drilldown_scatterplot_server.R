@@ -3,7 +3,7 @@
 #'
 #' @param id Module ID
 #' @param scatterplot_data A shiny::reactive that returns a dataframe with columns
-#' "sample_name", "group_display" and two value columns
+#' "sample_name", "group_display" and at least two other columns
 #' @param x_feature_input A shiny::reactive that returns a string
 #' @param y_feature_input A shiny::reactive that returns a string
 #' @param selected_group A string, this gets added to the sample label

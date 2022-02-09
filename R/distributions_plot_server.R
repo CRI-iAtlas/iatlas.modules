@@ -42,62 +42,16 @@ distributions_plot_server <- function(
       validated_feature_data <- shiny::reactive({
         if(is.null(feature_data())) return(NULL)
 
-        needed_col_names <-
-          c("feature_name", "feature_display")
+        optional_columns <- feature_data() %>%
+          colnames() %>%
+          setdiff("feature_name") %>%
+          c("feature_display") %>%
+          unique()
 
-        col_names <- colnames(feature_data())
-
-        if(!all(needed_col_names %in% col_names)) {
-          msg <- stringr::str_c(
-            "Columns in fetaure_data (",
-            stringr::str_c(col_names, collapse = ", "),
-            ") missing one or more of (",
-            stringr::str_c(needed_col_names, collapse = ", "),
-            ")."
-          )
-          stop(msg)
-        }
-
-        if(nrow(feature_data()) > length(unique(feature_data()$feature_name)))
-          stop("Values in feature_data$feature_name are not unique.")
-
-        return(feature_data())
-      })
-
-      validated_group_data <- shiny::reactive({
-
-        data <- group_data()
-
-        if(is.null(data)) return(NULL)
-
-        needed_col_names <-
-          c("group_name", "group_display")
-
-        col_names <- colnames(data)
-
-        if(!all(needed_col_names %in% col_names)) {
-          msg <- stringr::str_c(
-            "Columns in fetaure_data (",
-            stringr::str_c(col_names, collapse = ", "),
-            ") missing one or more of (",
-            stringr::str_c(needed_col_names, collapse = ", "),
-            ")."
-          )
-          stop(msg)
-        }
-
-        if(nrow(data) > length(unique(data$group_name)))
-          stop("Values in group_data$group_name are not unique.")
-
-        if(!"group_color" %in% col_names){
-          data <- dplyr::mutate(data, "group_color" = NA)
-        }
-
-        if(!"group_description" %in% col_names){
-          data <- dplyr::mutate(data, "group_description" = "")
-        }
-
-        return(data)
+        validate_feature_data(
+          feature_data(),
+          optional_columns = optional_columns
+        )
       })
 
       feature_classes <- shiny::reactive({
@@ -187,29 +141,9 @@ distributions_plot_server <- function(
           shiny::req(input$feature_choice)
         }
 
-        needed_col_names <-
-          c("sample_name", "feature_name", "group_name", "feature_value")
-
-        sample_data <- dplyr::select(
-          sample_data_function()(.feature = input$feature_choice),
-          dplyr::any_of(needed_col_names)
-        )
-
-        col_names <- colnames(sample_data)
-
-
-        if(!all(needed_col_names %in% col_names)) {
-          msg <- stringr::str_c(
-            "Columns in table from sample_data_function (",
-            stringr::str_c(col_names, collapse = ", "),
-            ") missing one or more of (",
-            stringr::str_c(needed_col_names, collapse = ", "),
-            ")."
-          )
-          stop(msg)
-        }
-
-        return(sample_data)
+        sample_data <-
+          sample_data_function()(.feature = input$feature_choice) %>%
+          validate_sample_data()
       })
 
       distplot_data <- shiny::reactive({
@@ -224,103 +158,34 @@ distributions_plot_server <- function(
           validated_sample_data(),
           input$scale_method_choice,
           input$reorder_method_choice,
-          validated_feature_data(),
-          validated_group_data()
+          validated_feature_data()
         )
       })
 
-      distplot_source_name <- shiny::reactive(ns("distplot"))
-
-      plotly_function <- shiny::reactive({
-        if(input$plot_type_choice == "Violin") return(plotly_violin)
-        else return(plotly_box)
-      })
-
-      plot_fill_colors <- shiny::reactive({
-
-        colors_provided <- !all(is.na(validated_group_data()$group_color))
-
-        if(colors_provided){
-          fill_colors <- validated_group_data() %>%
-            dplyr::select("group_display", "group_color") %>%
-            dplyr::distinct() %>%
-            tibble::deframe(.)
-        } else {
-          fill_colors <- NULL
-        }
-        return(fill_colors)
-      })
-
       plot_title <- shiny::reactive({
-        if(!is.null(distplot_title())) title <- distplot_title()
-        else if(is.null(input$feature_choice)) title <- ""
-        else{
+        if(!is.null(distplot_title())) return(distplot_title())
+        else if(is.null(input$feature_choice)) return("")
+        else {
+          shiny::req(validated_feature_data())
           title <- validated_feature_data() %>%
             dplyr::filter(.data$feature_name == input$feature_choice) %>%
             dplyr::pull("feature_display") %>%
             unique()
         }
-        return(title)
       })
 
-      output$distplot <- plotly::renderPlotly({
-        shiny::req(
-          distplot_data(),
-          distplot_source_name(),
-          plotly_function()
-        )
-        distplot_data() %>%
-          dplyr::select("group_display", "feature_value") %>%
-          plotly_function()(
-            source_name = distplot_source_name(),
-            x_col = "group_display",
-            y_col = "feature_value",
-            fill_colors = plot_fill_colors(),
-            title = plot_title(),
-            xlab = distplot_xlab(),
-            ylab = plot_title()
-          )
-      })
-
-      distplot_eventdata <- shiny::reactive({
-        shiny::req(distplot_source_name(), distplot_data(), plotly_function())
-        eventdata <- plotly::event_data("plotly_click", distplot_source_name())
-        if(is.null(eventdata) & !is.null(input$mock_event_data)){
-          eventdata <- input$mock_event_data
-        }
-        shiny::validate(shiny::need(eventdata, "Click on above barplot."))
-        return(eventdata)
-      })
-
-      plotly_server(
+      ploted_data <- distributions_plot_server2(
         "distplot",
-        plot_data = distplot_data,
-        group_data = validated_group_data,
-        eventdata = distplot_eventdata
-      )
-
-      histogram_data <- drilldown_histogram_server(
-        "histogram",
-        plot_data = distplot_data,
-        eventdata = distplot_eventdata,
-        xlab = plot_title(),
+        distplot_data,
+        group_data,
+        distplot_xlab,
+        distplot_title = plot_title,
+        drilldown      = drilldown,
+        plot_type      = shiny::reactive(input$plot_type_choice),
         ...
       )
 
-      output$display_drilldown_ui <- shiny::reactive({
-        drilldown()
-      })
-
-      shiny::outputOptions(
-        output,
-        "display_drilldown_ui",
-        suspendWhenHidden = FALSE
-      )
-
-      return(list(
-        "histogram_data" = histogram_data,
-        "distplot_data" = distplot_data
-      ))
+      return(ploted_data)
     }
   )
 }

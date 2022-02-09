@@ -18,6 +18,27 @@ server <- function(input, output, session) {
     barplot_ylab = shiny::reactive("Height")
   )
 
+  barplot_server(
+    "barplot3",
+    shiny::reactive(example_iris_data),
+    drilldown = shiny::reactive(T),
+    feature_data = shiny::reactive(example_iris_data_features_1_class()),
+    group_data = shiny::reactive(example_iris_data_groups()),
+    barplot_xlab = shiny::reactive("Species"),
+    barplot_ylab = shiny::reactive("Height")
+  )
+
+  barplot_server2(
+    "barplot4",
+    shiny::reactive(dplyr::rename(
+      example_iris_data(),
+      "feature_display" = "feature_name",
+    )),
+    drilldown = shiny::reactive(T),
+    barplot_xlab = shiny::reactive("Species"),
+    barplot_ylab = shiny::reactive("Height")
+  )
+
   distributions_plot_server(
     "distplot1",
     sample_data_function = shiny::reactive(example_iris_data),
@@ -50,7 +71,30 @@ server <- function(input, output, session) {
     drilldown = shiny::reactive(T),
     distplot_xlab = shiny::reactive("Species")
   )
+  distributions_plot_server2(
+      "distplot5",
+      distplot_data = shiny::reactive(
+        dplyr::rename(
+          example_iris_data(),
+          "feature_display" = "feature_name"
+        )
+      ),
+      drilldown = shiny::reactive(T),
+      distplot_xlab = shiny::reactive("Species")
+  )
 
+  distributions_plot_server2(
+    "distplot6",
+    distplot_data = shiny::reactive(
+      dplyr::rename(
+        example_iris_data(),
+        "feature_display" = "feature_name"
+      )
+    ),
+    group_data = shiny::reactive(example_iris_data_groups()),
+    drilldown = shiny::reactive(T),
+    distplot_xlab = shiny::reactive("Species")
+  )
 
   heatmap_server(
     "heatmap1",
@@ -79,6 +123,19 @@ server <- function(input, output, session) {
         )
     ),
     drilldown = shiny::reactive(T)
+  )
+
+  heatmap_server2(
+    "heatmap3",
+    heatmap_data = shiny::reactive(example_heatmap_iris_data()),
+    drilldown = shiny::reactive(T)
+  )
+
+  heatmap_server2(
+    "heatmap4",
+    heatmap_data = shiny::reactive(example_heatmap_iris_data()),
+    drilldown = shiny::reactive(T),
+    group_data = shiny::reactive(example_iris_data_groups()),
   )
 
 

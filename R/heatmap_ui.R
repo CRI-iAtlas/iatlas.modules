@@ -23,7 +23,7 @@ heatmap_ui <- function(
       html
     ),
     shiny::fluidRow(
-      iatlas.modules::optionsBox(
+      optionsBox(
         width = 12,
         shiny::column(
           width = 6,
@@ -43,20 +43,6 @@ heatmap_ui <- function(
         )
       )
     ),
-    shiny::fluidRow(
-      plotBox(
-        width = 12,
-        "heatmap" %>%
-          ns() %>%
-          plotly::plotlyOutput(.) %>%
-          shinycssloaders::withSpinner(.),
-        plotly_ui(ns("heatmap"))
-      )
-    ),
-    shiny::conditionalPanel(
-      condition = "output.display_drilldown_ui",
-      ns = ns,
-      drilldown_scatterplot_ui(ns("scatterplot"), ...)
-    )
+    heatmap_ui2(ns("heatmap"), ...)
   )
 }

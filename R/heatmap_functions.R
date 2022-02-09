@@ -1,19 +1,32 @@
-build_heatmap_tbl <- function(tbl, func){
-  tbl %>%
-    dplyr::select(
-      "feature" = "feature_display", "feature_order", "group_display", "feature_value", "response_value"
-    ) %>%
-    dplyr::group_by(.data$group_display, .data$feature, .data$feature_order) %>%
-    dplyr::summarise("value" = func(
-      .data$feature_value,
-      .data$response_value
-    )) %>%
-    dplyr::arrange(dplyr::desc(.data$feature_order)) %>%
-    dplyr::select(-c("feature_order")) %>%
-    tidyr::drop_na() %>%
-    tidyr::pivot_wider(
-      .,
-      names_from = "group_display",
-      values_from = "value"
-    )
+
+create_heatmap_data <- function(
+  feature_sample_tbl,
+  response_sample_tbl,
+  validated_feature_data,
+  validated_response_data
+){
+
+  dplyr::inner_join(
+
+    feature_sample_tbl %>%
+      dplyr::inner_join(validated_feature_data, by = "feature_name") %>%
+      dplyr::select(
+        "sample_name",
+        "feature_value",
+        "feature_display",
+        "feature_order",
+        "group_name"
+      ),
+
+    response_sample_tbl %>%
+      dplyr::inner_join(validated_response_data, by = "feature_name") %>%
+      dplyr::select(
+        "sample_name",
+        "response_value" = "feature_value",
+        "response_display" = "feature_display"
+      ),
+
+    by = "sample_name"
+  )
+
 }

@@ -1,8 +1,4 @@
-format_barplot_data <- function(
-  data,
-  feature_data = NULL,
-  group_data = NULL
-){
+format_barplot_data <- function(data, feature_data = NULL){
 
   data <- data %>%
     dplyr::select("sample_name", "feature_name", "group_name", "feature_value")
@@ -20,31 +16,11 @@ format_barplot_data <- function(
       ))
   }
 
-
-  if(is.null(group_data)){
-    data <- data %>%
-      dplyr::mutate("group_display" = .data$group_name)
-  } else {
-    data <- data %>%
-      dplyr::left_join(group_data, by = "group_name") %>%
-      dplyr::mutate(
-        "group_display" = dplyr::if_else(
-          is.na(.data$group_display),
-          .data$group_name,
-          .data$group_display
-        ),
-        "group_description" = "",
-        "group_color" = NA
-      )
-  }
-
   data %>%
     dplyr::select(
       "sample_name",
-      "feature_name",
-      "feature_display",
       "group_name",
-      "group_display",
+      "feature_display",
       "feature_value"
     )
 }

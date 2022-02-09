@@ -23,11 +23,11 @@ barplot_server(
 \item{sample_data_function}{A shiny::reactive that returns a function.
 The function must take an argument called ".feature" and return a
 dataframe with columns "sample_name", "feature_name", "group_name", and
-"feature_value",}
+"feature_value".}
 
 \item{feature_data}{A shiny::reactive that returns a dataframe with columns
-"feature_name","feature_display", and optionally "feature_class. Each value
- in the "feature_name" column should only appear once.}
+"feature_name", and optionally "feature_display" and "feature_class".
+ Each value in the "feature_name" column should only appear once.}
 
 \item{group_data}{A shiny::reactive that returns a dataframe with columns
 "group_name", "group_display", and optionally "group_description" and
@@ -43,7 +43,7 @@ dataframe with columns "sample_name", "feature_name", "group_name", and
 
 \item{drilldown}{A shiny::reactive that returns True or False}
 
-\item{...}{shiny::reactives passed to drilldown_scatterplot_server}
+\item{...}{shiny::reactives passed to barplot_server}
 }
 \description{
 Barplot Server

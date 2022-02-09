@@ -20,13 +20,11 @@ get_distributions_feature_list <- function(features, feature_class_choice){
     create_nested_named_list()
 }
 
-
 format_distplot_data <- function(
   data,
   scale_method_choice,
   reorder_method_choice,
-  feature_data = NULL,
-  group_data = NULL
+  feature_data = NULL
   ){
 
   distplot_data <- data %>%
@@ -47,26 +45,12 @@ format_distplot_data <- function(
       ))
   }
 
-  if(is.null(group_data)){
-    distplot_data <- distplot_data %>%
-      dplyr::mutate("group_display" = .data$group_name)
-  } else {
-    distplot_data <- distplot_data %>%
-      dplyr::left_join(group_data, by = "group_name") %>%
-      dplyr::mutate("group_display" = dplyr::if_else(
-        is.na(.data$group_display),
-        .data$group_name,
-        .data$group_display
-      ))
-  }
-
   distplot_data %>%
     dplyr::select(
       "sample_name",
       "feature_name",
       "feature_display",
       "group_name",
-      "group_display",
       "feature_value"
     )
 }

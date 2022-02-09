@@ -19,7 +19,7 @@ test_that("plotly_server", {
   group_data <- plot_data %>%
     dplyr::select("group_display" = "x") %>%
     dplyr::distinct() %>%
-    dplyr::mutate("group_description" = stringr::str_c("Race: ", .data$group_display))
+    dplyr::mutate("group_description" = stringr::str_c("Species: ", .data$group_display))
 
 
   shiny::testServer(
@@ -31,8 +31,10 @@ test_that("plotly_server", {
     ),
     {
       expect_true(show_group_text())
-      expect_equal(output$plot_group_text, "Race: Petal.Length")
+      expect_equal(group_text(), "Species: Petal.Length")
+      expect_equal(output$plot_group_text, "Species: Petal.Length")
       expect_type(output$download_tbl, "character")
+      expect_equal(session$getReturned()(), "Species: Petal.Length")
     }
   )
 })

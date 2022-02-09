@@ -354,51 +354,131 @@ get_markdown_path <- function(name, extension = ".markdown"){
 
 # input validation ------------------------------------------------------------
 
-validate_feature_data <- function(data){
+validate_data <- function(
+  data,
+  required_columns,
+  table_name,
+  table_key = NULL,
+  optional_columns = NULL
+){
 
-  needed_col_names <- c("feature_name", "feature_display")
-  col_names <- colnames(data)
+  validate_data_columns(data, required_columns, table_name, table_key)
+  validate_data_key(data, table_name, table_key)
 
-  if(!all(needed_col_names %in% col_names)) {
-    msg <- stringr::str_c(
-      "Columns in fetaure_data (",
-      stringr::str_c(col_names, collapse = ", "),
-      ") missing one or more of (",
-      stringr::str_c(needed_col_names, collapse = ", "),
-      ")."
-    )
-    stop(msg)
-  }
-
-  if(nrow(data) > length(unique(data$feature_name)))
-    stop("Values in feature_data$feature_name are not unique.")
+  if(is.null(optional_columns)) columns <- required_columns
+  else columns <- c(required_columns, optional_columns)
+  dplyr::select(data, dplyr::any_of(columns))
 }
 
-validate_group_data <- function(data){
-
-  needed_col_names <- c("group_name", "group_display")
-  col_names <- colnames(data)
-
-  if(!all(needed_col_names %in% col_names)) {
+validate_data_columns <- function(data, columns, table_name, table_key){
+  if(!all(columns %in% colnames(data))) {
     msg <- stringr::str_c(
-      "Columns in fetaure_data (",
-      stringr::str_c(col_names, collapse = ", "),
+      "Columns in ",
+      table_name,
+      "(",
+      sort(stringr::str_c(colnames(data), collapse = ", ")),
       ") missing one or more of (",
-      stringr::str_c(needed_col_names, collapse = ", "),
+      sort(stringr::str_c(columns, collapse = ", ")),
       ")."
     )
     stop(msg)
   }
+}
 
-  if(nrow(data) > length(unique(data$group_name)))
-    stop("Values in group_data$group_name are not unique.")
+validate_data_key <- function(data, table_name, table_key){
+  if(!is.null(table_key)){
+    if(nrow(data) > length(unique(data[[table_key]]))){
+      msg <- stringr::str_c(
+        "Values in ",
+        table_name,
+        " column ",
+        table_key,
+        " are not unique."
+      )
+      stop(msg)
+    }
+  }
+}
 
-  if(!"group_color" %in% col_names){
-    data <- dplyr::mutate(data, "group_color" = NA)
+validate_sample_data <- purrr::partial(
+  .f = validate_data,
+  required_columns = c(
+    "sample_name", "feature_name", "group_name", "feature_value"
+  ),
+  table_name = "sample_data"
+)
+
+validate_feature_data <- function(
+  data,
+  required_columns = c("feature_name"),
+  table_name = "feature_data",
+  table_key = "feature_name",
+  optional_columns = c("feature_display", "feature_class", "feature_order")
+){
+  data <- validate_data(
+    data,
+    required_columns,
+    table_name,
+    table_key,
+    optional_columns
+  )
+
+  add_display_column <- all(
+    "feature_display" %in% optional_columns,
+    !"feature_display" %in% colnames(data)
+  )
+  if(add_display_column){
+    data <- dplyr::mutate(data, "feature_display" = .data$feature_name)
   }
 
-  if(!"group_description" %in% col_names){
+  add_order_column <- all(
+    "feature_order" %in% optional_columns,
+    !"feature_order" %in% colnames(data)
+  )
+  if(add_order_column){
+    data <- dplyr::mutate(data, "feature_order" = NA_integer_)
+  }
+  return(data)
+}
+
+validate_group_data <- function(
+  data,
+  required_columns = c("group_name"),
+  table_name = "group_data",
+  table_key = "group_name",
+  optional_columns = c("group_display", "group_color", "group_description")
+){
+  data <- validate_data(
+    data,
+    required_columns,
+    table_name,
+    table_key,
+    optional_columns
+  )
+
+  add_display_column <- all(
+    "group_display" %in% optional_columns,
+    !"group_display" %in% colnames(data)
+  )
+  if(add_display_column){
+    data <- dplyr::mutate(data, "group_display" = .data$group_name)
+  }
+
+  add_color_column <- all(
+    "group_color" %in% optional_columns,
+    !"group_color" %in% colnames(data)
+  )
+  if(add_color_column){
+    data <- dplyr::mutate(data, "group_color" = NA_character_)
+  }
+
+  add_description_column <- all(
+    "group_description" %in% optional_columns,
+    !"group_description" %in% colnames(data)
+  )
+  if(add_description_column){
     data <- dplyr::mutate(data, "group_description" = "")
   }
+  return(data)
 }
 

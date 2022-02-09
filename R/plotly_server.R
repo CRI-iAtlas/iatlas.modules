@@ -22,8 +22,8 @@ plotly_server <- function(
       output$show_group_text <- show_group_text
       shiny::outputOptions(output, "show_group_text", suspendWhenHidden = FALSE)
 
-      output$plot_group_text <- shiny::renderText({
-        shiny::req(show_group_text())
+      group_text <- shiny::reactive({
+        shiny::req(show_group_text(), group_data())
         shiny::validate(shiny::need(
           eventdata(),
           "Click plot to see group information."
@@ -31,10 +31,14 @@ plotly_server <- function(
         create_group_text_from_eventdata(eventdata(), group_data())
       })
 
+      output$plot_group_text <- shiny::renderText(group_text())
+
       output$download_tbl <- shiny::downloadHandler(
         filename = function() stringr::str_c("data-", Sys.Date(), ".csv"),
         content = function(con) readr::write_csv(plot_data(), con)
       )
+
+      return(group_text)
     }
   )
 }

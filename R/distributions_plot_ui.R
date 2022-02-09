@@ -61,20 +61,6 @@ distributions_plot_ui <- function(
         )
       )
     ),
-    shiny::fluidRow(
-      plotBox(
-        width = 12,
-        "distplot" %>%
-          ns() %>%
-          plotly::plotlyOutput(.) %>%
-          shinycssloaders::withSpinner(.),
-        plotly_ui(ns("distplot"))
-      )
-    ),
-    shiny::conditionalPanel(
-      condition = "output.display_drilldown_ui",
-      ns = ns,
-      drilldown_histogram_ui(ns("histogram"))
-    )
+    distributions_plot_ui2(ns("distplot"))
   )
 }
