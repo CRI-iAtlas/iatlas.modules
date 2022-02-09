@@ -1,3 +1,11 @@
+test_result_object <- function(res){
+  scatterplot_data <- res$scatterplot_data
+  expect_true(tibble::is_tibble(scatterplot_data))
+  expect_named(scatterplot_data, c("x", "y", "text"))
+  heatmap_data <- res$heatmap_data
+  expect_true(tibble::is_tibble(heatmap_data))
+}
+
 
 test_that("heatmap_server2", {
 
@@ -44,6 +52,9 @@ test_that("heatmap_server2", {
         heatmap_eventdata(),
         c("curveNumber", "pointNumber", "x", "y", "z")
       )
+
+      expect_equal(group_text(), "Iris Species: Setosa")
+
       expect_equal(selected_feature(), "Sepal Length")
       expect_equal(selected_group(), "Setosa")
       expect_equal(response_feature(), "Sepal Width")
@@ -54,16 +65,7 @@ test_that("heatmap_server2", {
       )
       expect_true(nrow(scatterplot_data()) > 0)
 
-      res <- session$getReturned()
-      scatterplot_data <- res$scatterplot_data()
-      expect_type(scatterplot_data, "list")
-      expect_named(scatterplot_data, c("x", "y", "text"))
-      heatmap_data <- res$heatmap_data()
-      expect_type(heatmap_data, "list")
-      expect_named(
-        heatmap_data,
-        c('feature_display', 'Setosa', 'Versicolor', 'Virginica')
-      )
+      test_result_object(session$getReturned()())
     }
   )
 })
@@ -122,16 +124,7 @@ test_that("heatmap_server2_no_group_data", {
       )
       expect_true(nrow(scatterplot_data()) > 0)
 
-      res <- session$getReturned()
-      scatterplot_data <- res$scatterplot_data()
-      expect_type(scatterplot_data, "list")
-      expect_named(scatterplot_data, c("x", "y", "text"))
-      heatmap_data <- res$heatmap_data()
-      expect_type(heatmap_data, "list")
-      expect_named(
-        heatmap_data,
-        c('feature_display', 'setosa', 'versicolor', 'virginica')
-      )
+      test_result_object(session$getReturned()())
     }
   )
 })

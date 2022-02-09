@@ -96,35 +96,34 @@ server <- function(input, output, session) {
     distplot_xlab = shiny::reactive("Species")
   )
 
+  heatmap_server(
+    "heatmap1",
+    feature_sample_data_function = shiny::reactive(example_iris_data),
+    response_sample_data_function = shiny::reactive(example_iris_data),
+    feature_data = shiny::reactive(example_iris_data_features_1_class()),
+    response_data = shiny::reactive(example_iris_data_features_1_class()),
+    group_data = shiny::reactive(example_iris_data_groups()),
+    summarise_function_list = shiny::reactive(
+      purrr::partial(stats::cor, method = "pearson")
+    ),
+    drilldown = shiny::reactive(T)
+  )
 
-  # heatmap_server(
-  #   "heatmap1",
-  #   feature_sample_data_function = shiny::reactive(example_iris_data),
-  #   response_sample_data_function = shiny::reactive(example_iris_data),
-  #   feature_data = shiny::reactive(example_iris_data_features_1_class()),
-  #   response_data = shiny::reactive(example_iris_data_features_1_class()),
-  #   group_data = shiny::reactive(example_iris_data_groups()),
-  #   summarise_function_list = shiny::reactive(
-  #     purrr::partial(stats::cor, method = "pearson")
-  #   ),
-  #   drilldown = shiny::reactive(T)
-  # )
-  #
-  # heatmap_server(
-  #   "heatmap2",
-  #   feature_sample_data_function = shiny::reactive(example_iris_data),
-  #   response_sample_data_function = shiny::reactive(example_iris_data),
-  #   feature_data = shiny::reactive(example_iris_data_features_1_class()),
-  #   response_data = shiny::reactive(example_iris_data_features_1_class()),
-  #   group_data = shiny::reactive(example_iris_data_groups()),
-  #   summarise_function_list = shiny::reactive(
-  #     list(
-  #       "Pearson" = purrr::partial(stats::cor, method = "pearson"),
-  #       "Spearman" = purrr::partial(stats::cor, method = "spearman")
-  #       )
-  #   ),
-  #   drilldown = shiny::reactive(T)
-  # )
+  heatmap_server(
+    "heatmap2",
+    feature_sample_data_function = shiny::reactive(example_iris_data),
+    response_sample_data_function = shiny::reactive(example_iris_data),
+    feature_data = shiny::reactive(example_iris_data_features_1_class()),
+    response_data = shiny::reactive(example_iris_data_features_1_class()),
+    group_data = shiny::reactive(example_iris_data_groups()),
+    summarise_function_list = shiny::reactive(
+      list(
+        "Pearson" = purrr::partial(stats::cor, method = "pearson"),
+        "Spearman" = purrr::partial(stats::cor, method = "spearman")
+        )
+    ),
+    drilldown = shiny::reactive(T)
+  )
 
   heatmap_server2(
     "heatmap3",

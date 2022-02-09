@@ -9,12 +9,14 @@
 #' "group_display", and optionally "group_description" and
 #' "group_order". Each value in the "group_display" column should only appear
 #' once.
-#' @param summarize_function A shiny::reactive that returns a function. The function must take vectors.
-#' The first one will be the "feature_value" column of heatmap_data , and the second will be
-#' the "response_value" of heatmap_data, by group. The function must return one
+#' @param summarise_function A shiny::reactive that returns a function. The
+#' function must take two vectors. The first one will be
+#' the "feature_value" column of heatmap_data, and the second will be
+#' the "response_value" of heatmap_data. The function must return one
 #' numeric value.
 #' @param drilldown A shiny::reactive that returns True or False
 #' @param ... shiny::reactives passed to drilldown_scatterplot_server
+#'
 #'
 #' @export
 heatmap_server2 <- function(
@@ -88,9 +90,9 @@ heatmap_server2 <- function(
         return(eventdata)
       })
 
-      plotly_server(
+      group_text <- plotly_server(
         "heatmap",
-        plot_data = heatmap_tibble,
+        plot_data = summarized_heatmap_data,
         group_data = group_data,
         eventdata = heatmap_eventdata
       )
@@ -144,10 +146,15 @@ heatmap_server2 <- function(
         suspendWhenHidden = FALSE
       )
 
-      return(list(
-        "scatterplot_data" = formatted_scatterplot_data,
-        "heatmap_data" = summarized_heatmap_data
-      ))
+      module_result <- shiny::reactive({
+        shiny::req(formatted_scatterplot_data(), summarized_heatmap_data())
+        list(
+          "scatterplot_data" = formatted_scatterplot_data(),
+          "heatmap_data" = summarized_heatmap_data()
+        )
+      })
+
+      return(module_result)
     }
   )
 }
