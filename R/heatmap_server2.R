@@ -42,41 +42,17 @@ heatmap_server2 <- function(
 
       validated_heatmap_data <- shiny::reactive({
         shiny::req(heatmap_data())
-
-        validate_feature_data(
-          heatmap_data(),
-          required_columns = c(
-            "sample_name",
-            "group_name",
-            "feature_value",
-            "feature_display",
-            "response_display",
-            "response_value"
-          ),
-          table_name = "heatmap_data",
-          table_key = NULL,
-          optional_columns = c("feature_order")
-        )
+        validate_heatmap_data(heatmap_data())
       })
 
-      joined_heatmap_data <- shiny::reactive({
+      combined_heatmap_data <- shiny::reactive({
         shiny::req(validated_heatmap_data(), validated_group_data())
-        validated_heatmap_data() %>%
-          dplyr::inner_join(validated_group_data(), by = "group_name") %>%
-          dplyr::select(
-            "sample_name",
-            "feature_display",
-            "feature_order",
-            "group_display",
-            "feature_value",
-            "response_display",
-            "response_value"
-          )
+        combine_heatmap_data(validated_heatmap_data(), validated_group_data())
       })
 
       summarized_heatmap_data <- shiny::reactive({
-        shiny::req(joined_heatmap_data(), summarise_function())
-        summarize_heatmap_data(joined_heatmap_data(), summarise_function())
+        shiny::req(combined_heatmap_data(), summarise_function())
+        summarize_heatmap_data(combined_heatmap_data(), summarise_function())
       })
 
       heatmap_matrix <- shiny::reactive({
@@ -130,43 +106,25 @@ heatmap_server2 <- function(
       })
 
       response_feature <- shiny::reactive({
-        shiny::req(joined_heatmap_data())
-        joined_heatmap_data() %>%
+        shiny::req(combined_heatmap_data())
+        combined_heatmap_data() %>%
           dplyr::pull("response_display") %>%
           unique()
       })
 
       scatterplot_data <- shiny::reactive({
         shiny::req(
-          joined_heatmap_data(),
+          combined_heatmap_data(),
           selected_feature(),
           selected_group(),
           response_feature()
         )
-
-        shiny::validate(shiny::need(
-          all(
-            selected_group() %in% joined_heatmap_data()$group_display,
-            selected_feature() %in% joined_heatmap_data()$feature_display
-          ),
-          "Plot has been updated, please click on plot."
-        ))
-
-        shiny::validate(shiny::need(
-          selected_feature() != response_feature(),
-          "Selected features to compare are the same, please select new features."
-        ))
-
-        joined_heatmap_data() %>%
-          dplyr::filter(
-            .data$feature_display == selected_feature(),
-            .data$group_display == selected_group()
-          ) %>%
-          dplyr::select("sample_name", "group_display", "feature_value", "response_value") %>%
-          dplyr::rename(
-            !!selected_feature() := .data$feature_value,
-            !!response_feature() := .data$response_value
-          )
+        create_scatterplot_data(
+          combined_heatmap_data(),
+          selected_feature(),
+          response_feature(),
+          selected_group()
+        )
       })
 
       formatted_scatterplot_data <- drilldown_scatterplot_server(

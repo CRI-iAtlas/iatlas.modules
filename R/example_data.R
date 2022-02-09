@@ -48,6 +48,26 @@ example_iris_data_missing_column <- function(.feature = NULL, .feature_class = N
   dplyr::select(example_iris_data(), "sample_name", "feature_name", "group_name")
 }
 
+example_heatmap_iris_data <- function(){
+  dplyr::inner_join(
+
+    example_iris_data() %>%
+      dplyr::mutate(
+        "feature_display" = stringr::str_replace(.data$feature_name, "\\.", " ")
+      ) %>%
+      dplyr::select(-"feature_name"),
+
+    example_iris_data() %>%
+      dplyr::mutate(
+        "response_display" = stringr::str_replace(.data$feature_name, "\\.", " ")
+      ) %>%
+      dplyr::filter(.data$response_display == "Sepal Width") %>%
+      dplyr::select("sample_name", "response_display", "response_value" ="feature_value"),
+
+    by = "sample_name"
+  )
+}
+
 example_iris_data_feature_data <- function(){
   dplyr::tribble(
     ~feature_name,  ~feature_display, ~Class1,  ~Class2, ~feature_order,
@@ -135,4 +155,6 @@ example_scatterplot_iris_data_2_features <- function(){
   tbl <- example_scatterplot_iris_data_4_features() %>%
     dplyr::select("sample_name", "group_display", "Sepal.Length", "Sepal.Width")
 }
+
+
 

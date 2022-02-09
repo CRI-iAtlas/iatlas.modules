@@ -1,28 +1,10 @@
-heatmap_data <-
-  dplyr::inner_join(
-    example_iris_data() %>%
-      dplyr::mutate(
-        "feature_display" = stringr::str_replace(.data$feature_name, "\\.", " ")
-      ) %>%
-      dplyr::select(-"feature_name"),
-
-    example_iris_data() %>%
-      dplyr::mutate(
-        "response_display" = stringr::str_replace(.data$feature_name, "\\.", " ")
-      ) %>%
-      dplyr::filter(.data$response_display == "Sepal Width") %>%
-      dplyr::select("sample_name", "response_display", "response_value" ="feature_value"),
-
-    by = "sample_name"
-  )
-
 
 test_that("heatmap_server2", {
 
   shiny::testServer(
     heatmap_server2,
     args = list(
-      "heatmap_data" = shiny::reactive(heatmap_data),
+      "heatmap_data" = shiny::reactive(example_heatmap_iris_data()),
       "group_data" = shiny::reactive(example_iris_data_groups()),
       "drilldown" = shiny::reactive(T)
     ),
@@ -43,7 +25,7 @@ test_that("heatmap_server2", {
 
       expect_true(tibble::is_tibble(validated_heatmap_data()))
 
-      expect_true(tibble::is_tibble(joined_heatmap_data()))
+      expect_true(tibble::is_tibble(combined_heatmap_data()))
 
       expect_true(tibble::is_tibble(summarized_heatmap_data()))
       expect_named(
@@ -91,7 +73,7 @@ test_that("heatmap_server2_no_group_data", {
   shiny::testServer(
     heatmap_server2,
     args = list(
-      "heatmap_data" = shiny::reactive(heatmap_data),
+      "heatmap_data" = shiny::reactive(example_heatmap_iris_data()),
       "drilldown" = shiny::reactive(T)
     ),
     {
@@ -111,7 +93,7 @@ test_that("heatmap_server2_no_group_data", {
 
       expect_true(tibble::is_tibble(validated_heatmap_data()))
 
-      expect_true(tibble::is_tibble(joined_heatmap_data()))
+      expect_true(tibble::is_tibble(combined_heatmap_data()))
 
       expect_true(tibble::is_tibble(summarized_heatmap_data()))
       expect_named(
@@ -159,13 +141,11 @@ test_that("heatmap_server2_chosen_features_are_equal", {
   shiny::testServer(
     heatmap_server2,
     args = list(
-      "heatmap_data" = shiny::reactive(heatmap_data),
+      "heatmap_data" = shiny::reactive(example_heatmap_iris_data()),
       "group_data" = shiny::reactive(example_iris_data_groups()),
       "drilldown" = shiny::reactive(T)
     ),
     {
-      session$setInputs("class_choice" = "Length")
-      session$setInputs("response_choice" = "Sepal.Length")
       session$setInputs("mock_event_data" = data.frame(
         "curveNumber" = 0,
         "pointNumber" = 1,
@@ -186,7 +166,7 @@ test_that("heatmap_server2_plot_updated", {
   shiny::testServer(
     heatmap_server2,
     args = list(
-      "heatmap_data" = shiny::reactive(heatmap_data),
+      "heatmap_data" = shiny::reactive(example_heatmap_iris_data()),
       "group_data" = shiny::reactive(example_iris_data_groups()),
       "drilldown" = shiny::reactive(T)
     ),
