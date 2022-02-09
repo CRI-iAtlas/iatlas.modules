@@ -60,7 +60,7 @@ test_that("heatmap_server", {
           "sample_name",
           "feature_name",
           "feature_value",
-          "group_name"
+          "group_name"feature_display
         )
       )
       expect_true(tibble::is_tibble(response_sample_tbl()))
