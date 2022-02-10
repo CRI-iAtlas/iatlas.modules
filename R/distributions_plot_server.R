@@ -77,7 +77,7 @@ distributions_plot_server <- function(
       )
 
       output$feature_class_selection_ui <- shiny::renderUI({
-        shiny::req(feature_classes())
+        shiny::req(feature_classes(), display_feature_class_selection_ui())
         shiny::selectInput(
           inputId  = ns("feature_class_choice"),
           label    = "Select Feature Class",
@@ -112,7 +112,7 @@ distributions_plot_server <- function(
       })
 
       output$feature_selection_ui <- shiny::renderUI({
-        shiny::req(feature_list())
+        shiny::req(feature_list(), display_feature_selection_ui())
         shiny::selectInput(
           inputId  = ns("feature_choice"),
           label    = "Select Feature",
