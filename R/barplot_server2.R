@@ -30,12 +30,7 @@ barplot_server2 <- function(
     function(input, output, session) {
       ns <- session$ns
 
-      validated_group_data <- shiny::reactive({
-        if(is.null(group_data())) return(NULL)
-        validate_group_data(group_data())
-      })
-
-      validated_data <- shiny::reactive({
+      validated_barplot_data <- shiny::reactive({
         shiny::req(barplot_data())
         validate_data(
           barplot_data(),
@@ -46,27 +41,30 @@ barplot_server2 <- function(
         )
       })
 
-      merged_barplot_data <- shiny::reactive({
-        shiny::req(validated_data())
-        if(is.null(validated_group_data())){
-          result <- validated_data() %>%
-            dplyr::mutate(
-              "group_display" = .data$group_name,
-              "group_color" = NA_character_
-            )
-        } else {
-          result <- dplyr::inner_join(
-            validated_data(), validated_group_data(), by = "group_name"
-          )
+      validated_group_data <- shiny::reactive({
+        if(is.null(group_data())){
+          shiny::req(validated_barplot_data())
+          return(create_barplot_group_data(validated_barplot_data()))
         }
-        dplyr::select(
-          result,
-          "sample_name",
-          "group_display",
-          "group_color",
-          "feature_display",
-          "feature_value"
-        )
+        validate_group_data(group_data())
+      })
+
+      merged_barplot_data <- shiny::reactive({
+        shiny::req(validated_barplot_data())
+        result <- validated_barplot_data() %>%
+          dplyr::inner_join(validated_group_data(), by = "group_name") %>%
+          dplyr::select(
+            "sample_name",
+            "group_display",
+            "feature_display",
+            "feature_value"
+          )
+
+        if(nrow(result) == 0) {
+          stop("No matches in group_name between barplot_data and group_data.")
+        }
+
+        return(result)
       })
 
       summarized_barplot_data <- shiny::reactive({
