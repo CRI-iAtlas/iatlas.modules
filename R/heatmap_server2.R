@@ -3,8 +3,9 @@
 #'
 #' @param id Module ID
 #' @param heatmap_data A shiny::reactive that returns a dataframe with a columns
-#' named "sample_name", "group_name", "feature_value", "feature_display",
-#' "response_display", "response_value", and optionally "feature_order".
+#' named "sample_name", "group_name", "dataset_name", "feature_value",
+#' "feature_display", "response_display", "response_value", and optionally
+#' "feature_order".
 #' @param group_data A shiny::reactive that returns a dataframe with columns
 #' "group_display", and optionally "group_description" and
 #' "group_order". Each value in the "group_display" column should only appear

@@ -12,8 +12,8 @@ test_that("heatmap_server", {
   shiny::testServer(
     heatmap_server,
     args = list(
-      "feature_sample_data_function" = shiny::reactive(example_iris_data),
-      "response_sample_data_function" = shiny::reactive(example_iris_data),
+      "feature_sample_data_function" = shiny::reactive(example_iris_data_one_dataset),
+      "response_sample_data_function" = shiny::reactive(example_iris_data_one_dataset),
       "feature_data" = shiny::reactive(example_iris_data_features_1_class()),
       "response_data" = shiny::reactive(example_iris_data_features_1_class()),
       "group_data" = shiny::reactive(example_iris_data_groups()),
@@ -64,6 +64,7 @@ test_that("heatmap_server", {
           "sample_name",
           "feature_name",
           "group_name",
+          "dataset_name",
           "feature_value"
         )
       )
@@ -85,6 +86,7 @@ test_that("heatmap_server", {
           'feature_display',
           'feature_order',
           'group_name',
+          'dataset_name',
           'response_value',
           'response_display'
         )
@@ -102,8 +104,8 @@ test_that("heatmap_server_multiple_summarise_functions", {
   shiny::testServer(
     heatmap_server,
     args = list(
-      "feature_sample_data_function" = shiny::reactive(example_iris_data),
-      "response_sample_data_function" = shiny::reactive(example_iris_data),
+      "feature_sample_data_function" = shiny::reactive(example_iris_data_one_dataset),
+      "response_sample_data_function" = shiny::reactive(example_iris_data_one_dataset),
       "feature_data" = shiny::reactive(example_iris_data_features_1_class()),
       "response_data" = shiny::reactive(example_iris_data_features_1_class()),
       "group_data" = shiny::reactive(example_iris_data_groups()),
@@ -116,12 +118,23 @@ test_that("heatmap_server_multiple_summarise_functions", {
       "drilldown" = shiny::reactive(T)
     ),
     {
+      session$setInputs("class_choice" = "Length")
+      session$setInputs("response_choice" = "Sepal.Width")
+      session$setInputs("heatmap-mock_event_data" = data.frame(
+        "curveNumber" = 0,
+        "pointNumber" = 1,
+        "x" = "Setosa",
+        "y" = "Sepal Length",
+        "z" = "0.1805093"
+      ))
       session$setInputs("summarise_function_choice" = "Spearman")
 
       expect_true(display_summarise_function_ui())
       expect_type(output$summarise_function_ui, "list")
 
       expect_type(summarise_function(), "closure")
+
+      test_result_object(session$getReturned()())
     }
   )
 })
@@ -132,8 +145,8 @@ test_that("heatmap_server_error_no_feature_data", {
   shiny::testServer(
     heatmap_server,
     args = list(
-      "feature_sample_data_function" = shiny::reactive(example_iris_data),
-      "response_sample_data_function" = shiny::reactive(example_iris_data),
+      "feature_sample_data_function" = shiny::reactive(example_iris_data_one_dataset),
+      "response_sample_data_function" = shiny::reactive(example_iris_data_one_dataset),
       "feature_data" = shiny::reactive(example_iris_data_features_1_class()),
       "response_data" = shiny::reactive(example_iris_data_features_1_class()),
       "group_data" = shiny::reactive(example_iris_data_groups()),
@@ -156,8 +169,8 @@ test_that("heatmap_server_error_no_response_data", {
   shiny::testServer(
     heatmap_server,
     args = list(
-      "feature_sample_data_function" = shiny::reactive(example_iris_data),
-      "response_sample_data_function" = shiny::reactive(example_iris_data),
+      "feature_sample_data_function" = shiny::reactive(example_iris_data_one_dataset),
+      "response_sample_data_function" = shiny::reactive(example_iris_data_one_dataset),
       "feature_data" = shiny::reactive(example_iris_data_features_1_class()),
       "response_data" = shiny::reactive(example_iris_data_features_1_class()),
       "group_data" = shiny::reactive(example_iris_data_groups()),

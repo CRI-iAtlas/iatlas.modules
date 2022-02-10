@@ -4,10 +4,12 @@
 #' @param id Module ID
 #' @param plot_data A shiny::reactive that returns a dataframe with columns
 #' "group_display", "dataset_display", "feature_value"
-#' @param eventdata A shiny::reactive that returns a dataframe with column
-#' "key"
+#' @param eventdata A shiny::reactive that returns a dataframe
+#' @param eventdata_group_column A shiny::reactive that returns the name of a
+#' column in eventdata
+#' @param eventdata_dataset_column A shiny::reactive that returns the name of a
+#' column in eventdata
 #' @param ... arguments sents to plotly_histogram
-#'
 #' @export
 drilldown_histogram_server <- function(
   id,

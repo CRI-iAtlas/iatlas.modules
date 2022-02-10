@@ -4,6 +4,7 @@ validate_heatmap_data <- function(heatmap_data){
     required_columns = c(
       "sample_name",
       "group_name",
+      "dataset_name",
       "feature_value",
       "feature_display",
       "response_display",

@@ -111,8 +111,8 @@ server <- function(input, output, session) {
 
   heatmap_server(
     "heatmap1",
-    feature_sample_data_function = shiny::reactive(example_iris_data),
-    response_sample_data_function = shiny::reactive(example_iris_data),
+    feature_sample_data_function = shiny::reactive(example_iris_data_one_dataset),
+    response_sample_data_function = shiny::reactive(example_iris_data_one_dataset),
     feature_data = shiny::reactive(example_iris_data_features_1_class()),
     response_data = shiny::reactive(example_iris_data_features_1_class()),
     group_data = shiny::reactive(example_iris_data_groups()),
@@ -124,8 +124,8 @@ server <- function(input, output, session) {
 
   heatmap_server(
     "heatmap2",
-    feature_sample_data_function = shiny::reactive(example_iris_data),
-    response_sample_data_function = shiny::reactive(example_iris_data),
+    feature_sample_data_function = shiny::reactive(example_iris_data_one_dataset),
+    response_sample_data_function = shiny::reactive(example_iris_data_one_dataset),
     feature_data = shiny::reactive(example_iris_data_features_1_class()),
     response_data = shiny::reactive(example_iris_data_features_1_class()),
     group_data = shiny::reactive(example_iris_data_groups()),

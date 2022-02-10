@@ -17,8 +17,9 @@ heatmap_server2(
 \item{id}{Module ID}
 
 \item{heatmap_data}{A shiny::reactive that returns a dataframe with a columns
-named "sample_name", "group_name", "feature_value", "feature_display",
-"response_display", "response_value", and optionally "feature_order".}
+named "sample_name", "group_name", "dataset_name", "feature_value",
+"feature_display", "response_display", "response_value", and optionally
+"feature_order".}
 
 \item{group_data}{A shiny::reactive that returns a dataframe with columns
 "group_display", and optionally "group_description" and

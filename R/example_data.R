@@ -64,7 +64,7 @@ example_iris_data_missing_column <- function(.feature = NULL, .feature_class = N
 example_heatmap_iris_data <- function(){
   dplyr::inner_join(
 
-    example_iris_data() %>%
+    example_iris_data_one_dataset() %>%
       dplyr::mutate(
         "feature_display" = stringr::str_replace(.data$feature_name, "\\.", " ")
       ) %>%

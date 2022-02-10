@@ -8,9 +8,9 @@ distributions_plot_server2(
   id,
   distplot_data,
   group_data = shiny::reactive(NULL),
+  dataset_data = shiny::reactive(NULL),
   plot_type = shiny::reactive("Violin"),
   distplot_xlab = shiny::reactive(""),
-  distplot_title = shiny::reactive(NULL),
   drilldown = shiny::reactive(F),
   ...
 )
@@ -19,18 +19,20 @@ distributions_plot_server2(
 \item{id}{Module ID}
 
 \item{distplot_data}{A shiny::reactive that returns a dataframe with
-columns "sample_name", "group_name", feature_display", and "feature_value".}
+columns "sample_name", "group_name", feature_display", "feature_value", and
+"dataset_name". There will be one plot for each value in "dataset_name".}
 
 \item{group_data}{A shiny::reactive that returns a dataframe with columns
 "group_name", "group_display", and optionally "group_description" and
-"group_color". Each value in the "group_name"column should only appear once.}
+"group_color". Each value in the "group_name" column should only appear once.}
 
-\item{plot_type}{A shiny::reactive that returns a string, eith "Violin" or
+\item{dataset_data}{A shiny::reactive that returns a dataframe with columns
+"dataset_name", and "dataset_display".}
+
+\item{plot_type}{A shiny::reactive that returns a string, either "Violin" or
 "Box"}
 
 \item{distplot_xlab}{A shiny::reactive that returns a string}
-
-\item{distplot_title}{A shiny::reactive that returns a string}
 
 \item{drilldown}{A shiny::reactive that returns True or False}
 
