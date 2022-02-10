@@ -43,8 +43,8 @@ test_that("barplot_server2_iris_no_group_data", {
         "key" = "virginica"
       ))
 
-      expect_null(validated_group_data())
-      expect_true(tibble::is_tibble(validated_data()))
+      expect_true(tibble::is_tibble(validated_barplot_data()))
+      expect_true(tibble::is_tibble(validated_group_data()))
 
       expect_true(tibble::is_tibble(merged_barplot_data()))
       expect_true(nrow(merged_barplot_data()) > 0)
@@ -53,7 +53,6 @@ test_that("barplot_server2_iris_no_group_data", {
         c(
           "sample_name",
           "group_display",
-          "group_color",
           "feature_display",
           "feature_value"
         )
@@ -109,7 +108,7 @@ test_that("barplot_server2_iris", {
         "key" = "Virginica"
       ))
 
-      expect_true(tibble::is_tibble(validated_data()))
+      expect_true(tibble::is_tibble(validated_barplot_data()))
 
       expect_true(tibble::is_tibble(merged_barplot_data()))
       expect_true(nrow(merged_barplot_data()) > 0)
@@ -118,7 +117,6 @@ test_that("barplot_server2_iris", {
         c(
           "sample_name",
           "group_display",
-          "group_color",
           "feature_display",
           "feature_value"
         )

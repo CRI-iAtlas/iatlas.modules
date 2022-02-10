@@ -3,7 +3,7 @@
 #'
 #' @param id Module ID
 #' @param sample_data_function A shiny::reactive that returns a function.
-#' The function must take an argument called ".feature" and return a
+#' The function must take an argument called ".feature_class" and return a
 #' dataframe with columns "sample_name", "feature_name", "group_name", and
 #' "feature_value".
 #' @param feature_data A shiny::reactive that returns a dataframe with columns
@@ -46,12 +46,17 @@ barplot_server <- function(
       })
 
       display_feature_class_selection_ui <- shiny::reactive({
-        all(
+        col_exists <- all(
           !is.null(validated_feature_data()),
-          !is.null(validated_feature_data()$feature_class),
-          length(unique(validated_feature_data()$feature_class)) > 1
+          "feature_class" %in% colnames(validated_feature_data())
         )
+        if(!col_exists) return(FALSE)
+        else {
+          return(length(unique(validated_feature_data()$feature_class)) > 1)
+        }
       })
+
+
 
       output$display_feature_class_selection_ui <- shiny::reactive({
         display_feature_class_selection_ui()
