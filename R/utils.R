@@ -403,7 +403,7 @@ validate_data_key <- function(data, table_name, table_key){
 validate_sample_data <- purrr::partial(
   .f = validate_data,
   required_columns = c(
-    "sample_name", "feature_name", "group_name", "feature_value"
+    "sample_name", "feature_name", "group_name", "dataset_name", "feature_value"
   ),
   table_name = "sample_data"
 )
@@ -480,5 +480,21 @@ validate_group_data <- function(
     data <- dplyr::mutate(data, "group_description" = "")
   }
   return(data)
+}
+
+validate_dataset_data <- function(
+  data,
+  required_columns = c("dataset_name", "dataset_display"),
+  table_name = "dataset_data",
+  table_key = "dataset_name",
+  optional_columns = c()
+){
+  data <- validate_data(
+    data,
+    required_columns,
+    table_name,
+    table_key,
+    optional_columns
+  )
 }
 

@@ -30,7 +30,13 @@ format_distplot_data <- function(
   distplot_data <- data %>%
     scale_tbl_value_column(scale_method_choice) %>%
     reafctor_by_tbl_value_column(reorder_method_choice) %>%
-    dplyr::select("sample_name", "feature_name", "group_name", "feature_value")
+    dplyr::select(
+      "sample_name",
+      "feature_name",
+      "group_name",
+      "dataset_name",
+      "feature_value"
+    )
 
   if(is.null(feature_data)){
     distplot_data <- distplot_data %>%
@@ -51,6 +57,7 @@ format_distplot_data <- function(
       "feature_name",
       "feature_display",
       "group_name",
+      "dataset_name",
       "feature_value"
     )
 }

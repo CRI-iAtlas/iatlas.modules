@@ -43,9 +43,22 @@ example_iris_data <- function(.feature = NULL, .feature_class = NULL){
   )
 }
 
+example_iris_data_one_dataset <- function(.feature = NULL, .feature_class = NULL){
+  example_iris_data(.feature, .feature_class) %>%
+    dplyr::mutate("dataset_name" = "Iris")
+}
+
+example_iris_data_two_datasets <- function(.feature = NULL, .feature_class = NULL){
+  example_iris_data(.feature, .feature_class) %>%
+    dplyr::mutate("dataset_name" = dplyr::if_else(
+      as.integer(.data$sample_name) %% 2 == 0,
+      "Iris2",
+      "Iris1"
+    ))
+}
 
 example_iris_data_missing_column <- function(.feature = NULL, .feature_class = NULL){
-  dplyr::select(example_iris_data(), "sample_name", "feature_name", "group_name")
+  dplyr::select(example_iris_data_one_dataset(), -"sample_name")
 }
 
 example_heatmap_iris_data <- function(){

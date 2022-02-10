@@ -41,14 +41,14 @@ server <- function(input, output, session) {
 
   distributions_plot_server(
     "distplot1",
-    sample_data_function = shiny::reactive(example_iris_data),
+    sample_data_function = shiny::reactive(example_iris_data_one_dataset),
     drilldown = shiny::reactive(T),
     distplot_xlab = shiny::reactive("Species")
   )
 
   distributions_plot_server(
     "distplot2",
-    sample_data_function = shiny::reactive(example_iris_data),
+    sample_data_function = shiny::reactive(example_iris_data_one_dataset),
     feature_data = shiny::reactive(example_iris_data_features_1_class()),
     drilldown = shiny::reactive(T),
     distplot_xlab = shiny::reactive("Species")
@@ -56,7 +56,7 @@ server <- function(input, output, session) {
 
   distributions_plot_server(
     "distplot3",
-    sample_data_function = shiny::reactive(example_iris_data),
+    sample_data_function = shiny::reactive(example_iris_data_one_dataset),
     feature_data = shiny::reactive(example_iris_data_feature_data()),
     group_data = shiny::reactive(example_iris_data_groups()),
     drilldown = shiny::reactive(T),
@@ -65,17 +65,18 @@ server <- function(input, output, session) {
 
   distributions_plot_server(
     "distplot4",
-    sample_data_function = shiny::reactive(example_iris_data),
+    sample_data_function = shiny::reactive(example_iris_data_one_dataset),
     feature_data = shiny::reactive(example_iris_data_feature_data()),
     group_data = shiny::reactive(example_iris_data_groups2()),
     drilldown = shiny::reactive(T),
     distplot_xlab = shiny::reactive("Species")
   )
+
   distributions_plot_server2(
       "distplot5",
       distplot_data = shiny::reactive(
         dplyr::rename(
-          example_iris_data(),
+          example_iris_data_one_dataset(),
           "feature_display" = "feature_name"
         )
       ),
@@ -87,7 +88,19 @@ server <- function(input, output, session) {
     "distplot6",
     distplot_data = shiny::reactive(
       dplyr::rename(
-        example_iris_data(),
+        example_iris_data_two_datasets(),
+        "feature_display" = "feature_name"
+      )
+    ),
+    drilldown = shiny::reactive(T),
+    distplot_xlab = shiny::reactive("Species")
+  )
+
+  distributions_plot_server2(
+    "distplot7",
+    distplot_data = shiny::reactive(
+      dplyr::rename(
+        example_iris_data_one_dataset(),
         "feature_display" = "feature_name"
       )
     ),

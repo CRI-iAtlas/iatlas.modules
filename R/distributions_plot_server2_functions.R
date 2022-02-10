@@ -2,13 +2,17 @@ validate_distplot_data <- function(distplot_data){
   validate_data(
     distplot_data,
     required_columns = c(
-      "sample_name", "group_name", "feature_display",  "feature_value"
+      "sample_name",
+      "group_name",
+      "dataset_name",
+      "feature_display",
+      "feature_value"
     ),
     table_name = "distplot_data"
   )
 }
 
-create_group_data <- function(validated_distplot_data){
+create_distplot_group_data <- function(validated_distplot_data){
   data <- validated_distplot_data %>%
     dplyr::select("group_name") %>%
     dplyr::distinct() %>%
@@ -19,16 +23,29 @@ create_group_data <- function(validated_distplot_data){
     )
 }
 
-merge_distplot_data <- function(validated_distplot_data, validated_group_data){
+create_distplot_dataset_data <- function(validated_distplot_data){
+  data <- validated_distplot_data %>%
+    dplyr::select("dataset_name") %>%
+    dplyr::distinct() %>%
+    dplyr::mutate("dataset_display" = .data$dataset_name)
+}
+
+merge_distplot_data <- function(
+  validated_distplot_data,
+  validated_group_data,
+  validated_dataset_data
+){
   validated_distplot_data %>%
     dplyr::inner_join(validated_group_data, by = "group_name") %>%
+    dplyr::inner_join(validated_dataset_data, by = "dataset_name") %>%
     dplyr::select(
       "sample_name",
       "group_display",
       "group_color",
       "group_description",
       "feature_display",
-      "feature_value"
+      "feature_value",
+      "dataset_display"
     )
 }
 
