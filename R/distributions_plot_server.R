@@ -150,19 +150,8 @@ distributions_plot_server <- function(
       })
 
       distplot_data <- shiny::reactive({
-
-        shiny::req(
-          validated_sample_data(),
-          input$scale_method_choice,
-          input$reorder_method_choice
-        )
-
-        format_distplot_data(
-          validated_sample_data(),
-          input$scale_method_choice,
-          input$reorder_method_choice,
-          validated_feature_data()
-        )
+        shiny::req(validated_sample_data())
+        format_distplot_data(validated_sample_data(), validated_feature_data())
       })
 
       plot_title <- shiny::reactive({
@@ -185,6 +174,8 @@ distributions_plot_server <- function(
         distplot_xlab,
         drilldown      = drilldown,
         plot_type      = shiny::reactive(input$plot_type_choice),
+        scale_method   = shiny::reactive(input$scale_method_choice),
+        reorder_method = shiny::reactive(input$reorder_method_choice),
         ...
       )
 

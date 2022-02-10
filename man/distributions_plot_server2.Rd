@@ -10,6 +10,8 @@ distributions_plot_server2(
   group_data = shiny::reactive(NULL),
   dataset_data = shiny::reactive(NULL),
   plot_type = shiny::reactive("Violin"),
+  scale_method = shiny::reactive("None"),
+  reorder_method = shiny::reactive("None"),
   distplot_xlab = shiny::reactive(""),
   drilldown = shiny::reactive(F),
   ...
@@ -31,6 +33,12 @@ columns "sample_name", "group_name", feature_display", "feature_value", and
 
 \item{plot_type}{A shiny::reactive that returns a string, either "Violin" or
 "Box"}
+
+\item{scale_method}{A shiny::reactive that returns a string, one of (
+"None", Log2", "Log2 + 1", "Log10 + 1", "Log10")}
+
+\item{reorder_method}{A shiny::reactive that returns a string, one of (
+"None", "Median", "Mean", "Max", "Min")}
 
 \item{distplot_xlab}{A shiny::reactive that returns a string}
 

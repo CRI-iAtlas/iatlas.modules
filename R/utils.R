@@ -81,20 +81,21 @@ scale_tbl_value_column <- function(tbl, scale_method = "None"){
 #' Refactor By Tibble Value Column
 #'
 #' @param reorder_method One of "None", "Median", "Mean", "Max", "Min
-#' @param tbl A Tibble with columns "feature_value", "group_name"
+#' @param tbl A Tibble with columns "feature_value", "group_display"
 #'
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
 #' @importFrom stats median
 #'
 #' @export
-reafctor_by_tbl_value_column <- function(tbl, reorder_method = "None"){
+refactor_by_tbl_value_column <- function(tbl, reorder_method = "None"){
   if(reorder_method == "None") {
     tbl <- tbl %>%
       dplyr::mutate(
-        "group_name" = factor(.data$group_name)
+        "group_display" = factor(.data$group_display)
       )
   } else {
+
     reorder_method <- switch(
       reorder_method,
       "Median" = median,
@@ -102,16 +103,18 @@ reafctor_by_tbl_value_column <- function(tbl, reorder_method = "None"){
       "Max" = max,
       "Min" = min
     )
+
     new_levels <- tbl %>%
-      dplyr::group_by(.data$group) %>%
+      dplyr::group_by(.data$group_display) %>%
       dplyr::summarise(
         "feature_value" = reorder_method(.data$feature_value), .groups = "drop"
       ) %>%
       dplyr::arrange(.data$feature_value) %>%
-      dplyr::pull("group_name")
+      dplyr::pull("group_display")
+
     tbl <- tbl %>%
       dplyr::mutate(
-        "group_name" = factor(.data$group, levels = new_levels)
+        "group_display" = factor(.data$group_display, levels = new_levels)
       )
   }
 }
