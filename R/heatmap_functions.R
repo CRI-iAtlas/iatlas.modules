@@ -15,7 +15,8 @@ create_heatmap_data <- function(
         "feature_value",
         "feature_display",
         "feature_order",
-        "group_name"
+        "group_name",
+        "dataset_name"
       ),
 
     response_sample_tbl %>%

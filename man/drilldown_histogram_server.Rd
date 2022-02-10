@@ -4,16 +4,28 @@
 \alias{drilldown_histogram_server}
 \title{Drilldown Histogram Server}
 \usage{
-drilldown_histogram_server(id, plot_data, eventdata, ...)
+drilldown_histogram_server(
+  id,
+  plot_data,
+  eventdata,
+  eventdata_group_column = shiny::reactive("x"),
+  eventdata_dataset_column = shiny::reactive("key"),
+  ...
+)
 }
 \arguments{
 \item{id}{Module ID}
 
 \item{plot_data}{A shiny::reactive that returns a dataframe with columns
-"group_name", "group_display", "feature_value"}
+"group_display", "dataset_display", "feature_value"}
 
-\item{eventdata}{A shiny::reactive that returns a dataframe with column
-"key"}
+\item{eventdata}{A shiny::reactive that returns a dataframe}
+
+\item{eventdata_group_column}{A shiny::reactive that returns the name of a
+column in eventdata}
+
+\item{eventdata_dataset_column}{A shiny::reactive that returns the name of a
+column in eventdata}
 
 \item{...}{arguments sents to plotly_histogram}
 }

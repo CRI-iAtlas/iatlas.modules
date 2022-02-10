@@ -25,7 +25,8 @@ ui <- function() {
         shiny::tabPanel(
           "Distribution Plots2",
           distributions_plot_ui2("distplot5"),
-          distributions_plot_ui2("distplot6")
+          distributions_plot_ui2("distplot6"),
+          distributions_plot_ui2("distplot7")
         ),
         shiny::tabPanel(
           "Heatmaps",

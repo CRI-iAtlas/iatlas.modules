@@ -13,6 +13,8 @@
 #' @param group_data A shiny::reactive that returns a dataframe with columns
 #' "group_name", "group_display", and optionally "group_description" and
 #' "group_color". Each value in the "group_name"column should only appear once.
+#' @param dataset_data A shiny::reactive that returns a dataframe with columns
+#' "dataset_name", and "dataset_display".
 #' @param distplot_xlab A shiny::reactive that returns a string
 #' @param distplot_title A shiny::reactive that returns a string
 #' @param scale_method_default A shiny::reactive that returns a string
@@ -26,6 +28,7 @@ distributions_plot_server <- function(
   sample_data_function,
   feature_data = shiny::reactive(NULL),
   group_data = shiny::reactive(NULL),
+  dataset_data   = shiny::reactive(NULL),
   distplot_xlab = shiny::reactive(""),
   distplot_title = shiny::reactive(NULL),
   scale_method_default = shiny::reactive("None"),
@@ -178,8 +181,8 @@ distributions_plot_server <- function(
         "distplot",
         distplot_data,
         group_data,
+        dataset_data,
         distplot_xlab,
-        distplot_title = plot_title,
         drilldown      = drilldown,
         plot_type      = shiny::reactive(input$plot_type_choice),
         ...

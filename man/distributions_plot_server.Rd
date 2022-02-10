@@ -9,6 +9,7 @@ distributions_plot_server(
   sample_data_function,
   feature_data = shiny::reactive(NULL),
   group_data = shiny::reactive(NULL),
+  dataset_data = shiny::reactive(NULL),
   distplot_xlab = shiny::reactive(""),
   distplot_title = shiny::reactive(NULL),
   scale_method_default = shiny::reactive("None"),
@@ -33,6 +34,9 @@ dataframe with columns "sample_name", "feature_name", "group_name", and
 \item{group_data}{A shiny::reactive that returns a dataframe with columns
 "group_name", "group_display", and optionally "group_description" and
 "group_color". Each value in the "group_name"column should only appear once.}
+
+\item{dataset_data}{A shiny::reactive that returns a dataframe with columns
+"dataset_name", and "dataset_display".}
 
 \item{distplot_xlab}{A shiny::reactive that returns a string}
 

@@ -4,8 +4,8 @@
 #' @param id Module ID
 #' @param feature_sample_data_function A shiny::reactive that returns a function
 #' The function must take an argument called ".feature_class" and return a
-#' dataframe with columns "sample_name", "group_name", "feature_name", and
-#' "feature_value"
+#' dataframe with columns "sample_name", "group_name", "dataset_name",
+#' "feature_name", and "feature_value"
 #' @param response_sample_data_function A shiny::reactive that returns a function
 #' The function must take an argument called ".feature" and return a
 #' dataframe with columns "sample_name", "feature_name", "feature_value"

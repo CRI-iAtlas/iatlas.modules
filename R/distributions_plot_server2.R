@@ -3,14 +3,16 @@
 #'
 #' @param id Module ID
 #' @param distplot_data A shiny::reactive that returns a dataframe with
-#' columns "sample_name", "group_name", feature_display", and "feature_value".
+#' columns "sample_name", "group_name", feature_display", "feature_value", and
+#' "dataset_name". There will be one plot for each value in "dataset_name".
 #' @param group_data A shiny::reactive that returns a dataframe with columns
 #' "group_name", "group_display", and optionally "group_description" and
-#' "group_color". Each value in the "group_name"column should only appear once.
-#' @param plot_type A shiny::reactive that returns a string, eith "Violin" or
+#' "group_color". Each value in the "group_name" column should only appear once.
+#' @param dataset_data A shiny::reactive that returns a dataframe with columns
+#' "dataset_name", and "dataset_display".
+#' @param plot_type A shiny::reactive that returns a string, either "Violin" or
 #' "Box"
 #' @param distplot_xlab A shiny::reactive that returns a string
-#' @param distplot_title A shiny::reactive that returns a string
 #' @param drilldown A shiny::reactive that returns True or False
 #' @param ... shiny::reactives passed to drilldown_histogram_server
 #'
@@ -19,9 +21,9 @@ distributions_plot_server2 <- function(
   id,
   distplot_data,
   group_data     = shiny::reactive(NULL),
+  dataset_data   = shiny::reactive(NULL),
   plot_type      = shiny::reactive("Violin"),
   distplot_xlab  = shiny::reactive(""),
-  distplot_title = shiny::reactive(NULL),
   drilldown      = shiny::reactive(F),
   ...
   ) {
@@ -38,16 +40,32 @@ distributions_plot_server2 <- function(
       validated_group_data <- shiny::reactive({
         if(is.null(group_data())){
           shiny::req(validated_distplot_data())
-          return(create_group_data(validated_distplot_data()))
+          return(create_distplot_group_data(validated_distplot_data()))
         } else {
           return(validate_group_data(group_data()))
         }
       })
 
-      merged_distplot_data <- shiny::reactive({
-        shiny::req(validated_distplot_data(), validated_group_data())
-        merge_distplot_data(validated_distplot_data(), validated_group_data())
+      validated_dataset_data <- shiny::reactive({
+        if(is.null(dataset_data())){
+          shiny::req(validated_distplot_data())
+          return(create_distplot_dataset_data(validated_distplot_data()))
+        } else {
+          return(validate_dataset_data(dataset_data()))
+        }
+      })
 
+      merged_distplot_data <- shiny::reactive({
+        shiny::req(
+          validated_distplot_data(),
+          validated_group_data(),
+          validated_dataset_data()
+        )
+        merge_distplot_data(
+          validated_distplot_data(),
+          validated_group_data(),
+          validated_dataset_data()
+        )
       })
 
       distplot_source_name <- shiny::reactive(ns("distplot"))
@@ -63,28 +81,50 @@ distributions_plot_server2 <- function(
         get_plot_colors(validated_group_data())
       })
 
-      plot_title <- shiny::reactive({
-        if(!is.null(distplot_title())) return(distplot_title())
-        else return("")
+      feature <- shiny::reactive({
+        shiny::req(merged_distplot_data())
+        merged_distplot_data()$feature_display[[1]]
       })
 
-      output$distplot <- plotly::renderPlotly({
+      distplots <- shiny::reactive({
         shiny::req(
           merged_distplot_data(),
           distplot_source_name(),
-          plotly_function()
+          plotly_function(),
+          feature()
         )
-        merged_distplot_data() %>%
-          dplyr::select("group_display", "feature_value") %>%
-          plotly_function()(
+
+        data <- merged_distplot_data() %>%
+          dplyr::select("dataset_display", "group_display", "feature_value") %>%
+          dplyr::group_by(.data$dataset_display)
+
+
+        purrr::map2(
+          .x = dplyr::group_split(data),
+          .y = dplyr::group_keys(data)$dataset_display,
+          .f = ~plotly_function()(
+            plot_data = .x,
+            title = .y,
             source_name = distplot_source_name(),
             x_col = "group_display",
             y_col = "feature_value",
+            key_col = "dataset_display",
             fill_colors = plot_fill_colors(),
-            title = plot_title(),
             xlab = distplot_xlab(),
-            ylab = plot_title()
+            ylab = feature()
           )
+        )
+      })
+
+      output$distplot <- plotly::renderPlotly({
+        shiny::req(distplots())
+        plotly::subplot(
+          distplots(),
+          shareX = TRUE,
+          shareY = TRUE,
+          nrows = 1,
+          margin = c(0.01, 0.01, 0.01, 0.7)
+        )
       })
 
       distplot_eventdata <- shiny::reactive({
@@ -113,7 +153,6 @@ distributions_plot_server2 <- function(
         "histogram",
         plot_data = merged_distplot_data,
         eventdata = distplot_eventdata,
-        xlab = plot_title(),
         ...
       )
 
