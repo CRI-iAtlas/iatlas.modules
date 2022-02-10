@@ -49,6 +49,16 @@ merge_distplot_data <- function(
     )
 }
 
+format_distplot_data2 <- function(
+  merged_distplot_data, reorder_method, scale_method
+){
+  merged_distplot_data %>%
+    dplyr::select("group_display", "dataset_display", "feature_value") %>%
+    refactor_by_tbl_value_column(reorder_method) %>%
+    scale_tbl_value_column(scale_method) %>%
+    dplyr::group_by(.data$dataset_display)
+}
+
 get_plot_colors <- function(validated_group_data){
   colors_provided <- !all(is.na(validated_group_data$group_color))
 

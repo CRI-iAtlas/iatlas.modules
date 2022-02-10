@@ -12,6 +12,10 @@
 #' "dataset_name", and "dataset_display".
 #' @param plot_type A shiny::reactive that returns a string, either "Violin" or
 #' "Box"
+#' @param scale_method A shiny::reactive that returns a string, one of (
+#' "None", Log2", "Log2 + 1", "Log10 + 1", "Log10")
+#' @param reorder_method A shiny::reactive that returns a string, one of (
+#' "None", "Median", "Mean", "Max", "Min")
 #' @param distplot_xlab A shiny::reactive that returns a string
 #' @param drilldown A shiny::reactive that returns True or False
 #' @param ... shiny::reactives passed to drilldown_histogram_server
@@ -23,6 +27,8 @@ distributions_plot_server2 <- function(
   group_data     = shiny::reactive(NULL),
   dataset_data   = shiny::reactive(NULL),
   plot_type      = shiny::reactive("Violin"),
+  scale_method   = shiny::reactive("None"),
+  reorder_method = shiny::reactive("None"),
   distplot_xlab  = shiny::reactive(""),
   drilldown      = shiny::reactive(F),
   ...
@@ -86,22 +92,30 @@ distributions_plot_server2 <- function(
         merged_distplot_data()$feature_display[[1]]
       })
 
-      distplots <- shiny::reactive({
+      formatted_distplot_data <- shiny::reactive({
         shiny::req(
           merged_distplot_data(),
+          reorder_method(),
+          scale_method()
+        )
+        format_distplot_data2(
+          merged_distplot_data(),
+          reorder_method(),
+          scale_method()
+        )
+      })
+
+      distplots <- shiny::reactive({
+        shiny::req(
+          formatted_distplot_data(),
           distplot_source_name(),
           plotly_function(),
           feature()
         )
 
-        data <- merged_distplot_data() %>%
-          dplyr::select("dataset_display", "group_display", "feature_value") %>%
-          dplyr::group_by(.data$dataset_display)
-
-
         purrr::map2(
-          .x = dplyr::group_split(data),
-          .y = dplyr::group_keys(data)$dataset_display,
+          .x = dplyr::group_split(formatted_distplot_data()),
+          .y = dplyr::group_keys(formatted_distplot_data())$dataset_display,
           .f = ~plotly_function()(
             plot_data = .x,
             title = .y,

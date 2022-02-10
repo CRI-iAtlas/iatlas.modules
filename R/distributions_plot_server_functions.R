@@ -20,16 +20,9 @@ get_distributions_feature_list <- function(features, feature_class_choice){
     create_nested_named_list()
 }
 
-format_distplot_data <- function(
-  data,
-  scale_method_choice,
-  reorder_method_choice,
-  feature_data = NULL
-  ){
+format_distplot_data <- function(data, feature_data = NULL){
 
   distplot_data <- data %>%
-    scale_tbl_value_column(scale_method_choice) %>%
-    reafctor_by_tbl_value_column(reorder_method_choice) %>%
     dplyr::select(
       "sample_name",
       "feature_name",
