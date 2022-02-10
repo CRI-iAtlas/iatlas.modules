@@ -15,6 +15,10 @@ distplot_data_names <-  c(
   "feature_value"
 )
 
+feature_names <- c(
+  "Sepal.Length",  "Sepal.Width", "Petal.Length",  "Petal.Width"
+)
+
 
 test_result_object <- function(res){
   expect_named(
@@ -69,15 +73,15 @@ test_that("distributions_plot_server_no_features_no_feature_data", {
 
       expect_equal(feature_classes(), character(0))
       expect_false(display_feature_class_selection_ui())
+      expect_error(feature_list())
       expect_false(display_feature_selection_ui())
+
 
       expect_named(validated_sample_data(), validated_sample_names)
       expect_named(distplot_data(), distplot_data_names)
 
-      expect_equal(plot_title(), "")
 
       test_result_object(ploted_data())
-
     }
   )
 })
@@ -115,12 +119,12 @@ test_that("distributions_plot_server_no_features_no_classes", {
 
       expect_equal(feature_classes(), character(0))
       expect_false(display_feature_class_selection_ui())
+      expect_type(feature_list(), "character")
+      expect_named(feature_list(), feature_names)
       expect_true(display_feature_selection_ui())
 
       expect_named(validated_sample_data(), validated_sample_names)
       expect_named(distplot_data(), distplot_data_names)
-
-      expect_equal(plot_title(), "Sepal Length")
 
       test_result_object(ploted_data())
 
@@ -179,12 +183,11 @@ test_that("distributions_plot_server_1_class", {
       expect_error(output$feature_class_selection_ui)
       expect_true(display_feature_selection_ui())
       expect_type(feature_list(), "list")
+      expect_named(feature_list(), c("Length", "Width"))
       expect_type(output$feature_selection_ui, "list")
 
       expect_named(validated_sample_data(), validated_sample_names)
       expect_named(distplot_data(), distplot_data_names)
-
-      expect_equal(plot_title(), "Sepal Length")
 
       test_result_object(ploted_data())
     }
@@ -212,6 +215,7 @@ test_that("distributions_plot_server_2_classes", {
         "y" = c(5.1, 2.1),
         "key" = "Iris"
       ))
+      session$setInputs("feature_class_choice" = "Class1")
       session$setInputs("feature_choice" = "Sepal.Length")
       session$setInputs("scale_method_choice" = "None")
       session$setInputs("reorder_method_choice" = "None")
@@ -235,12 +239,11 @@ test_that("distributions_plot_server_2_classes", {
       expect_type(output$feature_class_selection_ui, "list")
       expect_true(display_feature_selection_ui())
       expect_type(feature_list(), "list")
+      expect_named(feature_list(), c("Length", "Width"))
       expect_type(output$feature_selection_ui, "list")
 
       expect_named(validated_sample_data(), validated_sample_names)
       expect_named(distplot_data(), distplot_data_names)
-
-      expect_equal(plot_title(), "Sepal Length")
 
       test_result_object(ploted_data())
     }

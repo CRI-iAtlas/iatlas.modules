@@ -23,8 +23,8 @@ distributions_plot_server(
 
 \item{sample_data_function}{A shiny::reactive that returns a function.
 The function must take an argument called ".feature" and return a
-dataframe with columns "sample_name", "feature_name", "group_name", and
-"feature_value",}
+dataframe with columns "sample_name", "feature_name", "group_name",
+"dataset_name", and "feature_value".}
 
 \item{feature_data}{A shiny::reactive that returns a dataframe with columns
 "feature_name", and "feature_display". Any other additional columns will be

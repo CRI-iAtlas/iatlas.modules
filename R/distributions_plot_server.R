@@ -4,8 +4,8 @@
 #' @param id Module ID
 #' @param sample_data_function A shiny::reactive that returns a function.
 #' The function must take an argument called ".feature" and return a
-#' dataframe with columns "sample_name", "feature_name", "group_name", and
-#' "feature_value",
+#' dataframe with columns "sample_name", "feature_name", "group_name",
+#' "dataset_name", and "feature_value".
 #' @param feature_data A shiny::reactive that returns a dataframe with columns
 #' "feature_name", and "feature_display". Any other additional columns will be
 #'  names of classes to group the features by. Each value in the "feature_name"
@@ -100,15 +100,26 @@ distributions_plot_server <- function(
       )
 
       feature_list <- shiny::reactive({
-        shiny::req(validated_feature_data())
+        shiny::req(validated_feature_data(), !is.null(feature_classes()))
 
-        if(is.null(input$feature_class_choice)){
-          class_choice <- feature_classes()[[1]]
+        if(length(feature_classes()) > 1){
+          shiny::req(input$feature_class_choice)
+          lst <- get_distributions_feature_list(
+            validated_feature_data(), input$feature_class_choice
+          )
+
+        } else if(length(feature_classes()) == 1){
+          lst <- get_distributions_feature_list(
+            validated_feature_data(), feature_classes()[[1]]
+          )
+
         } else {
-          class_choice <- input$feature_class_choice
+          lst <- validated_feature_data() %>%
+            dplyr::select("feature_name", "feature_display") %>%
+            tibble::deframe()
         }
 
-        get_distributions_feature_list(validated_feature_data(), class_choice)
+        return(lst)
       })
 
       output$feature_selection_ui <- shiny::renderUI({
@@ -154,17 +165,6 @@ distributions_plot_server <- function(
         format_distplot_data(validated_sample_data(), validated_feature_data())
       })
 
-      plot_title <- shiny::reactive({
-        if(!is.null(distplot_title())) return(distplot_title())
-        else if(is.null(input$feature_choice)) return("")
-        else {
-          shiny::req(validated_feature_data())
-          title <- validated_feature_data() %>%
-            dplyr::filter(.data$feature_name == input$feature_choice) %>%
-            dplyr::pull("feature_display") %>%
-            unique()
-        }
-      })
 
       ploted_data <- distributions_plot_server2(
         "distplot",
