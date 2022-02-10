@@ -101,6 +101,11 @@ example_iris_data_features_1_class <- function(){
     )
 }
 
+example_iris_data_feature_data_no_class <- function(){
+  example_iris_data_feature_data() %>%
+    dplyr::select("feature_name", "feature_display")
+}
+
 example_distributions_iris_data_feature_data_2_classes <- function(){
   example_iris_data_feature_data() %>%
     dplyr::select(-"feature_order")
