@@ -113,8 +113,6 @@ drilldown_scatterplot_server <- function(
         )
       })
 
-
-
       output$scatterplot <- plotly::renderPlotly({
         plotly_scatter(
           formatted_scatterplot_data(),
@@ -122,7 +120,8 @@ drilldown_scatterplot_server <- function(
           xlab = x_feature(),
           ylab = y_feature(),
           title = selected_group(),
-          identity_line = TRUE
+          identity_line = TRUE,
+          ...
         )
       })
 

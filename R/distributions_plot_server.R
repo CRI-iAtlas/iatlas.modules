@@ -20,7 +20,7 @@
 #' @param scale_method_default A shiny::reactive that returns a string
 #' @param feature_default A shiny::reactive that returns a string
 #' @param drilldown A shiny::reactive that returns True or False
-#' @param ... shiny::reactives passed to drilldown_histogram_server
+#' @param ... arguments sents to plotly_histogram
 #'
 #' @export
 distributions_plot_server <- function(
