@@ -74,3 +74,46 @@ get_plot_colors <- function(validated_group_data){
   return(fill_colors)
 }
 
+create_displots <- function(
+  formatted_distplot_data,
+  distplot_source_name,
+  plotly_function,
+  feature,
+  plot_fill_colors,
+  distplot_xlab
+){
+  tables <- dplyr::group_split(formatted_distplot_data)
+  titles <- dplyr::group_keys(formatted_distplot_data)$dataset_display
+
+  tables %>%
+    purrr::map(
+      .x = .,
+      .f = ~plotly_function(
+        plot_data = .x,
+        source_name = distplot_source_name,
+        x_col = "group_display",
+        y_col = "feature_value",
+        key_col = "dataset_display",
+        fill_colors = plot_fill_colors,
+        xlab = distplot_xlab,
+        ylab = feature
+      )
+    ) %>%
+    purrr::map2(
+      .x = .,
+      .y = titles,
+      .f = ~plotly::add_annotations(
+        p = .x,
+        text = .y,
+        x = 0.5,
+        y = 1,
+        yref = "paper",
+        xref = "paper",
+        xanchor = "center",
+        yanchor = "top",
+        yshift = 30,
+        showarrow = FALSE,
+        font = list(family = "Roboto, Open Sans, sans-serif", size = 15))
+    )
+}
+
