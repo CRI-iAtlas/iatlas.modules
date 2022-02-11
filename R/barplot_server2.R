@@ -4,8 +4,8 @@
 #' @param barplot_data A shiny::reactive that returns a dataframe with
 #' columns "sample_name", "group_name", feature_display", and "feature_value".
 #' @param group_data A shiny::reactive that returns a dataframe with columns
-#' group_display", and optionally, "group_description" and "group_color". Each
-#' value in the "group_name" column should only appear once.
+#' group_display", and optionally, "group_description". Each value in the
+#' "group_name" column should only appear once.
 #' @param barplot_xlab A shiny::reactive that returns a string
 #' @param barplot_ylab A shiny::reactive that returns a string
 #' @param barplot_title A shiny::reactive that returns a string

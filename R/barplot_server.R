@@ -10,14 +10,14 @@
 #' "feature_name", and optionally "feature_display" and "feature_class".
 #'  Each value in the "feature_name" column should only appear once.
 #' @param group_data A shiny::reactive that returns a dataframe with columns
-#' "group_name", "group_display", and optionally "group_description" and
-#' "group_color". Each value in the "group_name" column should only appear once.
+#' "group_name", "group_display", and optionally "group_description". Each
+#'  value in the "group_name" column should only appear once.
 #' @param barplot_xlab A shiny::reactive that returns a string
 #' @param barplot_ylab A shiny::reactive that returns a string
 #' @param barplot_title A shiny::reactive that returns a string
 #' @param barplot_label A shiny::reactive that returns a string
 #' @param drilldown A shiny::reactive that returns True or False
-#' @param ... shiny::reactives passed to barplot_server
+#' @param ... shiny::reactives passed to drilldown_scatterplot_server
 #'
 #' @export
 barplot_server <- function(

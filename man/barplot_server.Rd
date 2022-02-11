@@ -30,8 +30,8 @@ dataframe with columns "sample_name", "feature_name", "group_name", and
  Each value in the "feature_name" column should only appear once.}
 
 \item{group_data}{A shiny::reactive that returns a dataframe with columns
-"group_name", "group_display", and optionally "group_description" and
-"group_color". Each value in the "group_name" column should only appear once.}
+"group_name", "group_display", and optionally "group_description". Each
+ value in the "group_name" column should only appear once.}
 
 \item{barplot_xlab}{A shiny::reactive that returns a string}
 
@@ -43,7 +43,7 @@ dataframe with columns "sample_name", "feature_name", "group_name", and
 
 \item{drilldown}{A shiny::reactive that returns True or False}
 
-\item{...}{shiny::reactives passed to barplot_server}
+\item{...}{shiny::reactives passed to drilldown_scatterplot_server}
 }
 \description{
 Barplot Server

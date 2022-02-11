@@ -120,8 +120,7 @@ drilldown_scatterplot_server <- function(
           xlab = x_feature(),
           ylab = y_feature(),
           title = selected_group(),
-          identity_line = TRUE,
-          ...
+          identity_line = TRUE
         )
       })
 
