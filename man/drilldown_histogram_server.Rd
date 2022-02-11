@@ -27,7 +27,7 @@ column in eventdata}
 \item{eventdata_dataset_column}{A shiny::reactive that returns the name of a
 column in eventdata}
 
-\item{...}{arguments sents to plotly_histogram}
+\item{...}{arguments sent to plotly_histogram}
 }
 \description{
 Drilldown Histogram Server

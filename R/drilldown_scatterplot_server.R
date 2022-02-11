@@ -7,14 +7,15 @@
 #' @param x_feature_input A shiny::reactive that returns a string
 #' @param y_feature_input A shiny::reactive that returns a string
 #' @param selected_group A string, this gets added to the sample label
-#'
+#' @param ... arguments sent to plotly_scatter
 #' @export
 drilldown_scatterplot_server <- function(
   id,
   scatterplot_data,
   x_feature_input = NULL,
   y_feature_input = NULL,
-  selected_group = shiny::reactive("Clicked Group")
+  selected_group = shiny::reactive("Clicked Group"),
+  ...
 ) {
   shiny::moduleServer(
     id,
@@ -120,7 +121,8 @@ drilldown_scatterplot_server <- function(
           xlab = x_feature(),
           ylab = y_feature(),
           title = selected_group(),
-          identity_line = TRUE
+          identity_line = TRUE,
+          ...
         )
       })
 

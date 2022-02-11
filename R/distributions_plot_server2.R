@@ -18,7 +18,7 @@
 #' "None", "Median", "Mean", "Max", "Min")
 #' @param distplot_xlab A shiny::reactive that returns a string
 #' @param drilldown A shiny::reactive that returns True or False
-#' @param ... arguments sents to plotly_histogram
+#' @param ... arguments sent to plotly_histogram
 #'
 #' @export
 distributions_plot_server2 <- function(

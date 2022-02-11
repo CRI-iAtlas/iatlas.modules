@@ -9,7 +9,8 @@ drilldown_scatterplot_server(
   scatterplot_data,
   x_feature_input = NULL,
   y_feature_input = NULL,
-  selected_group = shiny::reactive("Clicked Group")
+  selected_group = shiny::reactive("Clicked Group"),
+  ...
 )
 }
 \arguments{
@@ -23,6 +24,8 @@ drilldown_scatterplot_server(
 \item{y_feature_input}{A shiny::reactive that returns a string}
 
 \item{selected_group}{A string, this gets added to the sample label}
+
+\item{...}{arguments sent to plotly_scatter}
 }
 \description{
 Drilldown Scatterplot Server

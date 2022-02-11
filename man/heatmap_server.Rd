@@ -57,7 +57,7 @@ the values in the response_data feature_name column}
 \item{default_class}{A shiny::reactive that returns a string that is one of
 the values in the feature_data feature_class column}
 
-\item{...}{shiny::reactives passed to drilldown_scatterplot_server}
+\item{...}{arguments sent to plotly_scatter}
 }
 \description{
 Heatmap Server
