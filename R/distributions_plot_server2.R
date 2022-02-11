@@ -112,21 +112,13 @@ distributions_plot_server2 <- function(
           plotly_function(),
           feature()
         )
-
-        purrr::map2(
-          .x = dplyr::group_split(formatted_distplot_data()),
-          .y = dplyr::group_keys(formatted_distplot_data())$dataset_display,
-          .f = ~plotly_function()(
-            plot_data = .x,
-            title = .y,
-            source_name = distplot_source_name(),
-            x_col = "group_display",
-            y_col = "feature_value",
-            key_col = "dataset_display",
-            fill_colors = plot_fill_colors(),
-            xlab = distplot_xlab(),
-            ylab = feature()
-          )
+        create_displots(
+          formatted_distplot_data(),
+          distplot_source_name(),
+          plotly_function(),
+          feature(),
+          plot_fill_colors(),
+          distplot_xlab()
         )
       })
 
@@ -136,6 +128,7 @@ distributions_plot_server2 <- function(
           distplots(),
           shareX = TRUE,
           shareY = TRUE,
+          titleY = TRUE,
           nrows = 1,
           margin = c(0.01, 0.01, 0.01, 0.7)
         )
