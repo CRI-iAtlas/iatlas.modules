@@ -113,8 +113,6 @@ drilldown_scatterplot_server <- function(
         )
       })
 
-
-
       output$scatterplot <- plotly::renderPlotly({
         plotly_scatter(
           formatted_scatterplot_data(),
