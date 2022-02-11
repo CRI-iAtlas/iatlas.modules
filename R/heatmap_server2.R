@@ -16,7 +16,7 @@
 #' the "response_value" of heatmap_data. The function must return one
 #' numeric value.
 #' @param drilldown A shiny::reactive that returns True or False
-#' @param ... shiny::reactives passed to drilldown_scatterplot_server
+#' @param ... arguments sent to plotly_scatter
 #'
 #'
 #' @export

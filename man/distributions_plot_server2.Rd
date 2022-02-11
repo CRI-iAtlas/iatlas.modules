@@ -44,7 +44,7 @@ columns "sample_name", "group_name", feature_display", "feature_value", and
 
 \item{drilldown}{A shiny::reactive that returns True or False}
 
-\item{...}{arguments sents to plotly_histogram}
+\item{...}{arguments sent to plotly_histogram}
 }
 \description{
 Distributions Plot Server

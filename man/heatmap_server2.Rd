@@ -34,7 +34,7 @@ numeric value.}
 
 \item{drilldown}{A shiny::reactive that returns True or False}
 
-\item{...}{shiny::reactives passed to drilldown_scatterplot_server}
+\item{...}{arguments sent to plotly_scatter}
 }
 \description{
 Heatmap Server

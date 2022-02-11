@@ -29,7 +29,7 @@
 #' the values in the response_data feature_name column
 #' @param default_class A shiny::reactive that returns a string that is one of
 #' the values in the feature_data feature_class column
-#' @param ... shiny::reactives passed to drilldown_scatterplot_server
+#' @param ... arguments sent to plotly_scatter
 #'
 #' @export
 heatmap_server <- function(

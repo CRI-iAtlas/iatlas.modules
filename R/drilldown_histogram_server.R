@@ -9,7 +9,7 @@
 #' column in eventdata
 #' @param eventdata_dataset_column A shiny::reactive that returns the name of a
 #' column in eventdata
-#' @param ... arguments sents to plotly_histogram
+#' @param ... arguments sent to plotly_histogram
 #' @export
 drilldown_histogram_server <- function(
   id,

@@ -36,7 +36,7 @@ group_display", and optionally, "group_description". Each value in the
 
 \item{drilldown}{A shiny::reactive that returns True or False}
 
-\item{...}{shiny::reactives passed to drilldown_scatterplot_server}
+\item{...}{arguments sent to plotly_scatter}
 }
 \description{
 Barplot Server2
