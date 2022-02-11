@@ -67,6 +67,7 @@ plotly_bar <- function(
     y = ~y,
     color = ~color,
     text = ~text,
+    textposition = 'none',
     key = ~key,
     type = "bar",
     source = source_name,
