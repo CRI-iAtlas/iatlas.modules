@@ -15,6 +15,7 @@ distributions_plot_server(
   scale_method_default = shiny::reactive("None"),
   feature_default = shiny::reactive(NULL),
   drilldown = shiny::reactive(F),
+  mock_event_data = shiny::reactive(NULL),
   ...
 )
 }
@@ -47,6 +48,11 @@ dataframe with columns "sample_name", "feature_name", "group_name",
 \item{feature_default}{A shiny::reactive that returns a string}
 
 \item{drilldown}{A shiny::reactive that returns True or False}
+
+\item{mock_event_data}{A shiny::reactive that returns a dataframe. For
+testing purposes only. Must have columns "curveNumber", "pointNumber", "x",
+"y", and "key". The "x" column corresponds to the group selected, and the
+"key" column corresponds to dataset selected.}
 
 \item{...}{arguments sent to plotly_histogram}
 }

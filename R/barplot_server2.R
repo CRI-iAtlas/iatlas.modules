@@ -119,7 +119,7 @@ barplot_server2 <- function(
         "barplot",
         plot_data  = summarized_barplot_data,
         group_data = validated_group_data,
-        eventdata  = barplot_eventdata
+        eventdata  = barplot_event_data
       )
 
       barplot_event_data <- shiny::reactive({

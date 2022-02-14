@@ -20,18 +20,18 @@ test_that("heatmap_server", {
       "summarise_function_list" = shiny::reactive(
         purrr::partial(stats::cor, method = "pearson")
       ),
-      "drilldown" = shiny::reactive(T)
-    ),
-    {
-      session$setInputs("class_choice" = "Length")
-      session$setInputs("response_choice" = "Sepal.Width")
-      session$setInputs("heatmap-mock_event_data" = data.frame(
+      "drilldown" = shiny::reactive(T),
+      "mock_event_data" = shiny::reactive(data.frame(
         "curveNumber" = 0,
         "pointNumber" = 1,
         "x" = "Setosa",
         "y" = "Sepal Length",
         "z" = "0.1805093"
       ))
+    ),
+    {
+      session$setInputs("class_choice" = "Length")
+      session$setInputs("response_choice" = "Sepal.Width")
 
       expect_true(tibble::is_tibble(validated_feature_data()))
       expect_named(
@@ -115,18 +115,18 @@ test_that("heatmap_server_multiple_summarise_functions", {
           "Spearman" = purrr::partial(stats::cor, method = "spearman")
         )
       ),
-      "drilldown" = shiny::reactive(T)
-    ),
-    {
-      session$setInputs("class_choice" = "Length")
-      session$setInputs("response_choice" = "Sepal.Width")
-      session$setInputs("heatmap-mock_event_data" = data.frame(
+      "drilldown" = shiny::reactive(T),
+      "mock_event_data" = shiny::reactive(data.frame(
         "curveNumber" = 0,
         "pointNumber" = 1,
         "x" = "Setosa",
         "y" = "Sepal Length",
         "z" = "0.1805093"
       ))
+    ),
+    {
+      session$setInputs("class_choice" = "Length")
+      session$setInputs("response_choice" = "Sepal.Width")
       session$setInputs("summarise_function_choice" = "Spearman")
 
       expect_true(display_summarise_function_ui())

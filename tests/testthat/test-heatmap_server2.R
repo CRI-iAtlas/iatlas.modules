@@ -6,6 +6,56 @@ test_result_object <- function(res){
   expect_true(tibble::is_tibble(heatmap_data))
 }
 
+test_that("heatmap_server2_bad_x_column", {
+
+  shiny::testServer(
+    heatmap_server2,
+    args = list(
+      "heatmap_data" = shiny::reactive(example_heatmap_iris_data()),
+      "group_data" = shiny::reactive(example_iris_data_groups()),
+      "drilldown" = shiny::reactive(T),
+      "mock_event_data" = shiny::reactive(data.frame(
+        "curveNumber" = 0,
+        "pointNumber" = 1,
+        "x" = "X",
+        "y" = "Sepal Length",
+        "z" = "0.1805093"
+      ))
+    ),
+    {
+      expect_error(
+        scatterplot_data(),
+        regexp = "mock_event_data column x value: X not in merged_heatmap_data column group_display"
+      )
+    }
+  )
+})
+
+test_that("heatmap_server2_bad_y_column", {
+
+  shiny::testServer(
+    heatmap_server2,
+    args = list(
+      "heatmap_data" = shiny::reactive(example_heatmap_iris_data()),
+      "group_data" = shiny::reactive(example_iris_data_groups()),
+      "drilldown" = shiny::reactive(T),
+      "mock_event_data" = shiny::reactive(data.frame(
+        "curveNumber" = 0,
+        "pointNumber" = 1,
+        "x" = "Setosa",
+        "y" = "Y",
+        "z" = "0.1805093"
+      ))
+    ),
+    {
+      expect_error(
+        scatterplot_data(),
+        regexp = "mock_event_data column y value: Y not in merged_heatmap_data column feature_display"
+      )
+    }
+  )
+})
+
 
 test_that("heatmap_server2", {
 
@@ -14,17 +64,16 @@ test_that("heatmap_server2", {
     args = list(
       "heatmap_data" = shiny::reactive(example_heatmap_iris_data()),
       "group_data" = shiny::reactive(example_iris_data_groups()),
-      "drilldown" = shiny::reactive(T)
-    ),
-    {
-      session$setInputs("mock_event_data" = data.frame(
+      "drilldown" = shiny::reactive(T),
+      "mock_event_data" = shiny::reactive(data.frame(
         "curveNumber" = 0,
         "pointNumber" = 1,
         "x" = "Setosa",
         "y" = "Sepal Length",
         "z" = "0.1805093"
       ))
-
+    ),
+    {
       expect_true(tibble::is_tibble(validated_group_data()))
       expect_named(
         validated_group_data(),
@@ -33,7 +82,7 @@ test_that("heatmap_server2", {
 
       expect_true(tibble::is_tibble(validated_heatmap_data()))
 
-      expect_true(tibble::is_tibble(combined_heatmap_data()))
+      expect_true(tibble::is_tibble(merged_heatmap_data()))
 
       expect_true(tibble::is_tibble(summarized_heatmap_data()))
       expect_named(
@@ -76,17 +125,16 @@ test_that("heatmap_server2_no_group_data", {
     heatmap_server2,
     args = list(
       "heatmap_data" = shiny::reactive(example_heatmap_iris_data()),
-      "drilldown" = shiny::reactive(T)
-    ),
-    {
-      session$setInputs("mock_event_data" = data.frame(
+      "drilldown" = shiny::reactive(T),
+      "mock_event_data" = shiny::reactive(data.frame(
         "curveNumber" = 0,
         "pointNumber" = 1,
         "x" = "setosa",
         "y" = "Sepal Length",
         "z" = "0.1805093"
       ))
-
+    ),
+    {
       expect_true(tibble::is_tibble(validated_group_data()))
       expect_named(
         validated_group_data(),
@@ -95,7 +143,7 @@ test_that("heatmap_server2_no_group_data", {
 
       expect_true(tibble::is_tibble(validated_heatmap_data()))
 
-      expect_true(tibble::is_tibble(combined_heatmap_data()))
+      expect_true(tibble::is_tibble(merged_heatmap_data()))
 
       expect_true(tibble::is_tibble(summarized_heatmap_data()))
       expect_named(
@@ -136,47 +184,20 @@ test_that("heatmap_server2_chosen_features_are_equal", {
     args = list(
       "heatmap_data" = shiny::reactive(example_heatmap_iris_data()),
       "group_data" = shiny::reactive(example_iris_data_groups()),
-      "drilldown" = shiny::reactive(T)
-    ),
-    {
-      session$setInputs("mock_event_data" = data.frame(
+      "drilldown" = shiny::reactive(T),
+      "mock_event_data" = shiny::reactive(data.frame(
         "curveNumber" = 0,
         "pointNumber" = 1,
         "x" = "Setosa",
         "y" = "Sepal Width",
         "z" = "0.1805093"
       ))
+    ),
+    {
+
       expect_error(
         scatterplot_data(),
         regexp = "Selected features to compare are the same, please select new features."
-      )
-    }
-  )
-})
-
-test_that("heatmap_server2_plot_updated", {
-
-  shiny::testServer(
-    heatmap_server2,
-    args = list(
-      "heatmap_data" = shiny::reactive(example_heatmap_iris_data()),
-      "group_data" = shiny::reactive(example_iris_data_groups()),
-      "drilldown" = shiny::reactive(T)
-    ),
-    {
-      session$setInputs("class_choice" = "Length")
-      session$setInputs("response_choice" = "Sepal.Length")
-      session$setInputs("mock_event_data" = data.frame(
-        "curveNumber" = 0,
-        "pointNumber" = 1,
-        "x" = "X",
-        "y" = "Sepal Length",
-        "z" = "0.1805093"
-      ))
-
-      expect_error(
-        scatterplot_data(),
-        regexp = "Plot has been updated, please click on plot."
       )
     }
   )
