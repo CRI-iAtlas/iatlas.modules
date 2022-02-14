@@ -13,6 +13,7 @@ barplot_server2(
   barplot_title = shiny::reactive(""),
   barplot_label = shiny::reactive("Feature"),
   drilldown = shiny::reactive(F),
+  mock_event_data = shiny::reactive(NULL),
   ...
 )
 }
@@ -35,6 +36,10 @@ group_display", and optionally, "group_description". Each value in the
 \item{barplot_label}{A shiny::reactive that returns a string}
 
 \item{drilldown}{A shiny::reactive that returns True or False}
+
+\item{mock_event_data}{A shiny::reactive that returns a dataframe. For
+testing purposes only. Must have columns "curveNumber", "pointNumber", "x",
+"y", and "key". The "x" column corresponds to the group selected.}
 
 \item{...}{arguments sent to plotly_scatter}
 }

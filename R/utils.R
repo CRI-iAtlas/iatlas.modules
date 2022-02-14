@@ -365,7 +365,7 @@ validate_data <- function(
   optional_columns = NULL
 ){
 
-  validate_data_columns(data, required_columns, table_name, table_key)
+  validate_data_columns(data, required_columns, table_name)
   validate_data_key(data, table_name, table_key)
 
   if(is.null(optional_columns)) columns <- required_columns
@@ -373,7 +373,7 @@ validate_data <- function(
   dplyr::select(data, dplyr::any_of(columns))
 }
 
-validate_data_columns <- function(data, columns, table_name, table_key){
+validate_data_columns <- function(data, columns, table_name){
   if(!all(columns %in% colnames(data))) {
     msg <- stringr::str_c(
       "Columns in ",

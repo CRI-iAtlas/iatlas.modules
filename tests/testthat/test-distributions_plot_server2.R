@@ -28,8 +28,7 @@ test_result_object <- function(res){
   expect_named(distplot_data, merged_distplot_names)
 }
 
-
-test_that("distributions_plot_server2_one_dataset", {
+test_that("distributions_plot_server2_one_dataset_no_event_data", {
 
   shiny::testServer(
     distributions_plot_server2,
@@ -45,13 +44,97 @@ test_that("distributions_plot_server2_one_dataset", {
       "distplot_xlab" = shiny::reactive("Species")
     ),
     {
-      session$setInputs("mock_event_data" = data.frame(
+      expect_error(distplot_event_data(), "Click on above violin/box plot.")
+    }
+  )
+})
+
+test_that("distributions_plot_server2_one_dataset_bad_event_data_x_col", {
+
+  shiny::testServer(
+    distributions_plot_server2,
+    args = list(
+      "distplot_data" = shiny::reactive(
+        dplyr::rename(
+          example_iris_data_one_dataset(),
+          "feature_display" = "feature_name"
+        )
+      ),
+      "plot_type" = shiny::reactive("Violin"),
+      "drilldown" = shiny::reactive(T),
+      "distplot_xlab" = shiny::reactive("Species"),
+      "mock_event_data" = shiny::reactive(data.frame(
+        "curveNumber" = c(0,0),
+        "pointNumber" = c(0,0),
+        "x" = "Setosa",
+        "y" = c(5.1, 2.1),
+        "key" = "Iris"
+      ))
+    ),
+    {
+      expect_error(
+        validated_mock_event_data(),
+        "mock_event_data column x value: Setosa not in merged_distplot_data column group_display"
+      )
+    }
+  )
+})
+
+test_that("distributions_plot_server2_one_dataset_bad_event_data_key_col", {
+
+  shiny::testServer(
+    distributions_plot_server2,
+    args = list(
+      "distplot_data" = shiny::reactive(
+        dplyr::rename(
+          example_iris_data_one_dataset(),
+          "feature_display" = "feature_name"
+        )
+      ),
+      "plot_type" = shiny::reactive("Violin"),
+      "drilldown" = shiny::reactive(T),
+      "distplot_xlab" = shiny::reactive("Species"),
+      "mock_event_data" = shiny::reactive(data.frame(
+        "curveNumber" = c(0,0),
+        "pointNumber" = c(0,0),
+        "x" = "setosa",
+        "y" = c(5.1, 2.1),
+        "key" = "iris"
+      ))
+    ),
+    {
+      expect_error(
+        validated_mock_event_data(),
+        "mock_event_data column key value: iris not in merged_distplot_data column group_display"
+      )
+    }
+  )
+})
+
+
+test_that("distributions_plot_server2_one_dataset", {
+
+  shiny::testServer(
+    distributions_plot_server2,
+    args = list(
+      "distplot_data" = shiny::reactive(
+        dplyr::rename(
+          example_iris_data_one_dataset(),
+          "feature_display" = "feature_name"
+        )
+      ),
+      "plot_type" = shiny::reactive("Violin"),
+      "drilldown" = shiny::reactive(T),
+      "distplot_xlab" = shiny::reactive("Species"),
+      "mock_event_data" = shiny::reactive(data.frame(
         "curveNumber" = c(0,0),
         "pointNumber" = c(0,0),
         "x" = "setosa",
         "y" = c(5.1, 2.1),
         "key" = "Iris"
       ))
+    ),
+    {
 
       expect_true(tibble::is_tibble(validated_group_data()))
       expect_true(tibble::is_tibble(validated_dataset_data()))
@@ -90,16 +173,16 @@ test_that("distributions_plot_server2_two_datasets", {
       ),
       "plot_type" = shiny::reactive("Violin"),
       "drilldown" = shiny::reactive(T),
-      "distplot_xlab" = shiny::reactive("Species")
-    ),
-    {
-      session$setInputs("mock_event_data" = data.frame(
+      "distplot_xlab" = shiny::reactive("Species"),
+      "mock_event_data" = shiny::reactive(data.frame(
         "curveNumber" = c(0,0),
         "pointNumber" = c(0,0),
         "x" = "setosa",
         "y" = c(5.1, 2.1),
         "key" = "Iris1"
       ))
+    ),
+    {
 
       expect_true(tibble::is_tibble(validated_group_data()))
       expect_true(tibble::is_tibble(validated_dataset_data()))
@@ -138,16 +221,16 @@ test_that("distributions_plot_server2_with_group_data", {
       ),
       "group_data" = shiny::reactive(example_iris_data_groups()),
       "drilldown" = shiny::reactive(T),
-      "distplot_xlab" = shiny::reactive("Species")
-    ),
-    {
-      session$setInputs("mock_event_data" = data.frame(
+      "distplot_xlab" = shiny::reactive("Species"),
+      "mock_event_data" = shiny::reactive(data.frame(
         "curveNumber" = c(0,0),
         "pointNumber" = c(0,0),
         "x" = "Setosa",
         "y" = c(5.1, 2.1),
         "key" = "Iris"
       ))
+    ),
+    {
 
       expect_true(tibble::is_tibble(validated_group_data()))
       expect_true(tibble::is_tibble(validated_dataset_data()))
@@ -187,17 +270,16 @@ test_that("distributions_plot_server2_with_dataset_data", {
         "dataset_display" = c("Iris 1", "Iris 2")
       )),
       "drilldown" = shiny::reactive(T),
-      "distplot_xlab" = shiny::reactive("Species")
-    ),
-    {
-      session$setInputs("mock_event_data" = data.frame(
+      "distplot_xlab" = shiny::reactive("Species"),
+      "mock_event_data" = shiny::reactive(data.frame(
         "curveNumber" = c(0,0),
         "pointNumber" = c(0,0),
         "x" = "setosa",
         "y" = c(5.1, 2.1),
         "key" = "Iris 1"
       ))
-
+    ),
+    {
       expect_true(tibble::is_tibble(validated_group_data()))
       expect_true(tibble::is_tibble(validated_dataset_data()))
       expect_true(tibble::is_tibble(validated_distplot_data()))
@@ -236,17 +318,16 @@ test_that("distributions_plot_server2_reorder", {
       "plot_type" = shiny::reactive("Violin"),
       "drilldown" = shiny::reactive(T),
       "distplot_xlab" = shiny::reactive("Species"),
-      "reorder_method" = shiny::reactive("Median")
-    ),
-    {
-      session$setInputs("mock_event_data" = data.frame(
+      "reorder_method" = shiny::reactive("Median"),
+      "mock_event_data" = shiny::reactive(data.frame(
         "curveNumber" = c(0,0),
         "pointNumber" = c(0,0),
         "x" = "setosa",
         "y" = c(5.1, 2.1),
         "key" = "Iris"
       ))
-
+    ),
+    {
       expect_true(tibble::is_tibble(validated_group_data()))
       expect_true(tibble::is_tibble(validated_dataset_data()))
       expect_true(tibble::is_tibble(validated_distplot_data()))

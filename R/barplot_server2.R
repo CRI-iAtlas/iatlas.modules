@@ -11,18 +11,22 @@
 #' @param barplot_title A shiny::reactive that returns a string
 #' @param barplot_label A shiny::reactive that returns a string
 #' @param drilldown A shiny::reactive that returns True or False
+#' @param mock_event_data A shiny::reactive that returns a dataframe. For
+#' testing purposes only. Must have columns "curveNumber", "pointNumber", "x",
+#' "y", and "key". The "x" column corresponds to the group selected.
 #' @param ... arguments sent to plotly_scatter
 #'
 #' @export
 barplot_server2 <- function(
   id,
   barplot_data,
-  group_data    = shiny::reactive(NULL),
-  barplot_xlab  = shiny::reactive(""),
-  barplot_ylab  = shiny::reactive(""),
-  barplot_title = shiny::reactive(""),
-  barplot_label = shiny::reactive("Feature"),
-  drilldown     = shiny::reactive(F),
+  group_data      = shiny::reactive(NULL),
+  barplot_xlab    = shiny::reactive(""),
+  barplot_ylab    = shiny::reactive(""),
+  barplot_title   = shiny::reactive(""),
+  barplot_label   = shiny::reactive("Feature"),
+  drilldown       = shiny::reactive(F),
+  mock_event_data = shiny::reactive(NULL),
   ...
 ) {
   shiny::moduleServer(
@@ -49,6 +53,7 @@ barplot_server2 <- function(
         validate_group_data(group_data())
       })
 
+
       merged_barplot_data <- shiny::reactive({
         shiny::req(validated_barplot_data())
         result <- validated_barplot_data() %>%
@@ -65,6 +70,26 @@ barplot_server2 <- function(
         }
 
         return(result)
+      })
+
+      validated_mock_event_data <- shiny::reactive({
+        if(is.null(mock_event_data())) return(NULL)
+        validate_data_columns(
+          mock_event_data(),
+          c("curveNumber", "pointNumber", "x", "y", "key"),
+          "mock_event_data"
+        )
+
+        selected_group <- mock_event_data()$x[[1]]
+        if(!selected_group %in% merged_barplot_data()$group_display){
+          msg <- stringr::str_c(
+            "mock_event_data column x value: ",
+            selected_group,
+            " not in merged_barplot_data column group_display"
+          )
+          stop(msg)
+        }
+        return(mock_event_data())
       })
 
       summarized_barplot_data <- shiny::reactive({
@@ -94,25 +119,25 @@ barplot_server2 <- function(
         "barplot",
         plot_data  = summarized_barplot_data,
         group_data = validated_group_data,
-        eventdata  = barplot_eventdata
+        eventdata  = barplot_event_data
       )
 
-      barplot_eventdata <- shiny::reactive({
+      barplot_event_data <- shiny::reactive({
         shiny::req(barplot_source_name(), summarized_barplot_data())
 
-        if(!is.null(input$mock_event_data)){
-          eventdata <- input$mock_event_data
+        if(!is.null(validated_mock_event_data())){
+          barplot_event_data <- validated_mock_event_data()
         } else {
-          eventdata <- plotly::event_data("plotly_click", barplot_source_name())
+          barplot_event_data <- plotly::event_data("plotly_click", barplot_source_name())
         }
 
-        shiny::validate(shiny::need(eventdata, "Click on above barplot."))
-        return(eventdata)
+        shiny::validate(shiny::need(barplot_event_data, "Click on above barplot."))
+        return(barplot_event_data)
       })
 
       selected_group <- shiny::reactive({
-        shiny::req(barplot_eventdata())
-        barplot_eventdata()$key[[1]]
+        shiny::req(barplot_event_data())
+        barplot_event_data()$key[[1]]
       })
 
       scatterplot_data <- shiny::reactive({

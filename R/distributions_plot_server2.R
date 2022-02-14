@@ -18,19 +18,24 @@
 #' "None", "Median", "Mean", "Max", "Min")
 #' @param distplot_xlab A shiny::reactive that returns a string
 #' @param drilldown A shiny::reactive that returns True or False
+#' @param mock_event_data A shiny::reactive that returns a dataframe. For
+#' testing purposes only. Must have columns "curveNumber", "pointNumber", "x",
+#' "y", and "key". The "x" column corresponds to the group selected, and the
+#' "key" column corresponds to dataset selected.
 #' @param ... arguments sent to plotly_histogram
 #'
 #' @export
 distributions_plot_server2 <- function(
   id,
   distplot_data,
-  group_data     = shiny::reactive(NULL),
-  dataset_data   = shiny::reactive(NULL),
-  plot_type      = shiny::reactive("Violin"),
-  scale_method   = shiny::reactive("None"),
-  reorder_method = shiny::reactive("None"),
-  distplot_xlab  = shiny::reactive(""),
-  drilldown      = shiny::reactive(F),
+  group_data      = shiny::reactive(NULL),
+  dataset_data    = shiny::reactive(NULL),
+  plot_type       = shiny::reactive("Violin"),
+  scale_method    = shiny::reactive("None"),
+  reorder_method  = shiny::reactive("None"),
+  distplot_xlab   = shiny::reactive(""),
+  drilldown       = shiny::reactive(F),
+  mock_event_data = shiny::reactive(NULL),
   ...
   ) {
   shiny::moduleServer(
@@ -72,6 +77,37 @@ distributions_plot_server2 <- function(
           validated_group_data(),
           validated_dataset_data()
         )
+      })
+
+      validated_mock_event_data <- shiny::reactive({
+        if(is.null(mock_event_data())) return(NULL)
+        validate_data_columns(
+          mock_event_data(),
+          c("curveNumber", "pointNumber", "x", "y", "key"),
+          "mock_event_data"
+        )
+
+        selected_group <- mock_event_data()$x[[1]]
+        if(!selected_group %in% merged_distplot_data()$group_display){
+          msg <- stringr::str_c(
+            "mock_event_data column x value: ",
+            selected_group,
+            " not in merged_distplot_data column group_display"
+          )
+          stop(msg)
+        }
+
+        selected_dataset <- mock_event_data()$key[[1]]
+        if(!selected_dataset %in% merged_distplot_data()$dataset_display){
+          msg <- stringr::str_c(
+            "mock_event_data column key value: ",
+            selected_dataset,
+            " not in merged_distplot_data column group_display"
+          )
+          stop(msg)
+        }
+
+        return(mock_event_data())
       })
 
       distplot_source_name <- shiny::reactive(ns("distplot"))
@@ -134,18 +170,18 @@ distributions_plot_server2 <- function(
         )
       })
 
-      distplot_eventdata <- shiny::reactive({
+      distplot_event_data <- shiny::reactive({
         shiny::req(
           merged_distplot_data(),
           distplot_source_name(),
           plotly_function()
         )
-        if(!is.null(input$mock_event_data)){
-          eventdata <- input$mock_event_data
+        if(!is.null(validated_mock_event_data())){
+          eventdata <- validated_mock_event_data()
         } else {
           eventdata <- plotly::event_data("plotly_click", distplot_source_name())
         }
-        shiny::validate(shiny::need(eventdata, "Click on above barplot."))
+        shiny::validate(shiny::need(eventdata, "Click on above violin/box plot."))
         return(eventdata)
       })
 
@@ -153,13 +189,13 @@ distributions_plot_server2 <- function(
         "distplot",
         plot_data = merged_distplot_data,
         group_data = validated_group_data,
-        eventdata = distplot_eventdata
+        eventdata = distplot_event_data
       )
 
       histogram_data <- drilldown_histogram_server(
         "histogram",
         plot_data = merged_distplot_data,
-        eventdata = distplot_eventdata,
+        eventdata = distplot_event_data,
         ...
       )
 

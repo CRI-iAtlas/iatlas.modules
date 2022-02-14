@@ -16,7 +16,7 @@ validate_heatmap_data <- function(heatmap_data){
   )
 }
 
-combine_heatmap_data <- function(validated_heatmap_data, validated_group_data){
+merge_heatmap_data <- function(validated_heatmap_data, validated_group_data){
   validated_heatmap_data %>%
     dplyr::inner_join(validated_group_data, by = "group_name") %>%
     dplyr::select(

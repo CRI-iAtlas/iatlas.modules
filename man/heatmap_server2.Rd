@@ -10,6 +10,7 @@ heatmap_server2(
   group_data = shiny::reactive(NULL),
   summarise_function = shiny::reactive(stats::cor),
   drilldown = shiny::reactive(F),
+  mock_event_data = shiny::reactive(NULL),
   ...
 )
 }
@@ -33,6 +34,11 @@ the "response_value" of heatmap_data. The function must return one
 numeric value.}
 
 \item{drilldown}{A shiny::reactive that returns True or False}
+
+\item{mock_event_data}{A shiny::reactive that returns a dataframe. For
+testing purposes only. Must have columns "curveNumber", "pointNumber", "x",
+"y", and "z". The "x" column corresponds to the group selected, and the
+"y" column corresponds to feature selected.}
 
 \item{...}{arguments sent to plotly_scatter}
 }

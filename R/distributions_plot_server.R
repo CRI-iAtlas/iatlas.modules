@@ -20,6 +20,10 @@
 #' @param scale_method_default A shiny::reactive that returns a string
 #' @param feature_default A shiny::reactive that returns a string
 #' @param drilldown A shiny::reactive that returns True or False
+#' @param mock_event_data A shiny::reactive that returns a dataframe. For
+#' testing purposes only. Must have columns "curveNumber", "pointNumber", "x",
+#' "y", and "key". The "x" column corresponds to the group selected, and the
+#' "key" column corresponds to dataset selected.
 #' @param ... arguments sent to plotly_histogram
 #'
 #' @export
@@ -34,7 +38,7 @@ distributions_plot_server <- function(
   scale_method_default = shiny::reactive("None"),
   feature_default = shiny::reactive(NULL),
   drilldown = shiny::reactive(F),
-
+  mock_event_data = shiny::reactive(NULL),
   ...
   ) {
   shiny::moduleServer(
@@ -172,10 +176,11 @@ distributions_plot_server <- function(
         group_data,
         dataset_data,
         distplot_xlab,
-        drilldown      = drilldown,
-        plot_type      = shiny::reactive(input$plot_type_choice),
-        scale_method   = shiny::reactive(input$scale_method_choice),
-        reorder_method = shiny::reactive(input$reorder_method_choice),
+        drilldown       = drilldown,
+        plot_type       = shiny::reactive(input$plot_type_choice),
+        scale_method    = shiny::reactive(input$scale_method_choice),
+        reorder_method  = shiny::reactive(input$reorder_method_choice),
+        mock_event_data = mock_event_data,
         ...
       )
 

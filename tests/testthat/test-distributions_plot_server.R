@@ -54,16 +54,16 @@ test_that("distributions_plot_server_no_features_no_feature_data", {
     args = list(
       "sample_data_func" = shiny::reactive(example_iris_data_one_dataset),
       "drilldown" = shiny::reactive(T),
-      "distplot_xlab" = shiny::reactive("Species")
-    ),
-    {
-      session$setInputs("distplot-mock_event_data" = data.frame(
+      "distplot_xlab" = shiny::reactive("Species"),
+      "mock_event_data" = shiny::reactive(data.frame(
         "curveNumber" = c(0,0),
         "pointNumber" = c(0,0),
         "x" = "setosa",
         "y" = c(5.1, 2.1),
         "key" = "Iris"
       ))
+    ),
+    {
       session$setInputs("scale_method_choice" = "None")
       session$setInputs("reorder_method_choice" = "None")
       session$setInputs("plot_type_choice" = "Violin")
@@ -96,16 +96,16 @@ test_that("distributions_plot_server_no_features_no_classes", {
       "distplot_xlab" = shiny::reactive("Species"),
       "feature_data" = shiny::reactive(
         example_iris_data_feature_data_no_class()
-      )
-    ),
-    {
-      session$setInputs("distplot-mock_event_data" = data.frame(
+      ),
+      "mock_event_data" = shiny::reactive(data.frame(
         "curveNumber" = c(0,0),
         "pointNumber" = c(0,0),
         "x" = "setosa",
         "y" = c(5.1, 2.1),
         "key" = "Iris"
       ))
+    ),
+    {
       session$setInputs("feature_choice" = "Sepal.Length")
       session$setInputs("scale_method_choice" = "None")
       session$setInputs("reorder_method_choice" = "None")
@@ -142,17 +142,16 @@ test_that("distributions_plot_server_1_class", {
         example_distributions_iris_data_feature_data_1_class()
       ),
       "drilldown" = shiny::reactive(T),
-      "distplot_xlab" = shiny::reactive("Species")
-    ),
-    {
-      session$setInputs("distplot-mock_event_data" = data.frame(
+      "distplot_xlab" = shiny::reactive("Species"),
+      "mock_event_data" = shiny::reactive(data.frame(
         "curveNumber" = c(0,0),
         "pointNumber" = c(0,0),
         "x" = "setosa",
         "y" = c(5.1, 2.1),
         "key" = "Iris"
       ))
-
+    ),
+    {
       session$setInputs("feature_choice" = "Sepal.Length")
       session$setInputs("scale_method_choice" = "None")
       session$setInputs("reorder_method_choice" = "None")
@@ -205,16 +204,16 @@ test_that("distributions_plot_server_2_classes", {
       ),
       "group_data" = shiny::reactive(example_iris_data_groups()),
       "drilldown" = shiny::reactive(T),
-      "distplot_xlab" = shiny::reactive("Species")
-    ),
-    {
-      session$setInputs("distplot-mock_event_data" = data.frame(
+      "distplot_xlab" = shiny::reactive("Species"),
+      "mock_event_data" = shiny::reactive(data.frame(
         "curveNumber" = c(0,0),
         "pointNumber" = c(0,0),
         "x" = "Setosa",
         "y" = c(5.1, 2.1),
         "key" = "Iris"
       ))
+    ),
+    {
       session$setInputs("feature_class_choice" = "Class1")
       session$setInputs("feature_choice" = "Sepal.Length")
       session$setInputs("scale_method_choice" = "None")
