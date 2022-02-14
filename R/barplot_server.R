@@ -17,19 +17,23 @@
 #' @param barplot_title A shiny::reactive that returns a string
 #' @param barplot_label A shiny::reactive that returns a string
 #' @param drilldown A shiny::reactive that returns True or False
+#' @param mock_event_data A shiny::reactive that returns a dataframe. For
+#' testing purposes only. Must have columns "curveNumber", "pointNumber", "x",
+#' "y", and "key". The "x" column corresponds to the group selected.
 #' @param ... arguments sent to plotly_scatter
 #'
 #' @export
 barplot_server <- function(
   id,
   sample_data_function,
-  feature_data  = shiny::reactive(NULL),
-  group_data    = shiny::reactive(NULL),
-  barplot_xlab  = shiny::reactive(""),
-  barplot_ylab  = shiny::reactive(""),
-  barplot_title = shiny::reactive(""),
-  barplot_label = shiny::reactive("Feature"),
-  drilldown     = shiny::reactive(F),
+  feature_data    = shiny::reactive(NULL),
+  group_data      = shiny::reactive(NULL),
+  barplot_xlab    = shiny::reactive(""),
+  barplot_ylab    = shiny::reactive(""),
+  barplot_title   = shiny::reactive(""),
+  barplot_label   = shiny::reactive("Feature"),
+  drilldown       = shiny::reactive(F),
+  mock_event_data = shiny::reactive(NULL),
   ...
 ) {
   shiny::moduleServer(
@@ -126,6 +130,7 @@ barplot_server <- function(
         barplot_title,
         barplot_label,
         drilldown,
+        mock_event_data,
         ...
       )
 

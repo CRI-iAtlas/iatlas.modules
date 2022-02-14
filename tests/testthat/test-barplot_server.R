@@ -31,17 +31,17 @@ test_that("barplot_server_iris_no_feature_or_group_data", {
     barplot_server,
     args = list(
       "sample_data_func" = shiny::reactive(example_iris_data),
-      "drilldown" = shiny::reactive(T)
-    ),
-    {
-      session$setInputs("feature_class_choice" = "Length")
-      session$setInputs("barplot-mock_event_data" = data.frame(
+      "drilldown" = shiny::reactive(T),
+      "mock_event_data" = shiny::reactive(data.frame(
         "curveNumber" = 1,
         "pointNumber" = 2,
         "x" = "setosa",
         "y" = 6.588,
         "key" = "setosa"
       ))
+    ),
+    {
+      session$setInputs("feature_class_choice" = "Length")
 
       expect_null(feature_data())
       expect_null(validated_feature_data())
@@ -66,17 +66,17 @@ test_that("barplot_server_iris_feature_data", {
     args = list(
       "sample_data_func" = shiny::reactive(example_iris_data),
       "feature_data" = shiny::reactive(example_iris_data_features_1_class()),
-      "drilldown" = shiny::reactive(T)
-    ),
-    {
-      session$setInputs("feature_class_choice" = "Length")
-      session$setInputs("barplot-mock_event_data" = data.frame(
+      "drilldown" = shiny::reactive(T),
+      "mock_event_data" = shiny::reactive(data.frame(
         "curveNumber" = 1,
         "pointNumber" = 2,
         "x" = "setosa",
         "y" = 6.588,
         "key" = "setosa"
       ))
+    ),
+    {
+      session$setInputs("feature_class_choice" = "Length")
 
       expect_true(tibble::is_tibble(feature_data()))
       expect_true(tibble::is_tibble(validated_feature_data()))
@@ -104,17 +104,17 @@ test_that("barplot_server_iris_group_data", {
     args = list(
       "sample_data_func" = shiny::reactive(example_iris_data),
       "group_data" = shiny::reactive(example_iris_data_groups()),
-      "drilldown" = shiny::reactive(T)
-    ),
-    {
-      session$setInputs("feature_class_choice" = "Length")
-      session$setInputs("barplot-mock_event_data" = data.frame(
+      "drilldown" = shiny::reactive(T),
+      "mock_event_data" = shiny::reactive(data.frame(
         "curveNumber" = 1,
         "pointNumber" = 2,
         "x" = "Virginica",
         "y" = 6.588,
         "key" = "Virginica"
       ))
+    ),
+    {
+      session$setInputs("feature_class_choice" = "Length")
 
       expect_null(feature_data())
       expect_null(validated_feature_data())
