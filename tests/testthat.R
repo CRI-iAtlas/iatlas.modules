@@ -1,4 +1,4 @@
 library(testthat)
-library(iatlas.modules)
+library(iatlasModules)
 
-test_check("iatlas.modules")
+test_check("iatlasModules")
