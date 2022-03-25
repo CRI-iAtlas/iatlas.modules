@@ -4,7 +4,7 @@
 \alias{get_system_path_file}
 \title{Get System Path File}
 \usage{
-get_system_path_file(prefix, extension, folder, package = "iatlas.modules")
+get_system_path_file(prefix, extension, folder, package = "iatlasModules")
 }
 \arguments{
 \item{prefix}{A string, the file prefix}
