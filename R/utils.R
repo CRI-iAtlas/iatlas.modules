@@ -344,7 +344,7 @@ se <- function(x){
 #'
 #' @export
 get_system_path_file <- function(
-  prefix, extension, folder, package = "iatlasModules"
+  prefix, extension, folder, package = "iatlas.modules"
   ){
   file_name <- stringr::str_c(prefix, extension)
   file.path(system.file(folder, package = package), file_name)

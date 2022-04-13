@@ -1,4 +1,4 @@
-Package: iatlasModules
+Package: iatlas.modules
 Title: iAatlas Modules
 Type: Package
 Version: 0.8.0
@@ -37,5 +37,5 @@ Imports:
     tidyselect (>= 1.0),
     utils,
     viridis (>= 0.5)
-URL: https://github.com/CRI-iAtlas/iatlasModules
-BugReports: https://github.com/CRI-iAtlas/iatlasModules/issues
+URL: https://github.com/CRI-iAtlas/iatlas.modules
+BugReports: https://github.com/CRI-iAtlas/iatlas.modules/issues
