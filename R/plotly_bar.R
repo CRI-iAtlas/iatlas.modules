@@ -76,7 +76,7 @@ plotly_bar <- function(
     hoverinfo = "text"
   ) %>%
     plotly::layout(
-      legend = list(orientation = "h", x = 0, y = 1),
+      legend = list(orientation = "h", x = 0, yref = "paper", y = 1.5),
       title = title,
       xaxis = list(title = xlab),
       yaxis = list(title = ylab)

@@ -43,7 +43,7 @@ distributions_plot_ui <- function(
           shiny::selectInput(
             ns("plot_type_choice"),
             "Select or Search for Plot Type",
-            choices = c("Violin", "Box")
+            choices = c("Box", "Violin")
           )
         ),
         shiny::column(
