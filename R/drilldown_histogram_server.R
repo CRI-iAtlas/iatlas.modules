@@ -62,7 +62,7 @@ drilldown_histogram_server <- function(
 
       plotly_server(
         "histogram",
-        plot_data = histogram_data()
+        plot_data = histogram_data
       )
 
       return(histogram_data)
